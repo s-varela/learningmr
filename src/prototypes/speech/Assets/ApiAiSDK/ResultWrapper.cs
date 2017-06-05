@@ -25,36 +25,6 @@ using Newtonsoft.Json;
 namespace ApiAiSDK.Unity.Android
 {
 
-#if UNITY_ANDROID	
-	public class ResultWrapper
-	{
-		private AndroidJavaObject resultObject;
-
-		public ResultWrapper(AndroidJavaObject resultObject)
-		{
-			if(resultObject == null)
-			{
-				throw new ArgumentNullException("resultObject");
-			}
-
-			this.resultObject = resultObject;
-		}
-
-		public bool IsReady
-		{
-			get {
-				var ready = resultObject.Call<bool>("isReady");
-				return ready;
-			}
-		}
-
-		public AndroidRecognitionResult GetResult()
-		{
-			var recognitionResultString = resultObject.Call<string>("getResult");
-            return JsonConvert.DeserializeObject<AndroidRecognitionResult>(recognitionResultString);
-		}
-	}
-#endif
 
 }
 

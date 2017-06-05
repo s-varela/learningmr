@@ -26,9 +26,7 @@ using System.Threading;
 using System.Linq;
 using System.ComponentModel;
 
-#if UNITY_ANDROID
-using ApiAiSDK.Unity.Android;
-#endif
+
 
 namespace ApiAiSDK.Unity
 {	
@@ -40,10 +38,7 @@ namespace ApiAiSDK.Unity
 		private volatile bool recordingActive;
 		private readonly object thisLock = new object();
 
-#if UNITY_ANDROID
-		private ResultWrapper androidResultWrapper;
-		private AndroidRecognizer androidRecognizer;
-#endif
+
 
 		public event EventHandler<AIResponseEventArgs> OnResult;
 		public event EventHandler<AIErrorEventArgs> OnError;
@@ -61,58 +56,20 @@ namespace ApiAiSDK.Unity
 
 			apiAi = new ApiAi(this.config);
 
-#if UNITY_ANDROID
 
-			if(Application.platform == RuntimePlatform.Android)
-			{
-				InitializeAndroid();
-			}
-
-#endif
 
 		}
 			
-#if UNITY_ANDROID
-		private void InitializeAndroid(){
-			androidRecognizer = new AndroidRecognizer();
-			androidRecognizer.Initialize();
-		}
-#endif
+
 
 		public void Update()
 		{
 
-#if UNITY_ANDROID
-			if (androidResultWrapper != null) {
-				UpdateAndroidResult();
-			}
-#endif
+
 
 		}
 
-#if UNITY_ANDROID
-		private void UpdateAndroidResult(){
-            Debug.Log("UpdateAndroidResult");
-            var wrapper = androidResultWrapper;
-			if (wrapper.IsReady) {
-				var recognitionResult = wrapper.GetResult();
-				androidResultWrapper = null;
-				androidRecognizer.Clean();
-				
-				if (recognitionResult.IsError) {
-					FireOnError(new Exception(recognitionResult.ErrorMessage));
-				} else {
-					var request = new AIRequest {
-						Query = recognitionResult.RecognitionResults,
-						Confidence = recognitionResult.Confidence
-					};
-					
-					var aiResponse = apiAi.TextRequest(request);
-					ProcessResult(aiResponse);
-				}
-			}
-		}
-#endif
+
 
 		public void StartListening(AudioSource audioSource)
 		{
@@ -131,11 +88,7 @@ namespace ApiAiSDK.Unity
 				throw new InvalidOperationException("Now only Android supported");
 			}
 
-#if UNITY_ANDROID
-			if (androidResultWrapper == null) {
-				androidResultWrapper = androidRecognizer.Recognize(config.Language.code);
-			}
-#endif
+
 		}
 
 		public void StopListening()
