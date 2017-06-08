@@ -35,7 +35,8 @@ public class ApiAiModule : MonoBehaviour
 {
 
     public Text answerTextField;
-    public Text inputTextField;
+	public Text inputTextField;
+    public Text resultTextField;
     private ApiAiUnity apiAiUnity;
     private AudioSource aud;
     public AudioClip listeningSound;
@@ -85,8 +86,17 @@ public class ApiAiModule : MonoBehaviour
 				Debug.Log(aiResponse.Result.ResolvedQuery);
                 
 				answerTextField.text = aiResponse.Result.ResolvedQuery;
+				if(aiResponse.Result.ResolvedQuery == "hello how are you")
+				{  
+					answerTextField.text += " IS CORRECT";
+				}
+				else
+				{
+					answerTextField.text += " IS WRONG"; 
+				}
                 
-            } else
+            } 
+			else
             {
                 Debug.LogError("Response is null");
             }
