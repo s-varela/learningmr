@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1476E3B4-DB40-8B02-B490-2BC42A896EBC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
+    <UnityVersion>5.5.0f3</UnityVersion>
+    <RootNamespace></RootNamespace>
+    <LangVersion>4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_5_0;UNITY_5_5;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VIDEO;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_5_0;UNITY_5_5;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VIDEO;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
+    <Reference Include="UnityScript.Lang" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlaymodeTestsRunner">
+      <HintPath>Library\UnityAssemblies\UnityEngine.PlaymodeTestsRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VR">
+      <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MedaiPlayerSampleGUI.cs" />
+    <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MedaiPlayerSampleSphereGUI.cs" />
+    <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MediaPlayerCtrl.cs" />
+    <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MediaPlayerFullScreenCtrl.cs" />
+    <Compile Include="Assets\Media\EasyMovieTexture\Scripts\SphereMirror.cs" />
+    <Compile Include="Assets\Media\EasyMovieTexture\Scripts\VideoCopyTexture.cs" />
+    <Compile Include="Assets\SD\Gameplay\Experience\VRExperience.cs" />
+    <Compile Include="Assets\SD\Gameplay\MediaManager\MediaManager.cs" />
+    <Compile Include="Assets\SD\VRUI\Scripts\IVRControl.cs" />
+    <Compile Include="Assets\SD\VRUI\Scripts\VRGameMenu.cs" />
+    <Compile Include="Assets\SD\VRUI\Scripts\VRMenuRoom.cs" />
+    <Compile Include="Assets\SD\VRUI\Scripts\VRRangeValueControl.cs" />
+    <Compile Include="Assets\SD\VRUI\Scripts\VRUI.cs" />
+    <Compile Include="Assets\SD\VRUI\Scripts\VRUIAnimationClick.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\OVRDebugHeadController.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\OVROverlay.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\OVRPlatformMenu.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\OVRTouchpad.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\Utils\OVRChromaticAberration.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\Utils\OVRDebugGraph.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\Utils\OVRModeParms.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\Utils\OVRMonoscopic.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\Utils\OVRResetOrientation.cs" />
+    <Compile Include="Assets\VR\GearVR\Moonlight\Scripts\Utils\OVRWaitCursor.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRCameraRig.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRCommon.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRDisplay.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRInput.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRManager.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVROnCompleteListener.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRPlugin.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRProfile.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRTracker.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\OVRVolumeControl.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\Util\OVRDebugInfo.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\Util\OVRGridCube.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\Util\OVRPlayerController.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\Util\OVRSceneSampleController.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\Util\OVRScreenFade.cs" />
+    <Compile Include="Assets\VR\GearVR\Scripts\Util\OVRTrackerBounds.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Menu\MenuAnimator.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Menu\MenuButton.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Menu\MenuItemPopout.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Menu\MenuSelectorMover.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\GUIArrows.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\InputWarnings.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\ObjectPool.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\PlatformDependentText.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\Reticle.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\ReturnToMainMenu.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\SelectionRadial.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\SelectionSlider.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\UIFader.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\UIMovement.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\UITint.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\VRCameraFade.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\Utils\VRCameraUI.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRDeviceManager.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\VREyeRaycaster.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRFPSCounter.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRInput.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRInteractiveItem.cs" />
+    <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRTrackingReset.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Media\EasyMovieTexture\Chromakey.shader" />
+    <None Include="Assets\Media\EasyMovieTexture\Unlit_SphereInside.shader" />
+    <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+    <None Include="Assets\SD\VRUI\Shaders\ComplexSlidingUV.shader" />
+    <None Include="Assets\VR\GearVR\Moonlight\Resources\Unlit Transparent Color.shader" />
+    <None Include="Assets\VR\GearVR\Moonlight\Shaders\OVRColorRampAlpha.shader" />
+    <None Include="Assets\VR\GearVR\Moonlight\Shaders\Unlit Crosshair.shader" />
+    <None Include="Assets\VR\VRStandardAssets\Shaders\PriorityParticleAlpha.shader" />
+    <None Include="Assets\VR\VRStandardAssets\Shaders\SeparableAlpha.shader" />
+    <None Include="Assets\VR\VRStandardAssets\Shaders\SlidingUV.shader" />
+    <None Include="Assets\VR\VRStandardAssets\Shaders\UIOverlay.shader" />
+    <None Include="Assets\VR\VRStandardAssets\Shaders\UnlitTransparentParam.shader" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="GenerateTargetFrameworkMonikerAttribute" />
+</Project>
