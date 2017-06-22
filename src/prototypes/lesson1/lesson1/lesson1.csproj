@@ -91,8 +91,12 @@
     <Reference Include="Facebook.Unity.Settings">
       <HintPath>Library\FacebookSDK\Facebook.Unity.Settings.dll</HintPath>
     </Reference>
+    <Reference Include="LitJson">
+      <HintPath>Assets\LitJson.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CargarTexto.cs" />
     <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MedaiPlayerSampleGUI.cs" />
     <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MedaiPlayerSampleSphereGUI.cs" />
     <Compile Include="Assets\Media\EasyMovieTexture\Scripts\MediaPlayerCtrl.cs" />
@@ -103,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\DoublefaceShader.shader" />
+    <None Include="Assets\Json.txt" />
     <None Include="Assets\Media\EasyMovieTexture\Chromakey.shader" />
     <None Include="Assets\Media\EasyMovieTexture\Unlit_SphereInside.shader" />
   </ItemGroup>
