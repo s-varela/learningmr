@@ -1,4 +1,6 @@
- /bin/*
- /src/prototypes/**/Library/*
-  /src/prototypes/**/obj/*
- 
+bin/
+Library/
+obj/
+*.suo
+ProjectSettings.asset
+Temp/
