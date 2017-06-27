@@ -1,0 +1,4 @@
+ /bin/*
+ /src/prototypes/**/Library/*
+  /src/prototypes/**/obj/*
+ 
