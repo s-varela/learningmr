@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "menuGazeOculus", "menuGazeOculus.csproj", "{94CAA06A-E751-1FC3-3DA2-7560A87AE7DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "menuGazeOculus.Editor", "menuGazeOculus.Editor.csproj", "{D198B990-F2F4-1D88-B66F-756035E4A814}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94CAA06A-E751-1FC3-3DA2-7560A87AE7DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94CAA06A-E751-1FC3-3DA2-7560A87AE7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94CAA06A-E751-1FC3-3DA2-7560A87AE7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94CAA06A-E751-1FC3-3DA2-7560A87AE7DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D198B990-F2F4-1D88-B66F-756035E4A814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D198B990-F2F4-1D88-B66F-756035E4A814}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D198B990-F2F4-1D88-B66F-756035E4A814}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D198B990-F2F4-1D88-B66F-756035E4A814}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
