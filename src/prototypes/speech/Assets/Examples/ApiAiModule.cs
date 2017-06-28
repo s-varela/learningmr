@@ -63,7 +63,7 @@ public class ApiAiModule : MonoBehaviour
             return true;
         };
             
-        const string ACCESS_TOKEN = "3485a96fb27744db83e78b8c4bc9e7b7";
+		const string ACCESS_TOKEN = "3bc0ab32c23f4e489d803abd20ba58d6";
 
         var config = new AIConfiguration(ACCESS_TOKEN, SupportedLanguage.English);
 
@@ -86,14 +86,6 @@ public class ApiAiModule : MonoBehaviour
 				Debug.Log(aiResponse.Result.ResolvedQuery);
                 
 				answerTextField.text = aiResponse.Result.ResolvedQuery;
-				if(aiResponse.Result.ResolvedQuery == "hello how are you")
-				{  
-					answerTextField.text += " IS CORRECT";
-				}
-				else
-				{
-					answerTextField.text += " IS WRONG"; 
-				}
                 
             } 
 			else

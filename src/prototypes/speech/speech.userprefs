@@ -2,12 +2,20 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Examples/ApiAiModule.cs">
     <Files>
-      <File FileName="Assets/ApiAiSDK/ApiAiUnity.cs" Line="15" Column="26" />
-      <File FileName="Assets/Examples/ApiAiModule.cs" Line="95" Column="32" />
+      <File FileName="Assets/ApiAiSDK/ApiAiUnity.cs" Line="210" Column="9" />
+      <File FileName="Assets/Examples/ApiAiModule.cs" Line="110" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/ApiAiSDK/ApiAiUnity.cs" line="76" column="1" />
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/ApiAiSDK/ApiAiUnity.cs" line="78" column="1" />
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/ApiAiSDK/ApiAiUnity.cs" line="80" column="1" />
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/ApiAiSDK/ApiAiUnity.cs" line="96" column="1" />
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/ApiAiSDK/ApiAiUnity.cs" line="109" column="1" />
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/ApiAiSDK/ApiAiUnity.cs" line="127" column="1" />
+      <Breakpoint file="/Users/svarela/Desktop/Projects/Personal/learningmr/src/prototypes/speech/Assets/Examples/ApiAiModule.cs" line="55" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
