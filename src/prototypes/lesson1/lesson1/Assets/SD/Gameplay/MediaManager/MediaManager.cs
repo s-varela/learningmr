@@ -43,10 +43,34 @@ public class MediaManager : MonoBehaviour {
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
         media.OnEnd += FinishExperience;
+
+        //Martin
+        //PlayMovieInCtrl(data.videoAssetKey);
+     
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    void Awake()
+    {
+        if (media == null)
+        {
+            media = FindObjectOfType<MediaPlayerCtrl>();
+            if (media == null)
+                throw new UnityException("No Media Player Ctrl object in scene");
+        }
+    }
+
+    public void PlayMovieInCtrl(string path)
+    {
+
+        // media = GetComponent<MediaPlayerCtrl>();
+        media.Load(path);
+      
+            // GetComponent<Renderer>().material.mainTexture = media.GetVideoTexture();
+        media.Play();
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
         
 	}
