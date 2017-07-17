@@ -16,7 +16,7 @@ public class CargarTexto : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        myJson = JsonMapper.ToObject(File.ReadAllText("Assets/Json.txt"));
+        myJson = JsonMapper.ToObject(File.ReadAllText("Assets/TextFiles/Json.txt"));
         text.text = myJson[valor.ToString()].ToString();
     }
 

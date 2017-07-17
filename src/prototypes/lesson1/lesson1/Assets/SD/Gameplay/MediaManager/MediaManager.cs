@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 using System.Collections;
 
 public class MediaManager : MonoBehaviour {
@@ -10,12 +11,15 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private AudioSource audioRight;
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
+    [SerializeField] private SubReader SubReader;
+    [SerializeField] private string SubtitleText;
 
     private AudioSource sfx;
 
 	// Use this for initialization
 	void Start ()
     {
+
         experience = VRExperience.Instance;
 
         if (audioLeft != null)
@@ -35,7 +39,7 @@ public class MediaManager : MonoBehaviour {
             sfx = gameObject.AddComponent<AudioSource>();
 
             sfx.clip = Resources.Load<AudioClip>(data.audioAssetKey);
-            sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
+           // sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
             sfx.loop = false;
             sfx.Play();
         }
@@ -72,8 +76,12 @@ public class MediaManager : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        
-	}
+        // search if duration is in last subtitle second (in miliseconds)
+        int duration = media.GetDuration();
+        SubtitleText = SubReader.readSubtitleLine(duration);
+
+
+    }
 
     private void PauseMedia()
     {

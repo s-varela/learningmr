@@ -1,0 +1,4 @@
+[0:00:04.100,0:00:07.000]-Hello, my name is Michael.
+[0:00:06.100,0:00:08.000]-What's your name?
+[0:00:08.100,0:00:10.000]-My name is Johnny.
+[0:00:10.100,0:00:12.000]-What's your name?
