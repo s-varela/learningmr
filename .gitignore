@@ -2,7 +2,11 @@ bin/
 Library/
 obj/
 *.suo
-ProjectSettings.asset
+/ProjectSettings
 Temp/
 *.exe
 *.apk
+*.csproj
+*.sln
+*.userprefs
+*_Data/

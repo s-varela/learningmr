@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.IO;
 using System.Collections;
 
@@ -12,10 +11,12 @@ public class SubReader : MonoBehaviour
     public SubReader() {
 
         //read file
-        fileReader();
+        subtitlesLastSeconds = new Hashtable();
+        subtitlesText = new Hashtable();
+        FileReader();
     }
 
-    public string fileReader() {
+    public string FileReader() {
 
         StreamReader subtitles = new StreamReader("Assets/TextFiles/Lesson01-01.txt");
 
@@ -44,7 +45,7 @@ public class SubReader : MonoBehaviour
         return "";
     }
 
-    public string readSubtitleLine(int duration) {
+    public string ReadSubtitleLine(int duration) {
 
         ICollection hashValues = subtitlesLastSeconds.Values;
         
