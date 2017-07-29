@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Threading;
 using UnityEngine.UI;
 using System.Diagnostics;
@@ -12,8 +13,10 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private AudioSource audioRight;
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
+
     private SubtitleReader subReader;
-    //[SerializeField] private string SubtitleText;
+
+   // [SerializeField] private string SubtitleText;
 
     private AudioSource sfx;
     private Stopwatch stopwatch;
@@ -51,6 +54,15 @@ public class MediaManager : MonoBehaviour {
         menu.OnMenuHide += ResumeMedia;
         media.OnEnd += ManagerVideo;
         media.Play();
+        //media.OnEnd += FinishExperience;
+
+        media.OnEnd += ManagerVideo;
+        media.Play();
+
+        subReader = new SubReader();
+        stopwatch = new Stopwatch();
+        stopwatch.Start();
+
     }
 
     void Awake()
@@ -70,12 +82,9 @@ public class MediaManager : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-
         int seconds = (int)stopwatch.ElapsedMilliseconds;
         // search if duration is in last subtitle second (in miliseconds)
         // PauseMedia();
-		UnityEngine.Debug.Log("seconds: " + seconds);
-
 		theGuiText.text = subReader.ReadSubtitleLine(seconds);
 
 	/*	if (!theGuiText.text.Equals ("")) {

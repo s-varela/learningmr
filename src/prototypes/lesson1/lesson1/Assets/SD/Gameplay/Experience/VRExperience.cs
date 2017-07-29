@@ -2,12 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
 
 public class VRExperience : MonoBehaviour {
 
     private static VRExperience _instance;
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
+
+    private string[] videos = { "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-05.mp4" };
+    private int indiceVideo = -1;
 
     public static VRExperience Instance
     {
@@ -24,8 +28,8 @@ public class VRExperience : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
-	}
+        indiceVideo = -1;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -83,5 +87,15 @@ public class VRExperience : MonoBehaviour {
         {
             return default(T);
         }
+    }
+
+    internal string NextVideo()
+    {
+        indiceVideo++;
+        if (indiceVideo< videos.Length)
+        {
+            return videos[indiceVideo];
+
+        }else return "End";
     }
 }
