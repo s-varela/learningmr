@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 using System.Collections;
 using System.Threading;
 using UnityEngine.UI;
@@ -15,22 +14,19 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private AudioSource audioRight;
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
-    private SubReader subReader;
+
+    private SubtitleReader subReader;
 	private string pathVideos = "/lesson1-data/videos/";
    // [SerializeField] private string SubtitleText;
 
-    //public TextMesh textObject;
-
     private AudioSource sfx;
-
-    private int i = 0;
-
     private Stopwatch stopwatch;
+	[SerializeField] public GUIText theGuiText;
 
     // Use this for initialization
     void Start ()
     {
-
+		audioLeft = new AudioSource ();
         experience = VRExperience.Instance;
 
         if (audioLeft != null)
@@ -59,70 +55,38 @@ public class MediaManager : MonoBehaviour {
         menu.OnMenuHide += ResumeMedia;
 
         media.OnEnd += ManagerVideo;
-       // media.Play();
-
         ManagerVideo();
 
-    }
+        }
 
     void Awake()
     {
-        if (subReader==null)
-        {
-            subReader = new SubReader();
-        }
-        if (stopwatch == null)
-        {
-            stopwatch = new Stopwatch();
-        }
-
         if (media == null)
         {
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+            subReader = new SubtitleReader();
             media = FindObjectOfType<MediaPlayerCtrl>();
-
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
         }
-
-		//ManagerVideo();
     }
 
 
     // Update is called once per frame
     void Update ()
     {
-
-        long seconds = stopwatch.ElapsedMilliseconds;
+        int seconds = (int)stopwatch.ElapsedMilliseconds;
         // search if duration is in last subtitle second (in miliseconds)
+        // PauseMedia();
+		theGuiText.text = subReader.ReadSubtitleLine(seconds);
 
-        int duration = media.GetDuration();
-        //textObject.text= subReader.ReadSubtitleLine(duration);
-
-        //textObject.text = "Seg:"+seconds +" duracion:"+duration+ " sub: XXXX";
-      // textObject.text = subReader.ReadSubtitleLine(duration);
-
-        //i++;
-        // textObject.text = i.ToString();
-
-        /*if (duration >= 7000 && duration <= 8000)
-            {
-                Debug.Log("Hello, my name is Michael");
-                PauseMedia();
-                textObject.text = "Hello, my name is Michael";
-                Thread.Sleep(2000);
-                ResumeMedia();
-            }
-            else
-            {
-                Debug.Log("Sigue");
-                textObject.text = "Sigue";
-        }*/
-
-
-        /* [0:00:04.100,0:00:07.000]-Hello, my name is Michael.
- [0:00:06.100, 0:00:08.000]-What's your name?
- [0:00:08.100,0:00:10.000]-My name is Johnny.
- [0:00:10.100, 0:00:12.000]-What's your name?*/
+	/*	if (!theGuiText.text.Equals ("")) {
+			PauseMedia ();
+			//TODO: reproducir audio de subtitulo
+			Thread.Sleep(2000);
+			ResumeMedia();
+		}*/
 
     }
 
