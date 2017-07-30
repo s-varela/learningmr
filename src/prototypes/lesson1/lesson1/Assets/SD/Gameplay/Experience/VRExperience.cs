@@ -10,7 +10,7 @@ public class VRExperience : MonoBehaviour {
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
 
-    private string[] videos = { "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-05.mp4" };
+	private string[] videos = {"Lesson01-01.mp4","Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-05.mp4" };
     private int indiceVideo = -1;
 
     public static VRExperience Instance
@@ -41,6 +41,7 @@ public class VRExperience : MonoBehaviour {
         if (_instance == null)
         {
             _instance = this;
+			indiceVideo = -1;
             DontDestroyOnLoad(this);
         }
         else if (this != _instance)
@@ -92,10 +93,12 @@ public class VRExperience : MonoBehaviour {
     internal string NextVideo()
     {
         indiceVideo++;
-        if (indiceVideo< videos.Length)
-        {
-            return videos[indiceVideo];
+		if (indiceVideo < videos.Length) {
+			return videos [indiceVideo];
 
-        }else return "End";
+		} else {
+			indiceVideo = -1;
+			return "End";
+		}
     }
 }

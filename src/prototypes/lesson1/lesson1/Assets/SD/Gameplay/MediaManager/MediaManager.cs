@@ -4,6 +4,7 @@ using System.Collections;
 using System.Threading;
 using UnityEngine.UI;
 using System.Diagnostics;
+using System.IO;
 
 public class MediaManager : MonoBehaviour {
 
@@ -15,10 +16,10 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
     private SubReader subReader;
+	private string pathVideos = "/lesson1-data/videos/";
    // [SerializeField] private string SubtitleText;
 
-
-    public TextMesh textObject;
+    //public TextMesh textObject;
 
     private AudioSource sfx;
 
@@ -56,25 +57,34 @@ public class MediaManager : MonoBehaviour {
 
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
-        //media.OnEnd += FinishExperience;
 
         media.OnEnd += ManagerVideo;
-        media.Play();
+       // media.Play();
 
-        subReader = new SubReader();
-        stopwatch = new Stopwatch();
-        stopwatch.Start();
+        ManagerVideo();
 
     }
 
     void Awake()
     {
+        if (subReader==null)
+        {
+            subReader = new SubReader();
+        }
+        if (stopwatch == null)
+        {
+            stopwatch = new Stopwatch();
+        }
+
         if (media == null)
         {
             media = FindObjectOfType<MediaPlayerCtrl>();
+
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
         }
+
+		//ManagerVideo();
     }
 
 
@@ -86,12 +96,12 @@ public class MediaManager : MonoBehaviour {
         // search if duration is in last subtitle second (in miliseconds)
 
         int duration = media.GetDuration();
-        textObject.text= subReader.ReadSubtitleLine(duration);
+        //textObject.text= subReader.ReadSubtitleLine(duration);
 
-        textObject.text = "Seg:"+seconds +" duracion:"+duration+ " sub: XXXX";
+        //textObject.text = "Seg:"+seconds +" duracion:"+duration+ " sub: XXXX";
       // textObject.text = subReader.ReadSubtitleLine(duration);
 
-        i++;
+        //i++;
         // textObject.text = i.ToString();
 
         /*if (duration >= 7000 && duration <= 8000)
@@ -173,13 +183,17 @@ public class MediaManager : MonoBehaviour {
 
     private void ManagerVideo()
     {
+		if (experience == null) {
+			experience = VRExperience.Instance;
+		}
         string videoName=experience.NextVideo();
+		print("file://"+ Application.persistentDataPath+ pathVideos+ videoName);
         stopwatch.Reset();
         if (!videoName.Equals("End"))
         {
-            media.UnLoad();
-            media.Load(videoName);
+			media.Load("file://"+ Application.persistentDataPath+ pathVideos+ videoName);
             media.Play();
+			stopwatch.Start();
         }
         else
         {

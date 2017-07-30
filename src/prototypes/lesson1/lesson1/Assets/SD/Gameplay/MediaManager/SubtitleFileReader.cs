@@ -13,7 +13,7 @@ public class SubReader : MonoBehaviour
         //read file
         subtitlesLastSeconds = new Hashtable();
         subtitlesText = new Hashtable();
-        FileReader();
+        //FileReader();
     }
 
     public string FileReader() {
