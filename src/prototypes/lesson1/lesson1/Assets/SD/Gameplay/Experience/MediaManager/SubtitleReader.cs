@@ -3,12 +3,12 @@ using System.Collections;
 using System.IO;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class SubtitleReader : MonoBehaviour
 { 
     private Hashtable subtitlesLastSeconds;
     private Hashtable subtitlesText;
-    public Text textObject;
 
     public SubtitleReader() {
         subtitlesLastSeconds = new Hashtable();
@@ -23,45 +23,66 @@ public class SubtitleReader : MonoBehaviour
 
     void Awake()
     {
-      textObject = GetComponent<UnityEngine.UI.Text>();
     }
 
         // Update is called once per frame
         void Update()
-    {
+	{
 
     }
 
     public void FileReader()
-    {
-        StreamReader subtitles = new StreamReader("Assets/TextFiles/Lesson01-01.txt");
-        int lineCounter = 0;
-        //guardo todos los ultimos segundos de los subtitulos y su texto
-        while (!subtitles.EndOfStream)
-        {
-            string line = subtitles.ReadLine();
-            int firstBracket = line.IndexOf("[") + 1;
-            int lastSquareBracket = line.IndexOf("]") - 1;
-            int lastInterval = int.Parse(line.Substring(firstBracket, lastSquareBracket));
+	{
+		
+		subtitlesLastSeconds.Add(0, 4720);
+       		subtitlesText.Add(0, "Hello, my name is Michael.");
+       subtitlesLastSeconds.Add(1, 5800);
+       subtitlesText.Add(1, "What's your name?");
+       subtitlesLastSeconds.Add(2, 8070);
+       subtitlesText.Add(2, "My name is Johnny.");
+       subtitlesLastSeconds.Add(3, 10570);
+       subtitlesText.Add(3, "What's your name?");
 
-            // Add to hasmap last second interval. 
-            subtitlesLastSeconds.Add(lineCounter, lastInterval);
 
-            //agregar texto a otro hashMap
-            int parent = line.IndexOf("]")+1;
-            int dash = line.IndexOf("|");
-            int between = dash - parent;
-            string subtitleText = line.Substring(parent, between);
+		try {
 
-            subtitlesText.Add(lineCounter, subtitleText);
-            lineCounter++;
-        }
-        subtitles.Close();
+			TextAsset subtitlesFile = Resources.Load("Assets/TextFiles/Lesson01-01") as TextAsset;
+			string text = subtitlesFile.text;
+			string[] textLines = Regex.Split (text, "\n|\r|\r\n" );
+			//StreamReader subtitles = new StreamReader ("Assets/TextFiles/Lesson01-01.txt");
+			int lineCounter = 0;
+			//guardo todos los ultimos segundos de los subtitulos y su texto
+			for ( int i=0; i < textLines.Length; i++ ) {
+				
+				string line = textLines[i];
+				int firstBracket = line.IndexOf ("[") + 1;
+				int lastSquareBracket = line.IndexOf ("]") - 1;
+				int lastInterval = int.Parse(line.Substring(firstBracket,lastSquareBracket));
+
+				// Add to hasmap last second interval. 
+				subtitlesLastSeconds.Add(lineCounter, lastInterval);
+
+				//agregar texto a otro hashMap
+				int parent = line.IndexOf("]")+1;
+				int dash = line.IndexOf("|");
+				int between = dash - parent;
+				string subtitleText = line.Substring(parent, between);
+
+				subtitlesText.Add(lineCounter, subtitleText);
+				lineCounter++;
+			}
+
+
+		} catch (System.Exception ex) {
+			Debug.Log("ERROR_OBTENIENDO_SUBTITULOS: " + ex.Message);
+		}
+			
     }
 
     public string ReadSubtitleLine(long duration)
     {
         string subToReturn = "";
+		int intDuration = (int)duration;
         ICollection hashValuesLast = subtitlesLastSeconds.Values;
         int howMany = hashValuesLast.Count;
         int[] lastSeconds = new int[howMany];
@@ -70,15 +91,12 @@ public class SubtitleReader : MonoBehaviour
         ICollection hashValuesSubs = subtitlesText.Values;
         string[] subs = new string[howMany];
         hashValuesSubs.CopyTo(subs, 0);
-		//nls
         // search if duration is in last subtitle second of the hash
         for (int i = 0; i < howMany ; i++)
         {
             
-            if (lastSeconds[i] < duration )
+			if (lastSeconds[i] < intDuration)
             {
-                //  UnityEngine.Debug.Log("lastSeconds[i] : " + lastSeconds[i]);
-                //  UnityEngine.Debug.Log("entro: ");
                 //devuelvo subtitulo
                 subToReturn = subs[i];
             }

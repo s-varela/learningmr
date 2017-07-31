@@ -21,6 +21,7 @@ public class MediaManager : MonoBehaviour {
     private AudioSource sfx;
     private Stopwatch stopwatch;
 	[SerializeField] public GUIText theGuiText;
+	[SerializeField] public Text normalText;
 
     // Use this for initialization
     void Start ()
@@ -59,7 +60,6 @@ public class MediaManager : MonoBehaviour {
         media.OnEnd += ManagerVideo;
         media.Play();
 
-        subReader = new SubReader();
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
@@ -71,7 +71,7 @@ public class MediaManager : MonoBehaviour {
         {
             stopwatch = new Stopwatch();
             stopwatch.Start();
-            subReader = new SubtitleReader();
+			subReader = new SubtitleReader();
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
@@ -82,10 +82,12 @@ public class MediaManager : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        int seconds = (int)stopwatch.ElapsedMilliseconds;
+		long seconds = stopwatch.ElapsedMilliseconds;
         // search if duration is in last subtitle second (in miliseconds)
         // PauseMedia();
-		theGuiText.text = subReader.ReadSubtitleLine(seconds);
+		string theSub = subReader.ReadSubtitleLine(seconds);
+		theGuiText.text = theSub;
+		normalText.text = theSub;
 
 	/*	if (!theGuiText.text.Equals ("")) {
 			PauseMedia ();
