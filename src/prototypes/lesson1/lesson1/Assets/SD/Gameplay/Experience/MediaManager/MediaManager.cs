@@ -21,7 +21,8 @@ public class MediaManager : MonoBehaviour {
 
     private AudioSource sfx;
     private Stopwatch stopwatch;
-	[SerializeField] public GUIText theGuiText;
+	//[SerializeField] public GUIText theGuiText;
+	[SerializeField] private TextMesh normalText;
 
     // Use this for initialization
     void Start ()
@@ -74,19 +75,21 @@ public class MediaManager : MonoBehaviour {
 
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
-        int seconds = (int)stopwatch.ElapsedMilliseconds;
+        long seconds = stopwatch.ElapsedMilliseconds;
         // search if duration is in last subtitle second (in miliseconds)
         // PauseMedia();
-		theGuiText.text = subReader.ReadSubtitleLine(seconds);
+        string theSub = subReader.ReadSubtitleLine(seconds);
+        //theGuiText.text = theSub;
+        normalText.text = theSub;
 
-	/*	if (!theGuiText.text.Equals ("")) {
-			PauseMedia ();
-			//TODO: reproducir audio de subtitulo
-			Thread.Sleep(2000);
-			ResumeMedia();
-		}*/
+        /*	if (!theGuiText.text.Equals ("")) {
+                PauseMedia ();
+                //TODO: reproducir audio de subtitulo
+                Thread.Sleep(2000);
+                ResumeMedia();
+            }*/
 
     }
 
