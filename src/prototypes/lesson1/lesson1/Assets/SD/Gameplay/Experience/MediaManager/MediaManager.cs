@@ -66,7 +66,7 @@ public class MediaManager : MonoBehaviour {
         {
             stopwatch = new Stopwatch();
             stopwatch.Start();
-            subReader = new SubtitleReader();
+			subReader = new SubtitleReader();
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
