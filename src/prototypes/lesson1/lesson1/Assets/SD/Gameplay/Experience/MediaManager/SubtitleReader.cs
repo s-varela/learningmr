@@ -82,7 +82,6 @@ public class SubtitleReader : MonoBehaviour
     {
 		try
 		{
-			
             StreamReader subtitles = new StreamReader(Application.persistentDataPath + pathSubs + "Lesson01-01.txt");
             int lineCounter = 0;
             //guardo todos los ultimos segundos de los subtitulos y su texto
@@ -114,9 +113,42 @@ public class SubtitleReader : MonoBehaviour
 
     }
 
+	public void RestFileReader(string videoName)
+	{
+		try
+		{
+			string fileName = videoName.Replace("mp4","txt");
+			StreamReader subtitles = new StreamReader(Application.persistentDataPath + pathSubs + fileName);
+			int lineCounter = 0;
+			//guardo todos los ultimos segundos de los subtitulos y su texto
+			while (!subtitles.EndOfStream)
+			{
+				string line = subtitles.ReadLine();
+				int firstBracket = line.IndexOf("[") + 1;
+				int lastSquareBracket = line.IndexOf("]") - 1;
+				int lastInterval = int.Parse(line.Substring(firstBracket, lastSquareBracket));
+				// Add to hasmap last second interval. 
+				subtitlesLastSeconds.Add(lineCounter, lastInterval);
 
+				//agregar texto a otro hashMap
+				int parent = line.IndexOf("]") + 1;
+				int dash = line.IndexOf("|");
+				int between = dash - parent;
+				string subtitleText = line.Substring(parent, between);
 
+				subtitlesText.Add(lineCounter, subtitleText);
+				lineCounter++;
+			}
+			subtitles.Close();
 
+		}
+		catch (System.Exception ex)
+		{
+			Debug.Log("ERROR_OBTENIENDO_SUBTITULOS: " + ex.Message);
+		}
+
+	}
+		
     public string ReadSubtitleLine(long duration)
     {
         string subToReturn = "";

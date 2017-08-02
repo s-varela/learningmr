@@ -22,13 +22,13 @@ public class MediaManager : MonoBehaviour {
     private AudioSource sfx;
     private Stopwatch stopwatch;
 	//[SerializeField] public GUIText theGuiText;
+	[SerializeField] private Text theText;
 	[SerializeField] private TextMesh normalText;
 
     // Use this for initialization
     void Start ()
     {
 		audioLeft = new AudioSource ();
-        experience = VRExperience.Instance;
 
         if (audioLeft != null)
         {
@@ -64,6 +64,7 @@ public class MediaManager : MonoBehaviour {
     {
         if (media == null)
         {
+			experience = VRExperience.Instance;
             stopwatch = new Stopwatch();
             stopwatch.Start();
 			subReader = new SubtitleReader();
@@ -83,6 +84,7 @@ public class MediaManager : MonoBehaviour {
         string theSub = subReader.ReadSubtitleLine(seconds);
         //theGuiText.text = theSub;
         normalText.text = theSub;
+		theText.text = theSub;
 
         /*	if (!theGuiText.text.Equals ("")) {
                 PauseMedia ();
@@ -154,11 +156,12 @@ public class MediaManager : MonoBehaviour {
 			experience = VRExperience.Instance;
 		}
         string videoName=experience.NextVideo();
+		subReader.RestFileReader(videoName);
 		print("file://"+ Application.persistentDataPath+ pathVideos+ videoName);
         stopwatch.Reset();
         if (!videoName.Equals("End"))
         {
-			media.Load("file://"+ Application.persistentDataPath+ pathVideos+ videoName);
+			media.Load("file://"+ Application.persistentDataPath + pathVideos + videoName);
             media.Play();
 			stopwatch.Start();
         }
@@ -168,4 +171,4 @@ public class MediaManager : MonoBehaviour {
         }
      
     }
-}
+} 
