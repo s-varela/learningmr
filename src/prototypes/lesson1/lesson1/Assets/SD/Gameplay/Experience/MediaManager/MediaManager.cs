@@ -76,22 +76,20 @@ public class MediaManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update()
-    {
-        long seconds = stopwatch.ElapsedMilliseconds;
-        // search if duration is in last subtitle second (in miliseconds)
-        // PauseMedia();
-        string theSub = subReader.ReadSubtitleLine(seconds);
-        //theGuiText.text = theSub;
-        normalText.text = theSub;
+	{
+		long seconds = stopwatch.ElapsedMilliseconds;
+		// search if duration is in last subtitle second (in miliseconds)
+		string theSub = subReader.ReadSubtitleLine (seconds);
+		//theGuiText.text = theSub;
+		normalText.text = theSub;
 
-        /*	if (!theGuiText.text.Equals ("")) {
-                PauseMedia ();
-                //TODO: reproducir audio de subtitulo
-                Thread.Sleep(2000);
-                ResumeMedia();
-            }*/
-
-    }
+		/*if (!normalText.text.Equals ("")) {
+			PauseMedia ();
+			//TODO: reproducir audio de subtitulo
+			Thread.Sleep (2000);
+			ResumeMedia ();
+		}*/
+	}
 
     private void PauseMedia()
     {
@@ -150,22 +148,34 @@ public class MediaManager : MonoBehaviour {
 
     private void ManagerVideo()
     {
-		if (experience == null) {
-			experience = VRExperience.Instance;
-		}
-        string videoName=experience.NextVideo();
-		print("file://"+ Application.persistentDataPath+ pathVideos+ videoName);
+        if (experience == null)
+        {
+            experience = VRExperience.Instance;
+        }
+        string videoName = experience.NextVideo();
+ 
         stopwatch.Reset();
         if (!videoName.Equals("End"))
         {
-			media.Load("file://"+ Application.persistentDataPath+ pathVideos+ videoName);
+            subReader.RestFileReader(videoName);
+            media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
             media.Play();
-			stopwatch.Start();
+            stopwatch.Start();
         }
         else
         {
             FinishExperience();
         }
-     
+
     }
+
+    /*private void ManagerAudio(string audioName)
+    {
+        sfx = gameObject.AddComponent<AudioSource>();
+
+        sfx.clip = Resources.Load<AudioClip>(experience.GetAudioAssetKey(audioName));
+        // sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
+        sfx.loop = false;
+        sfx.Play();
+    }*/
 }

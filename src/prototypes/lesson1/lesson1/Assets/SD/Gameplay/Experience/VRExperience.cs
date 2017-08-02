@@ -10,8 +10,8 @@ public class VRExperience : MonoBehaviour {
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
 
-	private string[] videos = {"Lesson01-01.mp4","Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-05.mp4" };
-    private int indiceVideo = -1;
+    private string[] videos = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
+    private static int indiceVideo = -1;
 
     public static VRExperience Instance
     {
@@ -20,28 +20,28 @@ public class VRExperience : MonoBehaviour {
             if (_instance == null)
             {
                 _instance = FindObjectOfType<VRExperience>();
-               // DontDestroyOnLoad(_instance.gameObject);
+                // DontDestroyOnLoad(_instance.gameObject);
             }
             return _instance;
         }
     }
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         indiceVideo = -1;
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update() {
+
+    }
 
     private void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
-			indiceVideo = -1;
+            indiceVideo = -1;
             DontDestroyOnLoad(this);
         }
         else if (this != _instance)
@@ -55,11 +55,11 @@ public class VRExperience : MonoBehaviour {
         foreach (KeyValuePair<string, object> pair in config)
         {
             if (!configuration.ContainsKey(pair.Key) || overwriteSettings)
-            { 
+            {
                 configuration[pair.Key] = pair.Value;
             }
         }
-        
+
         SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
     }
 
@@ -82,8 +82,8 @@ public class VRExperience : MonoBehaviour {
     {
         try
         {
-            return (T) configuration[name];
-        } 
+            return (T)configuration[name];
+        }
         catch
         {
             return default(T);
@@ -93,12 +93,17 @@ public class VRExperience : MonoBehaviour {
     internal string NextVideo()
     {
         indiceVideo++;
-		if (indiceVideo < videos.Length) {
-			return videos [indiceVideo];
+        if (indiceVideo < videos.Length) {
+            return videos[indiceVideo];
 
-		} else {
-			indiceVideo = -1;
-			return "End";
-		}
+        } else {
+            indiceVideo = -1;
+            return "End";
+        }
     }
+
+    /*public string GetAudioAssetKey(string audioName)
+    {
+		return "";
+    }*/
 }
