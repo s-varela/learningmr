@@ -1,0 +1,9 @@
+[3500]-Hello! My name is Michael.|
+[5400]-What's your name?|
+[7120]-My name is Johnny.|
+[8500]-Where are you from?|
+[11380]-I'm from ?????, Croatia.|
+[13480]-Where are you from?|
+[16300]-I'm from Sydney, Australia.|
+[19120]-Where are you from!|
+[21950]-Vaaaamooos todavia!|

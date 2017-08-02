@@ -22,6 +22,7 @@ public class MediaManager : MonoBehaviour {
     private AudioSource sfx;
     private Stopwatch stopwatch;
 	//[SerializeField] public GUIText theGuiText;
+	[SerializeField] private Text theText;
 	[SerializeField] private TextMesh normalText;
 
     // Use this for initialization
@@ -64,6 +65,7 @@ public class MediaManager : MonoBehaviour {
     {
         if (media == null)
         {
+			experience = VRExperience.Instance;
             stopwatch = new Stopwatch();
             stopwatch.Start();
 			subReader = new SubtitleReader();
