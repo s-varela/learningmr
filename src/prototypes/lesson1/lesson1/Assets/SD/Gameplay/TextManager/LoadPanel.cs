@@ -5,9 +5,12 @@ using UnityEngine.UI;
 
 public class LoadPanel : MonoBehaviour {
 
-    [SerializeField] TextMesh panel;
+    [SerializeField] TextMesh contenido;
 	[SerializeField] TextMesh subtitle;
+    [SerializeField] TextMesh sub;
     private string aux;
+    private string subAnt;
+    private string[] arrayCont;
     private int count = 0;
 
     // Use this for initialization
@@ -18,16 +21,33 @@ public class LoadPanel : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         
-        if (!subtitle.text.Equals(aux))
+        if (!subtitle.text.Equals(aux) && !subtitle.text.Equals(""))
         {
             aux = subtitle.text;
+            sub.text = subtitle.text;
             if (count == 0)
             {
-                panel.text = subtitle.text;
+                subAnt = aux;
                 count++;
             }
-            else
-            { panel.text = panel.text + "\n" + subtitle.text; }
+            else if (count == 1)
+            {
+                contenido.text = subAnt;
+                subAnt = sub.text;
+                count++;
+            }
+            else if (count > 1 && count < 5)
+            {
+                contenido.text = subAnt + "\n" + contenido.text;
+                subAnt = sub.text;
+                count++;
+            }
+            else if (count == 5)
+            {
+                arrayCont = contenido.text.Split('\n');
+                contenido.text = subAnt + "\n" + arrayCont[0] + "\n" + arrayCont[1];
+                subAnt = sub.text;
+            }
         }
 	}
 }

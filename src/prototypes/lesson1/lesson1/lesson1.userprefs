@@ -1,10 +1,11 @@
-﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\SD\Gameplay\Experience\MediaManager\MediaManager.cs">
+﻿<Properties StartupItem="lesson1.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\SD\Gameplay\TextManager\LoadPanel.cs">
     <Files>
-      <File FileName="Assets\SD\VRUI\Scripts\VRGameMenu.cs" Line="45" Column="18" />
-      <File FileName="Assets\SD\Gameplay\Experience\MediaManager\SubtitleReader.cs" Line="95" Column="24" />
+      <File FileName="Assets\SD\VRUI\Scripts\VRGameMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets\SD\Gameplay\Experience\MediaManager\SubtitleReader.cs" Line="1" Column="1" />
       <File FileName="Assets\SD\Gameplay\Experience\MediaManager\MediaManager.cs" Line="29" Column="6" />
+      <File FileName="Assets\SD\Gameplay\TextManager\LoadPanel.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
