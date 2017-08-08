@@ -8,6 +8,9 @@ Temp/
 **.apk
 **.csproj
 **.sln
+**.suo
+**.meta
+**.sln
 **.userprefs
 **_Data/
 /.vs/
