@@ -133,6 +133,7 @@
      <Compile Include="Assets\Media\EasyMovieTexture\Scripts\SphereMirror.cs" />
      <Compile Include="Assets\Media\EasyMovieTexture\Scripts\VideoCopyTexture.cs" />
      <Compile Include="Assets\MovimientoCamara.cs" />
+     <Compile Include="Assets\SD\Gameplay\Experience\MediaManager\AudioManager.cs" />
      <Compile Include="Assets\SD\Gameplay\Experience\MediaManager\MediaManager.cs" />
      <Compile Include="Assets\SD\Gameplay\Experience\MediaManager\SubtitleReader.cs" />
      <Compile Include="Assets\SD\Gameplay\Experience\VRExperience.cs" />
@@ -218,6 +219,7 @@
      <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRInput.cs" />
      <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRInteractiveItem.cs" />
      <Compile Include="Assets\VR\VRStandardAssets\Scripts\VRTrackingReset.cs" />
+     <None Include="Assets\TextFiles\Lesson01-04.txt" />
      <None Include="Assets\GoogleVR\Distortion\GvrDistortion.cginc" />
      <None Include="Assets\Media\EasyMovieTexture\Unlit_SphereInside.shader" />
      <None Include="Assets\GoogleVR\Shaders\GvrUIOverlayFont.shader" />
@@ -225,10 +227,9 @@
      <None Include="Assets\Media\EasyMovieTexture\Chromakey.shader" />
      <None Include="Assets\VR\VRStandardAssets\Shaders\UnlitTransparentParam.shader" />
      <None Include="Assets\VR\GearVR\Moonlight\Shaders\OVRColorRampAlpha.shader" />
-     <None Include="Assets\Handcrafted Mobile\CurvedVRKeyboard\Documentation\CHANGE_LOG.txt" />
+     <None Include="Assets\TextFiles\Lesson01-03.txt" />
      <None Include="Assets\GoogleVR\Shaders\GvrAdditiveOverlay.shader" />
      <None Include="Assets\VR\VRStandardAssets\Shaders\UIOverlay.shader" />
-     <None Include="Assets\Handcrafted Mobile\CurvedVRKeyboard\Documentation\README.txt" />
      <None Include="Assets\TextFiles\Json.txt" />
      <None Include="Assets\VR\GearVR\Moonlight\Shaders\Unlit Crosshair.shader" />
      <None Include="Assets\VR\VRStandardAssets\Shaders\PriorityParticleAlpha.shader" />
@@ -239,9 +240,11 @@
      <None Include="Assets\DoublefaceShader.shader" />
      <None Include="Assets\GoogleVR\Shaders\GvrUnlitTextureOverlay.shader" />
      <None Include="Assets\VR\VRStandardAssets\Shaders\SeparableAlpha.shader" />
+     <None Include="Assets\TextFiles\Lesson01-02.txt" />
      <None Include="Assets\GoogleVR\Shaders\GvrReticleShader.shader" />
      <None Include="Assets\GoogleVR\Shaders\GvrUIOverlay.shader" />
      <None Include="Assets\SD\VRUI\Shaders\ComplexSlidingUV.shader" />
+     <None Include="Assets\TextFiles\Lesson01-05.txt" />
      <None Include="Assets\GoogleVR\Shaders\GvrUnityCompatibility.cginc" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
