@@ -13,6 +13,7 @@ public class VRExperience : MonoBehaviour {
     private string[] videos = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
     private static int indiceVideo = -1;
 
+
     public static VRExperience Instance
     {
         get
@@ -101,9 +102,13 @@ public class VRExperience : MonoBehaviour {
             return "End";
         }
     }
+	internal string CurrentVideo()
+	{
+		if (indiceVideo < videos.Length) {
+			return videos[indiceVideo];
 
-    /*public string GetAudioAssetKey(string audioName)
-    {
-		return "";
-    }*/
+		} else {
+			return "End";
+		}
+	}
 }
