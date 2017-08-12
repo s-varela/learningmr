@@ -171,7 +171,7 @@ public class SubtitleReader : MonoBehaviour
 
             if (lastSeconds[i] < intDuration)
             {
-                //devuelvo subtitulo
+                //devuelvo subtitulo correspondiente`
                 subToReturn = subs[i];
             }
         }
