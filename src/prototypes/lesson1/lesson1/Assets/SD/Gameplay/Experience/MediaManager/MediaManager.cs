@@ -183,8 +183,10 @@ public class MediaManager : MonoBehaviour {
 				if (!theSub.Equals("") && theSub != normalText.text)
                 {
                     normalText.text = theSub;
+                    stopwatch.Stop();
                     PlayAudio(theSub);
                     Wait(3.0f);
+                    stopwatch.Start();
                 }
 
                 if (subReader.IsLastSubtitle(hashSub))

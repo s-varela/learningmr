@@ -91,7 +91,7 @@ public class VRSpeechMenu : MonoBehaviour {
 	private void StartRecordButtonOnClickHandler()
 	{
 		speechRecognitionResult.text = string.Empty;
-		speechRecognition.StartRecord(true/*isRuntimeDetectionToggle.isOn*/);
+		speechRecognition.StartRecord(false/*isRuntimeDetectionToggle.isOn*/);
 	}
 
 	private void StopRecordButtonOnClickHandler()
