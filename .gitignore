@@ -1,7 +1,6 @@
 bin/
 Library/
 obj/
-**.suo
 /ProjectSettings
 Temp/
 **.exe
@@ -13,4 +12,5 @@ Temp/
 **.sln
 **.userprefs
 **_Data/
+**.userprefs
 /.vs/
