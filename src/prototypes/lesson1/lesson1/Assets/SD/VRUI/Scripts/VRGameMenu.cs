@@ -22,7 +22,7 @@ public class VRGameMenu : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        input.OnCancel += ToggleMenu;
+        /*input.OnCancel += ToggleMenu;
         if(btnOK != null)
         {
             btnOK.OnAnimationComplete += ExitExperience;
@@ -30,7 +30,7 @@ public class VRGameMenu : MonoBehaviour {
         if (btnCancel != null)
         {
             btnCancel.OnAnimationComplete += CloseMenu;
-        }
+        }*/
 	}
 	
 	// Update is called once per frame
