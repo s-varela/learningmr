@@ -22,6 +22,7 @@ public class MediaManager : MonoBehaviour {
 
     private AudioSource sfx;
     private Stopwatch stopwatch;
+	private bool changeSub;
 	//[SerializeField] public GUIText theGuiText;
 	[SerializeField] private Text theText;
 	[SerializeField] private TextMesh normalText;
@@ -31,6 +32,7 @@ public class MediaManager : MonoBehaviour {
     {
 		audioLeft = new AudioSource ();
         experience = VRExperience.Instance;
+		changeSub = false;
 
         if (audioLeft != null)
         {
@@ -44,7 +46,7 @@ public class MediaManager : MonoBehaviour {
             audioRight.Play();
         }
 
-       /* if (data.audioAssetKey != null)
+     /*   if (data.audioAssetKey != null)
         {
             sfx = gameObject.AddComponent<AudioSource>();
 
@@ -53,11 +55,12 @@ public class MediaManager : MonoBehaviour {
             sfx.loop = false;
             sfx.Play();
         }*/
-	
+
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
 
-        media.OnEnd += ManagerVideo;
+        media.OnEnd += FinishLessonPart;
+		//media.OnEnd += ManagerVideo;
         ManagerVideo();
 
         }
@@ -80,26 +83,30 @@ public class MediaManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update()
-	{
-		long seconds = stopwatch.ElapsedMilliseconds;
-		// search if duration is in last subtitle second (in miliseconds)
-		string theSub = subReader.ReadSubtitleLine (seconds);
+    {
+        try
+        {
+			long seconds = stopwatch.ElapsedMilliseconds;
+			// search if duration is in last subtitle second (in miliseconds)
+			string theSub = subReader.GetHashSubValue(subReader.ReadSubtitleLine (seconds));
 
-        //Si la la frase es nueva pauso el video y reproduce la frase nuevamente
-		if (!theSub.Equals ("") && theSub!= normalText.text) {
-			//normalText=GetComponent<TextMesh>();
-			normalText.text = theSub;
-			PauseMedia ();
-			PlayAudio(normalText.text);
-			normalText.text = theSub;
-			Wait(3.0f);
-			ResumeMedia ();
-		} 
-	}
+			//Si la la frase es nueva pauso el video y reproduce la frase nuevamente
+			if (!theSub.Equals ("") && theSub!= normalText.text) {
+				//normalText=GetComponent<TextMesh>();
+				normalText.text = theSub;
+			} 
+        }
+        catch (System.Exception ex)
+        {
+            //TODO logger
+            UnityEngine.Debug.Log(ex.Message);
+            normalText.text = ex.Message;
+        }
+    }
 
     private void PauseMedia()
     {
-        /*if (data.audioAssetKey != null)
+      /*  if (data.audioAssetKey != null)
         {
             sfx.Pause();
         }
@@ -115,12 +122,12 @@ public class MediaManager : MonoBehaviour {
         }*/
 
         media.Pause();
-		stopwatch.Stop ();
+	stopwatch.Stop ();
     }
 
     private void ResumeMedia()
     {
-        /*if (data.audioAssetKey != null)
+       /* if (data.audioAssetKey != null)
         {
             sfx.UnPause();
         }
@@ -136,7 +143,7 @@ public class MediaManager : MonoBehaviour {
         }*/
 
         media.Play();
-		stopwatch.Start();
+	stopwatch.Start();
     }
 
     [System.Serializable]
@@ -154,45 +161,109 @@ public class MediaManager : MonoBehaviour {
         experience.BackToMainMenu();
     }
 
+    private void FinishLessonPart()
+    {
+
+        try
+        {
+			PauseMedia();
+            stopwatch.Stop();
+            stopwatch.Reset();
+            stopwatch.Start();
+            bool finishLesson = false;
+            string theSub;
+            Hashtable hashSub = null;
+
+            while (!finishLesson)
+            {
+                long seconds = stopwatch.ElapsedMilliseconds;
+                hashSub = subReader.ReadSubtitleLine(seconds);
+                theSub= subReader.GetHashSubValue(hashSub);
+              
+				if (!theSub.Equals("") && theSub != normalText.text)
+                {
+                    normalText.text = theSub;
+                    stopwatch.Stop();
+                    PlayAudio(theSub);
+                    Wait(3.0f);
+                    stopwatch.Start();
+                }
+
+                if (subReader.IsLastSubtitle(hashSub))
+                {
+                    finishLesson = true;
+                }
+            }
+            Wait(2.0f);
+            ManagerVideo();
+        }
+        catch (System.Exception ex)
+        {
+            //TODO logger
+            UnityEngine.Debug.Log(ex.Message);
+            normalText.text = ex.Message;
+        }
+    }
+
     private void ManagerVideo()
     {
-        if (experience == null)
+        try
         {
-            experience = VRExperience.Instance;
+            if (experience == null)
+            {
+                experience = VRExperience.Instance;
+            }
+            string videoName = experience.NextVideo();
+
+            stopwatch.Reset();
+            if (!videoName.Equals("End"))
+            {
+                subReader.RestFileReader(videoName);
+                media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+                media.Play();
+                stopwatch.Start();
+            }
+            else
+            {
+                FinishExperience();
+            }
         }
-        string videoName = experience.NextVideo();
- 
-        stopwatch.Reset();
-        if (!videoName.Equals("End"))
+        catch (System.Exception ex)
         {
-            subReader.RestFileReader(videoName);
-            media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
-            media.Play();
-            stopwatch.Start();
-        }
-        else
-        {
-            FinishExperience();
+            //TODO logger
+            UnityEngine.Debug.Log(ex.Message);
+            normalText.text = ex.Message;
         }
 
     }
 
 	private void PlayAudio(string subtilte)
     {
-        sfx = gameObject.AddComponent<AudioSource>();
-		if (subtilte != null && subtilte != "") {
-            string pathSounds = audioManager.getAudioPathName(subtilte);
-			if (pathSounds != null) {
-				sfx.clip = Resources.Load<AudioClip> (pathSounds) as AudioClip;
-				//sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
-				sfx.loop = false;
-                sfx.volume = 1.0f;
-				sfx.ignoreListenerPause = true;
-				sfx.enabled = false;
-				sfx.enabled = true;
-				sfx.Play();
-			}
-		}
+        try
+        {
+            sfx = gameObject.AddComponent<AudioSource>();
+            if (subtilte != null && subtilte != "")
+            {
+                string pathSounds = audioManager.getAudioPathName(subtilte);
+                if (pathSounds != null)
+                {
+                    sfx.clip = Resources.Load<AudioClip>(pathSounds) as AudioClip;
+                    //sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
+                    sfx.loop = false;
+                    sfx.volume = 1.0f;
+                    sfx.ignoreListenerPause = true;
+                    sfx.enabled = false;
+                    sfx.enabled = true;
+                    sfx.Play();
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            //TODO logger
+            UnityEngine.Debug.Log(ex.Message);
+            normalText.text = ex.Message;
+        }
     }
 
 	private void Wait (float waitTime)
