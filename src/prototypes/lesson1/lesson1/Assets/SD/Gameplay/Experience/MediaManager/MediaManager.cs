@@ -46,7 +46,7 @@ public class MediaManager : MonoBehaviour {
             audioRight.Play();
         }
 
-       /* if (data.audioAssetKey != null)
+     /*   if (data.audioAssetKey != null)
         {
             sfx = gameObject.AddComponent<AudioSource>();
 
@@ -55,7 +55,7 @@ public class MediaManager : MonoBehaviour {
             sfx.loop = false;
             sfx.Play();
         }*/
-	
+
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
 
@@ -106,7 +106,7 @@ public class MediaManager : MonoBehaviour {
 
     private void PauseMedia()
     {
-        /*if (data.audioAssetKey != null)
+      /*  if (data.audioAssetKey != null)
         {
             sfx.Pause();
         }
@@ -122,12 +122,12 @@ public class MediaManager : MonoBehaviour {
         }*/
 
         media.Pause();
-		stopwatch.Stop ();
+	stopwatch.Stop ();
     }
 
     private void ResumeMedia()
     {
-        /*if (data.audioAssetKey != null)
+       /* if (data.audioAssetKey != null)
         {
             sfx.UnPause();
         }
@@ -143,7 +143,7 @@ public class MediaManager : MonoBehaviour {
         }*/
 
         media.Play();
-		stopwatch.Start();
+	stopwatch.Start();
     }
 
     [System.Serializable]
