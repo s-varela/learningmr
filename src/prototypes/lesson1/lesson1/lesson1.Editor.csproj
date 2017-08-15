@@ -203,8 +203,6 @@
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTextureOverlay.shader" />
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTransparentOverlay.shader" />
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTransparentOverlayColor.shader" />
-    <None Include="Assets\Handcrafted Mobile\CurvedVRKeyboard\Documentation\CHANGE_LOG.txt" />
-    <None Include="Assets\Handcrafted Mobile\CurvedVRKeyboard\Documentation\README.txt" />
     <None Include="Assets\Media\EasyMovieTexture\Chromakey.shader" />
     <None Include="Assets\Media\EasyMovieTexture\Unlit_SphereInside.shader" />
     <None Include="Assets\SD\VRUI\Shaders\ComplexSlidingUV.shader" />

@@ -192,6 +192,7 @@
     <Compile Include="Assets\Media\EasyMovieTexture\Scripts\SphereMirror.cs" />
     <Compile Include="Assets\Media\EasyMovieTexture\Scripts\VideoCopyTexture.cs" />
     <Compile Include="Assets\MovimientoCamara.cs" />
+    <Compile Include="Assets\SD\Gameplay\Experience\MediaManager\AudioManager.cs" />
     <Compile Include="Assets\SD\Gameplay\Experience\MediaManager\MediaManager.cs" />
     <Compile Include="Assets\SD\Gameplay\Experience\MediaManager\SubtitleReader.cs" />
     <Compile Include="Assets\SD\Gameplay\Experience\VRExperience.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Assets\SD\Gameplay\Speech\GCSpeechRecognition.cs" />
     <Compile Include="Assets\SD\Gameplay\Speech\Speech.cs" />
     <Compile Include="Assets\SD\Gameplay\TextManager\LoadPanel.cs" />
+    <Compile Include="Assets\SD\Gameplay\TextManager\LoadSubtitlePanel.cs" />
     <Compile Include="Assets\SD\Gameplay\TextManager\MovTelepronter.cs" />
     <Compile Include="Assets\SD\Scripts\ApiAiModule.cs" />
     <Compile Include="Assets\SD\VRUI\Scripts\IVRControl.cs" />
@@ -289,8 +291,6 @@
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTextureOverlay.shader" />
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTransparentOverlay.shader" />
     <None Include="Assets\GoogleVR\Shaders\GvrUnlitTransparentOverlayColor.shader" />
-    <None Include="Assets\Handcrafted Mobile\CurvedVRKeyboard\Documentation\CHANGE_LOG.txt" />
-    <None Include="Assets\Handcrafted Mobile\CurvedVRKeyboard\Documentation\README.txt" />
     <None Include="Assets\Media\EasyMovieTexture\Chromakey.shader" />
     <None Include="Assets\Media\EasyMovieTexture\Unlit_SphereInside.shader" />
     <None Include="Assets\SD\VRUI\Shaders\ComplexSlidingUV.shader" />
