@@ -103,8 +103,10 @@ public class MediaManager : MonoBehaviour {
         try
         {
 			long seconds = stopwatch.ElapsedMilliseconds;
-			// search if duration is in last subtitle second (in miliseconds)
-			string theSub = subReader.GetHashSubValue(subReader.ReadSubtitleLine (seconds));
+            // search if duration is in last subtitle second (in miliseconds)
+            DialogType dialogType=subReader.ReadSubtitleLine(seconds);
+
+            string theSub = dialogType.Text;
 
 			//Si la la frase es nueva pauso el video y reproduce la frase nuevamente
 			if (!theSub.Equals ("") && theSub!= normalText.text) {
@@ -226,7 +228,7 @@ public class MediaManager : MonoBehaviour {
 
         try
         {
-
+      
             foreach (string sub in arrSubtitles)
             {
                 PlayAudio(sub);

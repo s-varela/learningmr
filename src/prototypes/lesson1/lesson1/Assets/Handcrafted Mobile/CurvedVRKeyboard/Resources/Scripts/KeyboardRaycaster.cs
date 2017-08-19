@@ -49,11 +49,11 @@ namespace CurvedVRKeyboard {
 #if !UNITY_HAS_GOOGLEVR
                     if(Input.GetButtonDown(clickInputName)) {// If key clicked
 #else
-                    if(GvrController.TouchDown) {
+                   // if(GvrController.TouchDown) {
 #endif
-                        keyItemCurrent.Click();
-                        keyboardStatus.HandleClick(keyItemCurrent);
-                    }
+                      //  keyItemCurrent.Click();
+                       // keyboardStatus.HandleClick(keyItemCurrent);
+                   // }
                 }
             } else if(keyItemCurrent != null) {// If no target hit and lost focus on item
                 ChangeCurrentKeyItem(null);
