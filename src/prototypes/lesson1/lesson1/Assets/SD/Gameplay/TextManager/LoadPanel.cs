@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class LoadPanel : MonoBehaviour
 {
@@ -80,4 +81,15 @@ public class LoadPanel : MonoBehaviour
             //}
         }
     }
+
+	public string[] ArrayText()
+	{
+		arrayText = info.text.Split ('\n');
+		return arrayText;
+	}
+
+	public void DeleteSub()
+	{
+		info.text = "";
+	}
 }

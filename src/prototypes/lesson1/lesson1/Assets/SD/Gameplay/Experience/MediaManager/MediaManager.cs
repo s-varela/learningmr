@@ -15,36 +15,45 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
 
+    //[SerializeField] private LoadSubtitlePanel loadSubtitlePanel;
+	[SerializeField] private LoadPanel loadPanel;
+
+	[SerializeField] GameObject panelExt;
+	[SerializeField] GameObject textInfo;
+	private MeshRenderer meshPanel;
+	private MeshRenderer meshTextInfo;
+
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private string pathVideos = "/lesson1-data/videos/";
-    private ArrayList arrSubtitles;
+    //private ArrayList arrSubtitles = new ArrayList();
+	private string[] arrSubtitles;
 
     private AudioSource sfx;
     private Stopwatch stopwatch;
 	private bool changeSub;
 	//[SerializeField] public GUIText theGuiText;
-	[SerializeField] private Text theText;
+	//[SerializeField] private Text theText;
 	[SerializeField] private TextMesh normalText;
 
     // Use this for initialization
 
 
-    void LoadSubsTemp()
-    {
-        arrSubtitles.Add("Hello, my name is Michael.");
-        arrSubtitles.Add("What's your name?");
-        arrSubtitles.Add("My name is Johnny.");
-        arrSubtitles.Add("What's your name?");
-        arrSubtitles.Add("Hi! Are you Johnny?");
-        arrSubtitles.Add("Yes, I am.");
-        arrSubtitles.Add("No, Im not. Im Michael.");
-        arrSubtitles.Add("Hello! My name is Michael.");
-    }
+//    void LoadSubsTemp()
+//    {
+//        arrSubtitles.Add("Hello, my name is Michael.");
+//        arrSubtitles.Add("What's your name?");
+//        arrSubtitles.Add("My name is Johnny.");
+//        arrSubtitles.Add("What's your name?");
+//        arrSubtitles.Add("Hi! Are you Johnny?");
+//        arrSubtitles.Add("Yes, I am.");
+//        arrSubtitles.Add("No, Im not. Im Michael.");
+//        arrSubtitles.Add("Hello! My name is Michael.");
+//    }
     void Start() {
 
 
-        LoadSubsTemp(); //TODO Eliminar solo para test
+        //LoadSubsTemp(); //TODO Eliminar solo para test
 
         audioLeft = new AudioSource ();
         experience = VRExperience.Instance;
@@ -113,7 +122,12 @@ public class MediaManager : MonoBehaviour {
 				//normalText=GetComponent<TextMesh>();
 				normalText.text = theSub;
 			} 
-        }
+			Hashtable aux = subReader.ReadSubtitleLine (seconds);
+			if(aux.ContainsKey(1))
+			{
+				ActiveObject();
+			}
+		}
         catch (System.Exception ex)
         {
             //TODO logger
@@ -225,10 +239,9 @@ public class MediaManager : MonoBehaviour {
 
     private void FinishLessonPart()
     {
-
         try
         {
-      
+			arrSubtitles = loadPanel.ArrayText();
             foreach (string sub in arrSubtitles)
             {
                 PlayAudio(sub);
@@ -236,7 +249,8 @@ public class MediaManager : MonoBehaviour {
                 stopwatch.Start();
             }
             Wait(2.0f);
-            arrSubtitles.Clear(); 
+			loadPanel.DeleteSub();
+            DesactiveObject();
             ManagerVideo();
         }
         catch (System.Exception ex)
@@ -314,5 +328,23 @@ public class MediaManager : MonoBehaviour {
 		float time = Time.realtimeSinceStartup;
 
 		while (Time.realtimeSinceStartup - time <= waitTime);
+	}
+
+	public void ActiveObject()
+	{
+		ActiveMeshRenderer(meshPanel, panelExt, true);
+		ActiveMeshRenderer(meshTextInfo, textInfo, true);
+	}
+
+	public void DesactiveObject()
+	{
+		ActiveMeshRenderer(meshPanel, panelExt, false);
+		ActiveMeshRenderer(meshTextInfo, textInfo, false);
+	}
+
+	private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
+	{
+		mesh = gameObj.GetComponent<MeshRenderer>();
+		mesh.enabled = v;
 	}
 }
