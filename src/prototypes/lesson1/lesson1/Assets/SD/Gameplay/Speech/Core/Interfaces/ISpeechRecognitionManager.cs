@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public interface ISpeechRecognitionManager
     {
         event Action<RecognitionResponse, long> RecognitionSuccessEvent;
@@ -14,4 +12,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
         void SetConfig(Config config);
         void Recognize(AudioClip clip, List<string[]> contexts, Enumerators.LanguageCode language);
     }
-}

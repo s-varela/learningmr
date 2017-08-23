@@ -20,8 +20,10 @@ public class MediaManager : MonoBehaviour {
 
 	[SerializeField] GameObject panelExt;
 	[SerializeField] GameObject textInfo;
-	private MeshRenderer meshPanel;
-	private MeshRenderer meshTextInfo;
+	[SerializeField] GameObject panelSub;
+	[SerializeField] GameObject textSub;
+	//private MeshRenderer meshPanel;
+	//private MeshRenderer meshTextInfo;
 
     private SubtitleReader subReader;
     private AudioManager audioManager;
@@ -123,7 +125,11 @@ public class MediaManager : MonoBehaviour {
 			Hashtable aux = subReader.ReadSubtitleLine (seconds);
 			if(aux.ContainsKey(1))
 			{
-				ActiveObject();
+				ActiveObject(panelExt);
+				ActiveObject(textInfo);
+
+				DesactiveObject(panelSub);
+				DesactiveObject(textSub);
 			}
 		}
         catch (System.Exception ex)
@@ -248,7 +254,11 @@ public class MediaManager : MonoBehaviour {
             }
             Wait(2.0f);
 			loadPanel.DeleteSub();
-            DesactiveObject();
+			DesactiveObject(panelExt);
+			DesactiveObject(textInfo);
+
+			ActiveObject(panelSub);
+			ActiveObject(textSub);
             ManagerVideo();
         }
         catch (System.Exception ex)
@@ -271,12 +281,15 @@ public class MediaManager : MonoBehaviour {
             string videoName = experience.NextVideo();
 
             stopwatch.Reset();
-            if (!videoName.Equals("End"))
+			if (!videoName.Equals("End"))
             {
-                subReader.RestFileReader(videoName);
-                media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
-                media.Play();
-                stopwatch.Start();
+				if(!videoName.Equals("Error"))
+				{
+                	subReader.RestFileReader(videoName);
+                	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+                	media.Play();
+                	stopwatch.Start();
+				}
             }
             else
             {
@@ -328,21 +341,73 @@ public class MediaManager : MonoBehaviour {
 		while (Time.realtimeSinceStartup - time <= waitTime);
 	}
 
-	public void ActiveObject()
+//	public void ActiveObject()
+//	{
+//		ActiveMeshRenderer(meshPanel, panelExt, true);
+//		ActiveMeshRenderer(meshTextInfo, textInfo, true);
+//	}
+//
+//	public void DesactiveObject()
+//	{
+//		ActiveMeshRenderer(meshPanel, panelExt, false);
+//		ActiveMeshRenderer(meshTextInfo, textInfo, false);
+//	}
+//
+//	private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
+//	{
+//		mesh = gameObj.GetComponent<MeshRenderer>();
+//		mesh.enabled = v;
+//	}
+
+	public void ActiveObject(GameObject gameObj)
 	{
-		ActiveMeshRenderer(meshPanel, panelExt, true);
-		ActiveMeshRenderer(meshTextInfo, textInfo, true);
+		ActiveMeshRenderer(gameObj, true);
 	}
 
-	public void DesactiveObject()
+	public void DesactiveObject(GameObject gameObj)
 	{
-		ActiveMeshRenderer(meshPanel, panelExt, false);
-		ActiveMeshRenderer(meshTextInfo, textInfo, false);
+		ActiveMeshRenderer(gameObj, false);
 	}
 
-	private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
+	private void ActiveMeshRenderer(GameObject gameObj, bool v)
 	{
-		mesh = gameObj.GetComponent<MeshRenderer>();
+		MeshRenderer mesh = gameObj.GetComponent<MeshRenderer>();
 		mesh.enabled = v;
+	}
+
+	public void SelectVideo(int indice)
+	{
+		try
+		{
+			if (experience == null)
+			{
+				experience = VRExperience.Instance;
+			}
+			indice--;
+			string videoName = experience.SelectVideo(indice);
+
+			stopwatch.Reset();
+			if (!videoName.Equals("End"))
+			{
+				if(!videoName.Equals("Error"))
+				{
+					subReader.RestFileReader(videoName);
+					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+					loadPanel.DeleteSub();
+					media.Play();
+					stopwatch.Start();
+				}
+			}
+			else
+			{
+				FinishExperience();
+			}
+		}
+		catch (System.Exception ex)
+		{
+			//TODO logger
+			UnityEngine.Debug.Log(ex.Message);
+			normalText.text = ex.Message;
+		}
 	}
 }
