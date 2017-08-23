@@ -18,6 +18,10 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] private TextMesh speechRecognitionResult;
 	[SerializeField] private GCSpeechRecognition speechRecognition;
 
+	[SerializeField] GameObject panelSub;
+	[SerializeField] GameObject panelInput;
+	[SerializeField] GameObject teclado;
+
 	// Use this for initialization
 	void Start () {
 
@@ -29,6 +33,10 @@ public class InteractionPanel : MonoBehaviour {
 		{
 			btnStop.OnAnimationComplete += StopRecordButtonOnClickHandler;
 		}
+		if (btnTeclado != null) 
+		{
+			btnTeclado.OnAnimationComplete += ButtonTecladoOnClick;
+		}
 
 		speechRecognition = GCSpeechRecognition.Instance;
 		speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
@@ -39,6 +47,13 @@ public class InteractionPanel : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+	}
+
+	private void ButtonTecladoOnClick()
+	{
+		panelSub.SetActive (false);
+		panelInput.SetActive (false);
+		teclado.SetActive (true);
 	}
 
 

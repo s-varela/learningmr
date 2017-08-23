@@ -15,15 +15,13 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
 
-    //[SerializeField] private LoadSubtitlePanel loadSubtitlePanel;
 	[SerializeField] private LoadPanel loadPanel;
 
 	[SerializeField] GameObject panelExt;
 	[SerializeField] GameObject textInfo;
 	[SerializeField] GameObject panelSub;
-	[SerializeField] GameObject textSub;
-	//private MeshRenderer meshPanel;
-	//private MeshRenderer meshTextInfo;
+	[SerializeField] GameObject panelInput;
+	[SerializeField] GameObject sphere;
 
     private SubtitleReader subReader;
     private AudioManager audioManager;
@@ -127,9 +125,9 @@ public class MediaManager : MonoBehaviour {
 			{
 				ActiveObject(panelExt);
 				ActiveObject(textInfo);
+				sphere.SetActive(true);
 
-				DesactiveObject(panelSub);
-				DesactiveObject(textSub);
+				panelSub.SetActive(false);
 			}
 		}
         catch (System.Exception ex)
@@ -257,8 +255,9 @@ public class MediaManager : MonoBehaviour {
 			DesactiveObject(panelExt);
 			DesactiveObject(textInfo);
 
-			ActiveObject(panelSub);
-			ActiveObject(textSub);
+			sphere.SetActive(false);
+
+			panelSub.SetActive(true);
             ManagerVideo();
         }
         catch (System.Exception ex)
@@ -340,24 +339,6 @@ public class MediaManager : MonoBehaviour {
 
 		while (Time.realtimeSinceStartup - time <= waitTime);
 	}
-
-//	public void ActiveObject()
-//	{
-//		ActiveMeshRenderer(meshPanel, panelExt, true);
-//		ActiveMeshRenderer(meshTextInfo, textInfo, true);
-//	}
-//
-//	public void DesactiveObject()
-//	{
-//		ActiveMeshRenderer(meshPanel, panelExt, false);
-//		ActiveMeshRenderer(meshTextInfo, textInfo, false);
-//	}
-//
-//	private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
-//	{
-//		mesh = gameObj.GetComponent<MeshRenderer>();
-//		mesh.enabled = v;
-//	}
 
 	public void ActiveObject(GameObject gameObj)
 	{
