@@ -1,6 +1,4 @@
-﻿namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
-    [System.Serializable]
+﻿    [System.Serializable]
     public class Config 
     {
         public string name;
@@ -20,4 +18,3 @@
         public float audioVolumeMultiplier;
        
     }
-}

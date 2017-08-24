@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public class ServiceLocator : IDisposable
     {
         private Dictionary<Type, IService> _services;
@@ -12,7 +10,7 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             _services = new Dictionary<Type, IService>();
             AddService<ISpeechRecognitionManager>(new SpeechRecognitionManager());
             AddService<IVoiceDetectionManager>(new VoiceDetectionManager());
-            AddService<IMediaManager>(new MediaManager());
+            AddService<IMediaManager>(new SpeechMediaManager());
         }
 
         public void InitServices()
@@ -46,4 +44,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             _services.Add(typeof(T), service);
         }
     }
-}

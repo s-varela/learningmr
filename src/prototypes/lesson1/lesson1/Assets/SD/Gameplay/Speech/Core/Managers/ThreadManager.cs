@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public class ThreadManager : IDisposable
     {
         private volatile List<Thread> _threads;
@@ -61,4 +59,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             _mainThreadActions.Clear();
         }
     }
-}

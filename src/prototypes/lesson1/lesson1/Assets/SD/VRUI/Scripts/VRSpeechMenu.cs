@@ -2,7 +2,6 @@
 using System.Collections;
 using VRStandardAssets.Utils;
 using System;
-using GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition;
 
 public class VRSpeechMenu : MonoBehaviour {
 

@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public static class AudioConvert
     {
         public static string Convert(AudioClip clip, Enumerators.AudioEncoding encoding, bool increaseVolume = false, float volume = 1f)
@@ -26,4 +24,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             return System.Convert.ToBase64String(audioArray);
         }
     }
-}

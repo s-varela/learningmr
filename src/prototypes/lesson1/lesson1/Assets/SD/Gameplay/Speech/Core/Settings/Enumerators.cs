@@ -1,6 +1,4 @@
-﻿namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
-    public class Enumerators
+﻿    public class Enumerators
     {
         public enum AudioEncoding
         {
@@ -66,4 +64,3 @@
             ZH_CHT
         }
     }
-}

@@ -1,7 +1,5 @@
 ﻿using System;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     [Serializable]
     public class RecognitionAudio
     {
@@ -84,4 +82,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
     {
         public SpeechRecognitionAlternative[] alternatives = new SpeechRecognitionAlternative[0];
     }
-}

@@ -3,8 +3,6 @@ using System.IO;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public static class AudioClip2PCMConverter
     {
         private const int HEADER_SIZE = 44;
@@ -155,4 +153,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             mstream.Write(subChunk2, 0, 4);
         }
     }
-}

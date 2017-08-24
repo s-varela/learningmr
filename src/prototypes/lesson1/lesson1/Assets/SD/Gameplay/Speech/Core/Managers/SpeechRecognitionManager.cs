@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public class SpeechRecognitionManager : IService, IDisposable, ISpeechRecognitionManager
     {
         public event Action<RecognitionResponse, long> RecognitionSuccessEvent;
@@ -139,4 +137,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             return request;
         }
     }
-}
