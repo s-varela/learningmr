@@ -145,18 +145,17 @@ public class MediaManager : MonoBehaviour {
     }
 
 	public void KeyboardExitButton(){
-		keyboard.SetActive(false);
+        keyboardInp.text = "";
+        keyboard.SetActive(false);
 		panelSub.SetActive(true);
 		panelInput.SetActive(true);
-        keyboardInp.text = "";
-
     }
 
 	public void KeyboardOKButton(){
-		keyboard.SetActive(false);
+        keyboardInp.text = "";
+        keyboard.SetActive(false);
 		panelSub.SetActive(true);
 		panelInput.SetActive(true);
-        keyboardInp.text = "";
 
         string userAnswer = "My name is";
         string evaluatedAnswer = processAnswer.evaluateAnswer(userAnswer);
