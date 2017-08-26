@@ -21,9 +21,10 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
 	[SerializeField] GameObject teclado;
+    [SerializeField] Text keyboardInp;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
 		if(btnStart != null)
 		{
@@ -54,7 +55,8 @@ public class InteractionPanel : MonoBehaviour {
 		panelSub.SetActive (false);
 		panelInput.SetActive (false);
 		teclado.SetActive (true);
-	}
+        keyboardInp.text = "";
+    }
 
 
 	private void OnDestroy()
