@@ -3,7 +3,9 @@ using System.Collections;
 using System.Threading;
 using UnityEngine.UI;
 using System.Diagnostics;
+using Assets.AnswersLogic;
 using System.IO;
+
 
 public class MediaManager : MonoBehaviour {
 
@@ -22,9 +24,13 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
 	[SerializeField] GameObject sphere;
+	[SerializeField] GameObject keyboard;
+    [SerializeField] Text keyboardInp;
+
 
     private SubtitleReader subReader;
     private AudioManager audioManager;
+    private ProcessAnswer processAnswer;
     private string pathVideos = "/lesson1-data/videos/";
     //private ArrayList arrSubtitles = new ArrayList();
 	private string[] arrSubtitles;
@@ -50,28 +56,43 @@ public class MediaManager : MonoBehaviour {
 //        arrSubtitles.Add("No, Im not. Im Michael.");
 //        arrSubtitles.Add("Hello! My name is Michael.");
 //    }
+
+	void Awake()
+	{
+		if (media == null)
+		{
+			experience = VRExperience.Instance;
+			stopwatch = new Stopwatch();
+			stopwatch.Start();
+			subReader = new SubtitleReader();
+			audioManager = new AudioManager();
+            processAnswer = new ProcessAnswer();
+            media = FindObjectOfType<MediaPlayerCtrl>();
+			if (media == null)
+				throw new UnityException("No Media Player Ctrl object in scene");
+		}
+	}
+
     void Start() {
 
 
-        //LoadSubsTemp(); //TODO Eliminar solo para test
+		//LoadSubsTemp(); //TODO Eliminar solo para test
 
-        audioLeft = new AudioSource ();
-        experience = VRExperience.Instance;
+		audioLeft = new AudioSource ();
+		experience = VRExperience.Instance;
 		changeSub = false;
 
-        if (audioLeft != null)
-        {
-            audioLeft.volume = experience.GetConfigurationValue<float>(data.videoVolumeConfigValue);
-            audioLeft.Play();
-        }
+		if (audioLeft != null) {
+			audioLeft.volume = experience.GetConfigurationValue<float> (data.videoVolumeConfigValue);
+			audioLeft.Play ();
+		}
 
-        if (audioRight != null)
-        {
-            audioRight.volume = experience.GetConfigurationValue<float>(data.videoVolumeConfigValue);
-            audioRight.Play();
-        }
+		if (audioRight != null) {
+			audioRight.volume = experience.GetConfigurationValue<float> (data.videoVolumeConfigValue);
+			audioRight.Play ();
+		}
 
-     /*   if (data.audioAssetKey != null)
+		/*   if (data.audioAssetKey != null)
         {
             sfx = gameObject.AddComponent<AudioSource>();
 
@@ -81,29 +102,14 @@ public class MediaManager : MonoBehaviour {
             sfx.Play();
         }*/
 
-        menu.OnMenuShow += PauseMedia;
-        menu.OnMenuHide += ResumeMedia;
+		menu.OnMenuShow += PauseMedia;
+		menu.OnMenuHide += ResumeMedia;
 
-        media.OnEnd += FinishLessonPart;
+		media.OnEnd += FinishLessonPart;
 		//media.OnEnd += ManagerVideo;
-        ManagerVideo();
+		ManagerVideo ();
 
-        }
-
-    void Awake()
-    {
-        if (media == null)
-        {
-			experience = VRExperience.Instance;
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
-			subReader = new SubtitleReader();
-            audioManager = new AudioManager();
-            media = FindObjectOfType<MediaPlayerCtrl>();
-            if (media == null)
-                throw new UnityException("No Media Player Ctrl object in scene");
-        }
-    }
+	}
 
 
     // Update is called once per frame
@@ -138,6 +144,24 @@ public class MediaManager : MonoBehaviour {
         }
     }
 
+	public void KeyboardExitButton(){
+		keyboard.SetActive(false);
+		panelSub.SetActive(true);
+		panelInput.SetActive(true);
+        keyboardInp.text = "";
+
+    }
+
+	public void KeyboardOKButton(){
+		keyboard.SetActive(false);
+		panelSub.SetActive(true);
+		panelInput.SetActive(true);
+        keyboardInp.text = "";
+
+        string userAnswer = "My name is";
+        string evaluatedAnswer = processAnswer.evaluateAnswer(userAnswer);
+    }
+
     private void PauseMedia()
     {
       /*  if (data.audioAssetKey != null)
@@ -156,7 +180,7 @@ public class MediaManager : MonoBehaviour {
         }*/
 
         media.Pause();
-	stopwatch.Stop ();
+		stopwatch.Stop ();
     }
 
     private void ResumeMedia()
@@ -177,7 +201,7 @@ public class MediaManager : MonoBehaviour {
         }*/
 
         media.Play();
-	stopwatch.Start();
+		stopwatch.Start();
     }
 
     [System.Serializable]
