@@ -28,6 +28,8 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] Text keyboardInp;
 
 
+	[SerializeField] NavigationPanel navigationPanel;
+
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
@@ -307,6 +309,8 @@ public class MediaManager : MonoBehaviour {
             {
 				if(!videoName.Equals("Error"))
 				{
+					navigationPanel.materialOriginal();
+					navigationPanel.colorPart();
                 	subReader.RestFileReader(videoName);
                 	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
                 	media.Play();
@@ -395,6 +399,8 @@ public class MediaManager : MonoBehaviour {
 			{
 				if(!videoName.Equals("Error"))
 				{
+					navigationPanel.materialOriginal();
+					navigationPanel.colorPart();
 					subReader.RestFileReader(videoName);
 					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
 					loadPanel.DeleteSub();
