@@ -11,7 +11,7 @@ using System.Collections;
             hashAudios = new Hashtable();
 			hashAudios.Add("Are you Paul?", "are_you_paul");    
 			hashAudios.Add("Hi! Are you Johnny?", "are_you_johnny");
-			hashAudios.Add("Hello, my name is Michael.", "hello_my_name_is_michael");
+			hashAudios.Add("Hello! My name is Michael.", "hello_my_name_is_michael");
 			hashAudios.Add("I'm from Split, Croatia.", "im_from_split_croatia");
 			hashAudios.Add("I'm from Sydney, Australia.", "im_from_sydney_australia");
 			hashAudios.Add("My name is Johnny.", "my_name_is_johnny");
