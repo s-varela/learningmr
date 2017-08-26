@@ -280,7 +280,7 @@ public class MediaManager : MonoBehaviour {
     {
 		pause = false;
         loadPanel.DeleteSub();
-        DesactiveObject();
+        //DesactiveObject();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
@@ -311,7 +311,7 @@ public class MediaManager : MonoBehaviour {
                 	subReader.RestFileReader(videoName);
                 	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
                 	media.Play();
-                	stopwatch.Start();
+                	counterVideo.Start();
 				}
             }
             else
@@ -395,7 +395,7 @@ public class MediaManager : MonoBehaviour {
 			indice--;
 			string videoName = experience.SelectVideo(indice);
 
-			stopwatch.Reset();
+            counterVideo.Reset();
 			if (!videoName.Equals("End"))
 			{
 				if(!videoName.Equals("Error"))
@@ -406,7 +406,7 @@ public class MediaManager : MonoBehaviour {
 					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
 					loadPanel.DeleteSub();
 					media.Play();
-					stopwatch.Start();
+                    counterVideo.Start();
 				}
 			}
 			else
