@@ -1,8 +1,6 @@
 ﻿using UnityEngine.Networking;
 using System.Text;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public class NetworkRequest
     {
         public long netPacketIndex;
@@ -24,4 +22,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             request.Send();
         }
     }
-}

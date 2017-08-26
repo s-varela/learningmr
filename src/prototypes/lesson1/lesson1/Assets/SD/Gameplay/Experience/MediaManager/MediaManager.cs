@@ -3,10 +3,11 @@ using System.Collections;
 using System.Threading;
 using UnityEngine.UI;
 using System.Diagnostics;
+using Assets.AnswersLogic;
 using System.IO;
 
-public class MediaManager : MonoBehaviour
-{
+
+public class MediaManager : MonoBehaviour {
 
     private VRExperience experience = null;
 
@@ -16,17 +17,20 @@ public class MediaManager : MonoBehaviour
     [SerializeField] private MediaManagerData data;
     [SerializeField] private VRGameMenu menu;
 
-    //[SerializeField] private LoadSubtitlePanel loadSubtitlePanel;
-    [SerializeField] private LoadPanel loadPanel;
+	[SerializeField] private LoadPanel loadPanel;
 
-    [SerializeField] GameObject panelExt;
-    [SerializeField] GameObject textInfo;
-    private MeshRenderer meshPanel;
-    private MeshRenderer meshTextInfo;
-    private MeshRenderer meshPanelInteraction;
+	[SerializeField] GameObject panelExt;
+	[SerializeField] GameObject textInfo;
+	[SerializeField] GameObject panelSub;
+	[SerializeField] GameObject panelInput;
+	[SerializeField] GameObject sphere;
+	[SerializeField] GameObject keyboard;
+    [SerializeField] Text keyboardInp;
+
 
     private SubtitleReader subReader;
     private AudioManager audioManager;
+    private ProcessAnswer processAnswer;
     private string pathVideos = "/lesson1-data/videos/";
     //private ArrayList arrSubtitles = new ArrayList();
     private string[] arrSubtitles;
@@ -63,6 +67,11 @@ public class MediaManager : MonoBehaviour
             audioRight.Play();
         }
 
+		if (audioRight != null) {
+			audioRight.volume = experience.GetConfigurationValue<float> (data.videoVolumeConfigValue);
+			audioRight.Play ();
+		}
+
         /*   if (data.audioAssetKey != null)
            {
                sfx = gameObject.AddComponent<AudioSource>();
@@ -92,6 +101,7 @@ public class MediaManager : MonoBehaviour
             counterAudio = new Stopwatch();
             subReader = new SubtitleReader();
             audioManager = new AudioManager();
+            processAnswer = new ProcessAnswer();
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
@@ -184,6 +194,23 @@ public class MediaManager : MonoBehaviour
             UnityEngine.Debug.Log(ex.Message);
             normalText.text = ex.Message;
         }
+    }
+
+	public void KeyboardExitButton(){
+        keyboardInp.text = "";
+        keyboard.SetActive(false);
+		panelSub.SetActive(true);
+		panelInput.SetActive(true);
+    }
+
+	public void KeyboardOKButton(){
+        keyboardInp.text = "";
+        keyboard.SetActive(false);
+		panelSub.SetActive(true);
+		panelInput.SetActive(true);
+
+        string userAnswer = "My name is";
+        string evaluatedAnswer = processAnswer.evaluateAnswer(userAnswer);
     }
 
     private void PauseMedia()
@@ -319,28 +346,62 @@ public class MediaManager : MonoBehaviour
         }
     }
 
-    private void Wait(float waitTime)
-    {
-        float time = Time.realtimeSinceStartup;
+	private void Wait (float waitTime)
+	{
+		float time = Time.realtimeSinceStartup;
 
-        while (Time.realtimeSinceStartup - time <= waitTime) ;
-    }
+		while (Time.realtimeSinceStartup - time <= waitTime);
+	}
 
-    public void ActiveObject()
-    {
-        ActiveMeshRenderer(meshPanel, panelExt, true);
-        ActiveMeshRenderer(meshTextInfo, textInfo, true);
-    }
+	public void ActiveObject(GameObject gameObj)
+	{
+		ActiveMeshRenderer(gameObj, true);
+	}
 
-    public void DesactiveObject()
-    {
-        ActiveMeshRenderer(meshPanel, panelExt, false);
-        ActiveMeshRenderer(meshTextInfo, textInfo, false);
-    }
+	public void DesactiveObject(GameObject gameObj)
+	{
+		ActiveMeshRenderer(gameObj, false);
+	}
 
-    private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
-    {
-        mesh = gameObj.GetComponent<MeshRenderer>();
-        mesh.enabled = v;
-    }
+	private void ActiveMeshRenderer(GameObject gameObj, bool v)
+	{
+		MeshRenderer mesh = gameObj.GetComponent<MeshRenderer>();
+		mesh.enabled = v;
+	}
+
+	public void SelectVideo(int indice)
+	{
+		try
+		{
+			if (experience == null)
+			{
+				experience = VRExperience.Instance;
+			}
+			indice--;
+			string videoName = experience.SelectVideo(indice);
+
+			stopwatch.Reset();
+			if (!videoName.Equals("End"))
+			{
+				if(!videoName.Equals("Error"))
+				{
+					subReader.RestFileReader(videoName);
+					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+					loadPanel.DeleteSub();
+					media.Play();
+					stopwatch.Start();
+				}
+			}
+			else
+			{
+				FinishExperience();
+			}
+		}
+		catch (System.Exception ex)
+		{
+			//TODO logger
+			UnityEngine.Debug.Log(ex.Message);
+			normalText.text = ex.Message;
+		}
+	}
 }

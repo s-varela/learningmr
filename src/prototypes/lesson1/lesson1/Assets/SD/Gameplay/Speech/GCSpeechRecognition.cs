@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public class GCSpeechRecognition : MonoBehaviour
     {
         public event Action<RecognitionResponse, long> RecognitionSuccessEvent;
@@ -174,4 +172,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
                 speechRecognitionManager.Recognize(clip, null, speechRecognitionManager.CurrentConfig.defaultLanguage);
         }
     }
-}

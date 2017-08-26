@@ -1,4 +1,4 @@
-﻿﻿using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -110,5 +110,20 @@ public class VRExperience : MonoBehaviour {
 		} else {
 			return "End";
 		}
+	}
+
+	internal string SelectVideo(int indice)
+	{
+		if (indice < videos.Length) {
+			indiceVideo = indice;
+			return videos[indiceVideo];
+		} else {
+			return "Error";
+		}
+	}
+
+	internal int CountVideo()
+	{
+		return videos.Length;
 	}
 }

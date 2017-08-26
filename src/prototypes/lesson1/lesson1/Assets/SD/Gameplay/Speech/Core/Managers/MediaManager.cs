@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
-    public class MediaManager : IService, IMediaManager
+    public class SpeechMediaManager : IService, IMediaManager
     {
         public event Action StartedRecordEvent;
         public event Action<AudioClip> FinishedRecordEvent;
@@ -178,4 +176,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             return clip;
         }
     }
-}

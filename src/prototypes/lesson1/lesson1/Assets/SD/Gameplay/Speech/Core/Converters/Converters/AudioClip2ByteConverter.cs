@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public static class AudioClip2ByteConverter
     {
         public static byte[] AudioClipToByte(AudioClip clip, bool increaseVolume = false, float volumeMultiplier = 1f)
@@ -52,4 +50,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
             return samples;
         }
     }
-}

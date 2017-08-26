@@ -5,8 +5,6 @@ using System.Threading;
 //defines
 //using grpc = Grpc.Core;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public class Networking : IDisposable
     {
         public event Action<NetworkResponse> NetworkResponseEvent;
@@ -68,4 +66,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
         //  grpc.Channel channel = new grpc.Channel(uri);
         //}
     }
-}

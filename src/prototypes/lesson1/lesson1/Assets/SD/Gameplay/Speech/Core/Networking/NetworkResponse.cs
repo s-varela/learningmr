@@ -1,6 +1,4 @@
-﻿namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
-    public class NetworkResponse
+﻿    public class NetworkResponse
     {
         public long netPacketIndex;
 
@@ -14,4 +12,3 @@
             error = err;
         }
     }
-}

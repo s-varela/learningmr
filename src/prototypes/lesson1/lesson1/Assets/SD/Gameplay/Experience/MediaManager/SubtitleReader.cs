@@ -165,6 +165,12 @@ public class SubtitleReader : MonoBehaviour
     {
         if (hashsub.ContainsKey(1))
         {
+            if (lastSeconds[i] < intDuration)
+            {
+                //devuelvo subtitulo correspondiente`
+                subToReturn = subs[i];
+            }
+
             return hashsub[1].ToString();
         }
         if (hashsub.ContainsKey(0))

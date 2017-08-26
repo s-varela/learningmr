@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
     public interface IMediaManager
     {
         event Action StartedRecordEvent;
@@ -19,4 +17,3 @@ namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
         void StopRecord();
         void StartRecord();
     }
-}

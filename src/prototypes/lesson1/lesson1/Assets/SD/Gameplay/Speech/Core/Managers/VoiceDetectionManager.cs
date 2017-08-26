@@ -1,6 +1,4 @@
-﻿namespace GoogleSpeech.Plugins.GoogleCloud.SpeechRecognition
-{
-    public class VoiceDetectionManager : IService, IVoiceDetectionManager
+﻿    public class VoiceDetectionManager : IService, IVoiceDetectionManager
     {
         private ISpeechRecognitionManager _speechRecognitionManager;
 
@@ -55,4 +53,3 @@
                 return false;
         }
     }
-}
