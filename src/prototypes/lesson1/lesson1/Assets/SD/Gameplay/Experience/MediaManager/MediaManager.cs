@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using System.Diagnostics;
 using System.IO;
 
-public class MediaManager : MonoBehaviour {
+public class MediaManager : MonoBehaviour
+{
 
     private VRExperience experience = null;
-    
+
     [SerializeField] private MediaPlayerCtrl media;
     [SerializeField] private AudioSource audioLeft;
     [SerializeField] private AudioSource audioRight;
@@ -16,48 +17,39 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private VRGameMenu menu;
 
     //[SerializeField] private LoadSubtitlePanel loadSubtitlePanel;
-	[SerializeField] private LoadPanel loadPanel;
+    [SerializeField] private LoadPanel loadPanel;
 
-	[SerializeField] GameObject panelExt;
-	[SerializeField] GameObject textInfo;
-	private MeshRenderer meshPanel;
-	private MeshRenderer meshTextInfo;
+    [SerializeField] GameObject panelExt;
+    [SerializeField] GameObject textInfo;
+    private MeshRenderer meshPanel;
+    private MeshRenderer meshTextInfo;
+    private MeshRenderer meshPanelInteraction;
 
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private string pathVideos = "/lesson1-data/videos/";
     //private ArrayList arrSubtitles = new ArrayList();
-	private string[] arrSubtitles;
+    private string[] arrSubtitles;
 
     private AudioSource sfx;
-    private Stopwatch stopwatch;
-	private bool changeSub;
-	//[SerializeField] public GUIText theGuiText;
-	//[SerializeField] private Text theText;
-	[SerializeField] private TextMesh normalText;
+    private Stopwatch counterVideo;
+    private Stopwatch counterAudio;
+    private bool changeSub;
+    private bool showUserInput;
+    private bool pause;
+    //[SerializeField] public GUIText theGuiText;
+    //[SerializeField] private Text theText;
+    [SerializeField] private TextMesh normalText;
+
+    private int indiceAudio;
 
     // Use this for initialization
 
-
-//    void LoadSubsTemp()
-//    {
-//        arrSubtitles.Add("Hello, my name is Michael.");
-//        arrSubtitles.Add("What's your name?");
-//        arrSubtitles.Add("My name is Johnny.");
-//        arrSubtitles.Add("What's your name?");
-//        arrSubtitles.Add("Hi! Are you Johnny?");
-//        arrSubtitles.Add("Yes, I am.");
-//        arrSubtitles.Add("No, Im not. Im Michael.");
-//        arrSubtitles.Add("Hello! My name is Michael.");
-//    }
-    void Start() {
-
-
-        //LoadSubsTemp(); //TODO Eliminar solo para test
-
-        audioLeft = new AudioSource ();
+    void Start()
+    {
+        audioLeft = new AudioSource();
         experience = VRExperience.Instance;
-		changeSub = false;
+        changeSub = false;
 
         if (audioLeft != null)
         {
@@ -71,37 +63,42 @@ public class MediaManager : MonoBehaviour {
             audioRight.Play();
         }
 
-     /*   if (data.audioAssetKey != null)
-        {
-            sfx = gameObject.AddComponent<AudioSource>();
+        /*   if (data.audioAssetKey != null)
+           {
+               sfx = gameObject.AddComponent<AudioSource>();
 
-            sfx.clip = Resources.Load<AudioClip>(data.audioAssetKey);
-           // sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
-            sfx.loop = false;
-            sfx.Play();
-        }*/
+               sfx.clip = Resources.Load<AudioClip>(data.audioAssetKey);
+              // sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
+               sfx.loop = false;
+               sfx.Play();
+           }*/
 
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
 
-        media.OnEnd += FinishLessonPart;
-		//media.OnEnd += ManagerVideo;
+        //media.OnEnd += FinishLessonPart;
+        //media.OnEnd += ManagerVideo;
         ManagerVideo();
 
-        }
+    }
 
     void Awake()
     {
         if (media == null)
         {
-			experience = VRExperience.Instance;
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
-			subReader = new SubtitleReader();
+            experience = VRExperience.Instance;
+            counterVideo = new Stopwatch();
+            counterVideo.Start();
+            counterAudio = new Stopwatch();
+            subReader = new SubtitleReader();
             audioManager = new AudioManager();
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
+
+            pause = false;
+            showUserInput = false;
+            indiceAudio = 0;
         }
     }
 
@@ -111,23 +108,76 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-			long seconds = stopwatch.ElapsedMilliseconds;
-            // search if duration is in last subtitle second (in miliseconds)
-            DialogType dialogType=subReader.ReadSubtitleLine(seconds);
+      
+            if (!pause && !showUserInput)
+            {
+                long seconds = counterVideo.ElapsedMilliseconds;
+                // search if duration is in last subtitle second (in miliseconds)
 
-            string theSub = dialogType.Text;
+                DialogType dialogType = subReader.ReadSubtitleLine(seconds);
 
-			//Si la la frase es nueva pauso el video y reproduce la frase nuevamente
-			if (!theSub.Equals ("") && theSub!= normalText.text) {
-				//normalText=GetComponent<TextMesh>();
-				normalText.text = theSub;
-			} 
-			Hashtable aux = subReader.ReadSubtitleLine (seconds);
-			if(aux.ContainsKey(1))
-			{
-				ActiveObject();
-			}
-		}
+                if (dialogType != null)
+                {
+                    string theSub = dialogType.Text;
+
+                    //Si la la frase es nueva pauso el video y reproduce la frase nuevamente
+                    if (!theSub.Equals("") && theSub != normalText.text)
+                    {
+                        normalText.text = theSub;
+                    }
+                    if (dialogType.Pause)
+                    {
+                        //arrSubtitles = loadPanel.ArrayText();
+                        ActiveObject();
+                        pause = true;
+                        counterAudio.Start();
+                        //FinishLessonPart();
+
+                    }
+                    else if (dialogType.RequiredInput)
+                    {
+                        showUserInput = true;
+                        normalText.text = " INPUT USUARIO ....";
+                        Wait(5.0f);
+                    }
+
+                }
+            }
+            else if (pause)//se termino la sub leccion, muestro panel frontal y reproduzco audios
+            {
+                PauseMedia();
+                counterVideo.Stop();
+                long counter = counterAudio.ElapsedMilliseconds;
+                if (counter >= 4000) //Espero x tiempo
+                {
+                    arrSubtitles = loadPanel.ArrayText();
+                    if (indiceAudio < arrSubtitles.Length)
+                    {
+                      
+                        string sub = arrSubtitles[indiceAudio];
+                        
+                        PlayAudio(sub);
+
+                        counterAudio.Stop();
+                        counterAudio.Reset();
+                        counterAudio.Start();
+						indiceAudio++;
+                    }
+                    else { 
+                        indiceAudio = 0; //reseteo el contador
+                        counterAudio.Stop();
+                        counterAudio.Reset();
+                        counterAudio.Start();
+                        pause = false;
+                        FinishLessonPart();
+                    }
+                }
+            } else if (showUserInput)
+            {
+                //mostrar panel interaccion
+            }
+            
+        }
         catch (System.Exception ex)
         {
             //TODO logger
@@ -138,44 +188,44 @@ public class MediaManager : MonoBehaviour {
 
     private void PauseMedia()
     {
-      /*  if (data.audioAssetKey != null)
-        {
-            sfx.Pause();
-        }
+        /*  if (data.audioAssetKey != null)
+          {
+              sfx.Pause();
+          }
 
-        if (audioLeft != null)
-        {
-            audioLeft.Pause();
-        }
+          if (audioLeft != null)
+          {
+              audioLeft.Pause();
+          }
 
-        if (audioRight)
-        {
-            audioRight.Pause();
-        }*/
+          if (audioRight)
+          {
+              audioRight.Pause();
+          }*/
 
         media.Pause();
-	stopwatch.Stop ();
+        counterVideo.Stop();
     }
 
     private void ResumeMedia()
     {
-       /* if (data.audioAssetKey != null)
-        {
-            sfx.UnPause();
-        }
+        /* if (data.audioAssetKey != null)
+         {
+             sfx.UnPause();
+         }
 
-        if (audioLeft != null)
-        {
-            audioLeft.UnPause();
-        }
+         if (audioLeft != null)
+         {
+             audioLeft.UnPause();
+         }
 
-        if (audioRight)
-        {
-            audioRight.UnPause();
-        }*/
+         if (audioRight)
+         {
+             audioRight.UnPause();
+         }*/
 
         media.Play();
-	stopwatch.Start();
+        counterVideo.Start();
     }
 
     [System.Serializable]
@@ -189,78 +239,20 @@ public class MediaManager : MonoBehaviour {
 
     private void FinishExperience()
     {
-        //Debug.Log("Llegue a FinishExperience");
         experience.BackToMainMenu();
     }
 
-    /* private void FinishLessonPart()
-     {
-
-         try
-         {
-             PauseMedia();
-             stopwatch.Stop();
-             stopwatch.Reset();
-             stopwatch.Start();
-             bool finishLesson = false;
-             string theSub;
-             Hashtable hashSub = null;
-
-             while (!finishLesson)
-             {
-                 long seconds = stopwatch.ElapsedMilliseconds;
-                 hashSub = subReader.ReadSubtitleLine(seconds);
-                 theSub= subReader.GetHashSubValue(hashSub);
-
-                 if (!theSub.Equals("") && theSub != normalText.text)
-                 {
-                     normalText.text = theSub;
-                     stopwatch.Stop();
-                     PlayAudio(theSub);
-                     Wait(3.0f);
-                     stopwatch.Start();
-                 }
-
-                 if (subReader.IsLastSubtitle(hashSub))
-                 {
-                     finishLesson = true;
-                 }
-             }
-             Wait(2.0f);
-             ManagerVideo();
-         }
-         catch (System.Exception ex)
-         {
-             //TODO logger
-             UnityEngine.Debug.Log(ex.Message);
-             normalText.text = ex.Message;
-         }
-     }*/
 
     private void FinishLessonPart()
     {
-        try
-        {
-			arrSubtitles = loadPanel.ArrayText();
-            foreach (string sub in arrSubtitles)
-            {
-                PlayAudio(sub);
-                Wait(3.0f);
-                stopwatch.Start();
-            }
-            Wait(2.0f);
-			loadPanel.DeleteSub();
-            DesactiveObject();
-            ManagerVideo();
-        }
-        catch (System.Exception ex)
-        {
-            //TODO logger
-            UnityEngine.Debug.Log(ex.Message);
-            normalText.text = ex.Message;
-        }
+		pause = false;
+        loadPanel.DeleteSub();
+        DesactiveObject();
+        counterVideo.Reset();
+        counterVideo.Stop();
+        counterVideo.Start();
+        ManagerVideo();
     }
-
 
     private void ManagerVideo()
     {
@@ -272,13 +264,13 @@ public class MediaManager : MonoBehaviour {
             }
             string videoName = experience.NextVideo();
 
-            stopwatch.Reset();
+            counterVideo.Reset();
             if (!videoName.Equals("End"))
             {
                 subReader.RestFileReader(videoName);
                 media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
                 media.Play();
-                stopwatch.Start();
+                counterVideo.Start();
             }
             else
             {
@@ -294,7 +286,7 @@ public class MediaManager : MonoBehaviour {
 
     }
 
-	private void PlayAudio(string subtilte)
+    private void PlayAudio(string subtilte)
     {
         try
         {
@@ -313,6 +305,10 @@ public class MediaManager : MonoBehaviour {
                     sfx.enabled = true;
                     sfx.Play();
                 }
+                else
+                {
+                    UnityEngine.Debug.Log("Error en la reproduccion del audio. Audio no encontrado. texto: "+subtilte);
+                }
             }
         }
         catch (System.Exception ex)
@@ -323,28 +319,28 @@ public class MediaManager : MonoBehaviour {
         }
     }
 
-	private void Wait (float waitTime)
-	{
-		float time = Time.realtimeSinceStartup;
+    private void Wait(float waitTime)
+    {
+        float time = Time.realtimeSinceStartup;
 
-		while (Time.realtimeSinceStartup - time <= waitTime);
-	}
+        while (Time.realtimeSinceStartup - time <= waitTime) ;
+    }
 
-	public void ActiveObject()
-	{
-		ActiveMeshRenderer(meshPanel, panelExt, true);
-		ActiveMeshRenderer(meshTextInfo, textInfo, true);
-	}
+    public void ActiveObject()
+    {
+        ActiveMeshRenderer(meshPanel, panelExt, true);
+        ActiveMeshRenderer(meshTextInfo, textInfo, true);
+    }
 
-	public void DesactiveObject()
-	{
-		ActiveMeshRenderer(meshPanel, panelExt, false);
-		ActiveMeshRenderer(meshTextInfo, textInfo, false);
-	}
+    public void DesactiveObject()
+    {
+        ActiveMeshRenderer(meshPanel, panelExt, false);
+        ActiveMeshRenderer(meshTextInfo, textInfo, false);
+    }
 
-	private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
-	{
-		mesh = gameObj.GetComponent<MeshRenderer>();
-		mesh.enabled = v;
-	}
+    private void ActiveMeshRenderer(MeshRenderer mesh, GameObject gameObj, bool v)
+    {
+        mesh = gameObj.GetComponent<MeshRenderer>();
+        mesh.enabled = v;
+    }
 }

@@ -62,8 +62,11 @@ public class SubtitleReader : MonoBehaviour
                 }
                 else if (subtitleText.Contains("&P"))
                 {
-                    dialogType.Finish = true;
+                    dialogType.Pause = true;
                     dialogType.Text = subtitleText.Split('&')[0];
+                }else
+                {
+                    dialogType.Text = subtitleText;
                 }
 
                 dialogs.Add(lineCounter, dialogType);
