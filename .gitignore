@@ -1,7 +1,7 @@
 bin/
 Library/
 obj/
-/ProjectSettings
+ProjectSettings/
 Temp/
 **.exe
 **.apk

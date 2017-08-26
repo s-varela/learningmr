@@ -91,6 +91,6 @@ public class LoadPanel : MonoBehaviour
 	public void DeleteSub()
 	{
 		info.text = "";
-        count = 0;
+		count = 0;
 	}
 }

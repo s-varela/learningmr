@@ -28,6 +28,8 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] Text keyboardInp;
 
 
+	[SerializeField] NavigationPanel navigationPanel;
+
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
@@ -138,7 +140,11 @@ public class MediaManager : MonoBehaviour {
                     if (dialogType.Pause)
                     {
                         //arrSubtitles = loadPanel.ArrayText();
-                        ActiveObject();
+						ActiveObject(panelExt);
+						ActiveObject(textInfo);
+						sphere.SetActive(true);
+
+						panelSub.SetActive(false);
                         pause = true;
                         counterAudio.Start();
                         //FinishLessonPart();
@@ -278,6 +284,10 @@ public class MediaManager : MonoBehaviour {
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
+        ActiveObject(panelExt);
+		ActiveObject(textInfo);
+		sphere.SetActive(true);
+		panelSub.SetActive(false);
         ManagerVideo();
     }
 
@@ -294,10 +304,15 @@ public class MediaManager : MonoBehaviour {
             counterVideo.Reset();
             if (!videoName.Equals("End"))
             {
-                subReader.RestFileReader(videoName);
-                media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
-                media.Play();
-                counterVideo.Start();
+				if(!videoName.Equals("Error"))
+				{
+					navigationPanel.materialOriginal();
+					navigationPanel.colorPart();
+                	subReader.RestFileReader(videoName);
+                	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+                	media.Play();
+                	stopwatch.Start();
+				}
             }
             else
             {
@@ -385,6 +400,8 @@ public class MediaManager : MonoBehaviour {
 			{
 				if(!videoName.Equals("Error"))
 				{
+					navigationPanel.materialOriginal();
+					navigationPanel.colorPart();
 					subReader.RestFileReader(videoName);
 					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
 					loadPanel.DeleteSub();

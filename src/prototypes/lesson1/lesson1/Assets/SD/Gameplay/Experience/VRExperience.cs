@@ -126,4 +126,9 @@ public class VRExperience : MonoBehaviour {
 	{
 		return videos.Length;
 	}
+
+	internal int GetIndice()
+	{
+		return indiceVideo;
+	}
 }

@@ -26,6 +26,14 @@ public class NavigationPanel : MonoBehaviour {
 
 	[SerializeField] private MediaManager mediaManager;
 
+	[SerializeField] Material PartLesson;
+	[SerializeField] Material UI_BtnFrame;
+
+	[SerializeField] GameObject GO_btn1;
+	[SerializeField] GameObject GO_btn2;
+	[SerializeField] GameObject GO_btn3;
+	[SerializeField] GameObject GO_btn4;
+
 	private int cantVideo = 0; 
 
 	private VRExperience experience = null;
@@ -78,6 +86,7 @@ public class NavigationPanel : MonoBehaviour {
 			UI_Btn3Text.text = btn1Int.ToString ();
 			btn1Int++;
 			UI_Btn4Text.text = btn1Int.ToString ();
+			materialOriginal ();
 		}
 	}
 
@@ -93,6 +102,8 @@ public class NavigationPanel : MonoBehaviour {
 			UI_Btn3Text.text = btn1Int.ToString ();
 			btn1Int++;
 			UI_Btn4Text.text = btn1Int.ToString ();
+			materialOriginal ();
+
 		}
 	}
 
@@ -118,5 +129,68 @@ public class NavigationPanel : MonoBehaviour {
 	{
 		int btn4Int = Convert.ToInt16(UI_Btn4Text.text);
 		mediaManager.SelectVideo (btn4Int);
+	}
+
+	public void colorPart()
+	{
+		int indice = experience.GetIndice();
+		indice++;
+		switch (indice) 
+		{
+		case 1:
+			changeColor(GO_btn1);
+			break;
+		case 2:
+			changeColor(GO_btn2);
+			break;
+		case 3:
+			changeColor(GO_btn3);
+			break;
+		case 4:
+			changeColor(GO_btn4);
+			break;
+		default:
+			indice = indice - 4;
+			ButtonDerClick();
+			colorPart(indice);
+			break;
+		}
+	}
+
+	private void colorPart(int indice)
+	{
+		switch (indice) 
+		{
+		case 1:
+			changeColor(GO_btn1);
+			break;
+		case 2:
+			changeColor(GO_btn2);
+			break;
+		case 3:
+			changeColor(GO_btn3);
+			break;
+		case 4:
+			changeColor(GO_btn4);
+			break;
+		default:
+			indice = indice - 4;
+			ButtonDerClick();
+			colorPart(indice);
+			break;
+		}
+	}
+
+	private void changeColor(GameObject btn)
+	{
+		btn.GetComponent<Renderer>().material = PartLesson;
+	}
+
+	public void materialOriginal()
+	{
+		GO_btn1.GetComponent<Renderer>().material = UI_BtnFrame;
+		GO_btn2.GetComponent<Renderer>().material = UI_BtnFrame;
+		GO_btn3.GetComponent<Renderer>().material = UI_BtnFrame;
+		GO_btn4.GetComponent<Renderer>().material = UI_BtnFrame;
 	}
 }
