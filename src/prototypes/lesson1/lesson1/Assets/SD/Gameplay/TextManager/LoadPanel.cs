@@ -93,4 +93,25 @@ public class LoadPanel : MonoBehaviour
 		info.text = "";
 		count = 0;
 	}
+
+	public void colorSub (int indiceAudio, string[] array)
+	{
+		for (int i = 0; i < array.Length; i++)
+		{
+			if (i == 0 && indiceAudio == 0) 
+			{	info.text = "<color=#ffff00>" + array [i] + "</color>";	} 
+			else 
+			{
+				if (i == indiceAudio) 
+				{	info.text = info.text + "\n" + "<color=#ffff00>" + array [i] + "</color>";	} 
+				else 
+				{
+					if (i == 0) 
+					{	info.text = array [i];	}
+					else
+					{	info.text = info.text + "\n" + array[i];	}
+				}
+			}
+		}
+	}
 }

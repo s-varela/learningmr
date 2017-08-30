@@ -2,6 +2,7 @@
 using System.Collections;
 using VRStandardAssets.Utils;
 using System;
+using Assets.AnswersLogic;
 
 public class VRSpeechMenu : MonoBehaviour {
 
@@ -17,6 +18,9 @@ public class VRSpeechMenu : MonoBehaviour {
 	[SerializeField] private TextMesh speechRecognitionResult;
 	private GCSpeechRecognition speechRecognition;
 
+	[SerializeField] private MediaManager mediaManager;
+
+
 
     private bool active = false;
 
@@ -25,7 +29,7 @@ public class VRSpeechMenu : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        input.OnCancel += ToggleMenu;
+        //input.OnCancel += ToggleMenu;
 		speechRecognition = GCSpeechRecognition.Instance;
         if(btnOK != null)
         {
@@ -125,9 +129,9 @@ public class VRSpeechMenu : MonoBehaviour {
 
 		if (obj != null && obj.results.Length > 0)
 		{
-			speechRecognitionResult.text = "Speech Recognition succeeded!\n Best match: " + obj.results[0].alternatives[0].transcript;
+			speechRecognitionResult.text = obj.results[0].alternatives[0].transcript;
 
-			string other = "\nAlternatives: ";
+			/*string other = "\nAlternatives: ";
 
 			foreach (var result in obj.results)
 			{ 
@@ -138,7 +142,7 @@ public class VRSpeechMenu : MonoBehaviour {
 				}
 			}
 
-			speechRecognitionResult.text += other;
+			speechRecognitionResult.text += other;*/
 		}
 		else
 		{

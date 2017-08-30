@@ -9,9 +9,20 @@ namespace Assets.AnswersLogic
     {
         public ProcessAnswer(){}
         
-        public string evaluateAnswer(String userAnswer)
+        public bool evaluateAnswer(String userAnswer)
         {
-            return "";
+			string answer1 = "my name is";
+			string answer2_1 = "i'm from";
+			string answer2_2 = "i am from";
+
+			if (userAnswer != null && userAnswer != "") 
+			{
+				if (userAnswer.ToLower ().Contains (answer1) || userAnswer.ToLower ().Contains (answer2_1) || userAnswer.ToLower ().Contains (answer2_2)) 
+				{
+					return true;
+				}
+			}
+			return false;
         }
     }
 

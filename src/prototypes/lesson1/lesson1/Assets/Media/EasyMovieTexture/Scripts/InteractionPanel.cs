@@ -23,6 +23,8 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] GameObject teclado;
     [SerializeField] Text keyboardInp;
 
+	[SerializeField] private MediaManager mediaManager;
+
     // Use this for initialization
     void Start () {
 
@@ -112,5 +114,6 @@ public class InteractionPanel : MonoBehaviour {
 		{
 			speechRecognitionResult.text = "No words were detected.";
 		}
+		mediaManager.validateAnswer (speechRecognitionResult.text);
 	}
 }

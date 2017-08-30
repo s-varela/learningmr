@@ -26,6 +26,7 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject sphere;
 	[SerializeField] GameObject keyboard;
     [SerializeField] Text keyboardInp;
+	[SerializeField] TextMesh Sub;
 
 
 	[SerializeField] NavigationPanel navigationPanel;
@@ -36,16 +37,19 @@ public class MediaManager : MonoBehaviour {
     private string pathVideos = "/lesson1-data/videos/";
     //private ArrayList arrSubtitles = new ArrayList();
     private string[] arrSubtitles;
+	private string[] arrayText;
 
     private AudioSource sfx;
     private Stopwatch counterVideo;
     private Stopwatch counterAudio;
+	private Stopwatch counterDelay;
     private bool changeSub;
     private bool showUserInput;
     private bool pause;
     //[SerializeField] public GUIText theGuiText;
     //[SerializeField] private Text theText;
     [SerializeField] private TextMesh normalText;
+	private bool answerOK = false;
 
     private int indiceAudio;
 
@@ -101,6 +105,7 @@ public class MediaManager : MonoBehaviour {
             counterVideo = new Stopwatch();
             counterVideo.Start();
             counterAudio = new Stopwatch();
+			counterDelay = new Stopwatch ();
             subReader = new SubtitleReader();
             audioManager = new AudioManager();
             processAnswer = new ProcessAnswer();
@@ -136,33 +141,45 @@ public class MediaManager : MonoBehaviour {
                     if (!theSub.Equals("") && theSub != normalText.text)
                     {
                         normalText.text = theSub;
+						answerOK = false;
                     }
                     if (dialogType.Pause)
                     {
                         //arrSubtitles = loadPanel.ArrayText();
-						ActiveObject(panelExt);
-						ActiveObject(textInfo);
-						sphere.SetActive(true);
-
-						panelSub.SetActive(false);
+					
                         pause = true;
                         counterAudio.Start();
+
+						counterDelay.Reset();
+						counterDelay.Start();
                         //FinishLessonPart();
 
                     }
-                    else if (dialogType.RequiredInput)
+					else if (dialogType.RequiredInput && !answerOK)
                     {
                         showUserInput = true;
-                        normalText.text = " INPUT USUARIO ....";
-                        Wait(5.0f);
+						pause = false;
+						panelInput.SetActive(true);
+						PauseMedia();
+
+						counterDelay.Reset();
+						counterDelay.Start();
+                        //normalText.text = " INPUT USUARIO ....";
+                        //Wait(5.0f);
                     }
 
                 }
             }
-            else if (pause)//se termino la sub leccion, muestro panel frontal y reproduzco audios
+			else if (pause && counterDelay.ElapsedMilliseconds>2000)//se termino la sub leccion, muestro panel frontal y reproduzco audios
             {
                 PauseMedia();
+				ActiveObject(panelExt);
+				ActiveObject(textInfo);
+				sphere.SetActive(true);
+
+				panelSub.SetActive(false);
                 counterVideo.Stop();
+
                 long counter = counterAudio.ElapsedMilliseconds;
                 if (counter >= 4000) //Espero x tiempo
                 {
@@ -173,6 +190,11 @@ public class MediaManager : MonoBehaviour {
                         string sub = arrSubtitles[indiceAudio];
                         
                         PlayAudio(sub);
+						if(indiceAudio == 0)
+						{
+							arrayText = loadPanel.ArrayText();
+						}
+						loadPanel.colorSub(indiceAudio, arrayText);
 
                         counterAudio.Stop();
                         counterAudio.Reset();
@@ -188,8 +210,9 @@ public class MediaManager : MonoBehaviour {
                         FinishLessonPart();
                     }
                 }
-            } else if (showUserInput)
+			} else if (showUserInput)
             {
+				sphere.SetActive(true);
                 //mostrar panel interaccion
             }
             
@@ -210,13 +233,8 @@ public class MediaManager : MonoBehaviour {
     }
 
 	public void KeyboardOKButton(){
-        keyboardInp.text = "";
-        keyboard.SetActive(false);
-		panelSub.SetActive(true);
-		panelInput.SetActive(true);
-
-        string userAnswer = "My name is";
-        string evaluatedAnswer = processAnswer.evaluateAnswer(userAnswer);
+		string answer = keyboardInp.text;
+		validateAnswer (answer);
     }
 
     private void PauseMedia()
@@ -280,14 +298,13 @@ public class MediaManager : MonoBehaviour {
     {
 		pause = false;
         loadPanel.DeleteSub();
-        //DesactiveObject();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
-        ActiveObject(panelExt);
-		ActiveObject(textInfo);
-		sphere.SetActive(true);
-		panelSub.SetActive(false);
+		DesactiveObject(panelExt);
+		DesactiveObject(textInfo);
+		sphere.SetActive(false);
+		panelSub.SetActive(true);
         ManagerVideo();
     }
 
@@ -308,6 +325,8 @@ public class MediaManager : MonoBehaviour {
 				{
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
+					Sub.text = "";
+					normalText.text = "";
                 	subReader.RestFileReader(videoName);
                 	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
                 	media.Play();
@@ -401,6 +420,12 @@ public class MediaManager : MonoBehaviour {
 				if(!videoName.Equals("Error"))
 				{
 					navigationPanel.materialOriginal();
+					Sub.text="";
+					normalText.text = "";
+					panelExt.SetActive(false);
+					panelInput.SetActive(false);
+					sphere.SetActive(false);
+					panelSub.SetActive(true);
 					navigationPanel.colorPart();
 					subReader.RestFileReader(videoName);
 					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
@@ -419,6 +444,27 @@ public class MediaManager : MonoBehaviour {
 			//TODO logger
 			UnityEngine.Debug.Log(ex.Message);
 			normalText.text = ex.Message;
+		}
+	}
+
+	public void validateAnswer(string answer)
+	{
+		keyboard.SetActive(false);
+		panelSub.SetActive(true);
+		panelInput.SetActive (false);
+
+		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer);
+
+		if (evaluatedAnswer) {
+			pause = false;
+			ResumeMedia();
+			showUserInput = false;
+			answerOK = true;
+			sphere.SetActive (false);
+		} 
+		else 
+		{
+			panelInput.SetActive (true);
 		}
 	}
 }
