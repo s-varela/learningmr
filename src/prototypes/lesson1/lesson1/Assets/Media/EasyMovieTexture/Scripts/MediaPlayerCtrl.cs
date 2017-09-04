@@ -19,7 +19,7 @@ public class MediaPlayerCtrl : MonoBehaviour {
 	private int m_iCurrentSeekPosition;
 	private float m_fVolume = 1f;
 	
-	public bool m_bFullScreen = false;//Please use only in FullScreen prefab.
+	public bool m_bFullScreen = true;//Please use only in FullScreen prefab.
 	public bool m_bSupportRockchip = true; //Using a device support Rochchip or Low-end devices
 	//(Reason 1 : Not directly play in StreamingAssets)
 	//(Reason 2 : Video buffer is RGB565 only supported)
