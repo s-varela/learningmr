@@ -1,16 +1,36 @@
+# Visual Studio 2015 cache directory
+/.vs/
+
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/Assets/AssetStoreTools*
+ExportedObj/
 bin/
-Library/
 obj/
-ProjectSettings/
-Temp/
+
 **.exe
 **.apk
-**.csproj
-**.sln
-**.suo
-**.meta
-**.sln
-**.userprefs
-**_Data/
-**.userprefs
-**.vs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+
+# Unity3D generated meta files
+*.pidb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
