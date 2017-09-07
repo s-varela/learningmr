@@ -28,6 +28,7 @@ public class NavigationPanel : MonoBehaviour {
 
 	[SerializeField] Material PartLesson;
 	[SerializeField] Material UI_BtnFrame;
+	[SerializeField] Material MaterialOcultar;
 
 	[SerializeField] GameObject GO_btn1;
 	[SerializeField] GameObject GO_btn2;
@@ -35,6 +36,7 @@ public class NavigationPanel : MonoBehaviour {
 	[SerializeField] GameObject GO_btn4;
 
 	private int cantVideo = 0; 
+	private int cantVideoAux = 0;
 
 	private VRExperience experience = null;
 
@@ -42,6 +44,25 @@ public class NavigationPanel : MonoBehaviour {
 	void Start () {
 		experience = VRExperience.Instance;
 		cantVideo = experience.CountVideo();
+		cantVideoAux = experience.CountVideo();
+
+		switch (cantVideo) 
+		{
+		case 1:
+			changeMaterialOcultar (GO_btn2);
+			changeMaterialOcultar (GO_btn3);
+			changeMaterialOcultar (GO_btn4);
+			break;
+		case 2:
+			changeMaterialOcultar (GO_btn3);
+			changeMaterialOcultar (GO_btn4);
+			break;
+		case 3:
+			changeMaterialOcultar (GO_btn4);
+			break;
+		default:
+			break;
+		}
 
 		if(btnDer != null)
 		{
@@ -87,6 +108,8 @@ public class NavigationPanel : MonoBehaviour {
 			btn1Int++;
 			UI_Btn4Text.text = btn1Int.ToString ();
 			materialOriginal ();
+			cantVideoAux = cantVideoAux - 4;
+			OcultarPart();
 		}
 	}
 
@@ -103,7 +126,7 @@ public class NavigationPanel : MonoBehaviour {
 			btn1Int++;
 			UI_Btn4Text.text = btn1Int.ToString ();
 			materialOriginal ();
-
+			cantVideoAux = cantVideoAux + 4;
 		}
 	}
 
@@ -135,25 +158,32 @@ public class NavigationPanel : MonoBehaviour {
 	{
 		int indice = experience.GetIndice();
 		indice++;
-		switch (indice) 
+		int btn1Int = Convert.ToInt16(UI_Btn1Text.text);
+		int btn4Int = btn1Int + 3;
+		if (btn1Int <= indice && btn4Int >= indice) {
+			switch (indice) {
+			case 1:
+				changeColor (GO_btn1);
+				break;
+			case 2:
+				changeColor (GO_btn2);
+				break;
+			case 3:
+				changeColor (GO_btn3);
+				break;
+			case 4:
+				changeColor (GO_btn4);
+				break;
+			default:
+				indice = indice - 4;
+				ButtonDerClick ();
+				colorPart (indice);
+				break;
+			}
+		} else 
 		{
-		case 1:
-			changeColor(GO_btn1);
-			break;
-		case 2:
-			changeColor(GO_btn2);
-			break;
-		case 3:
-			changeColor(GO_btn3);
-			break;
-		case 4:
-			changeColor(GO_btn4);
-			break;
-		default:
-			indice = indice - 4;
-			ButtonDerClick();
-			colorPart(indice);
-			break;
+			ButtonDerClick ();
+			colorPart ();
 		}
 	}
 
@@ -186,11 +216,43 @@ public class NavigationPanel : MonoBehaviour {
 		btn.GetComponent<Renderer>().material = PartLesson;
 	}
 
+	private void changeMaterialOcultar(GameObject btn)
+	{
+		btn.GetComponent<Renderer>().material = MaterialOcultar;
+	}
+
 	public void materialOriginal()
 	{
 		GO_btn1.GetComponent<Renderer>().material = UI_BtnFrame;
 		GO_btn2.GetComponent<Renderer>().material = UI_BtnFrame;
 		GO_btn3.GetComponent<Renderer>().material = UI_BtnFrame;
 		GO_btn4.GetComponent<Renderer>().material = UI_BtnFrame;
+	}
+
+	public void OcultarPart()
+	{
+		switch (cantVideoAux) 
+		{
+		case 1:
+			changeMaterialOcultar (GO_btn2);
+			UI_Btn2Text.text = "";
+			changeMaterialOcultar (GO_btn3);
+			UI_Btn3Text.text = "";
+			changeMaterialOcultar (GO_btn4);
+			UI_Btn4Text.text = "";
+			break;
+		case 2:
+			changeMaterialOcultar (GO_btn3);
+			UI_Btn3Text.text = "";
+			changeMaterialOcultar (GO_btn4);
+			UI_Btn4Text.text = "";
+			break;
+		case 3:
+			changeMaterialOcultar (GO_btn4);
+			UI_Btn4Text.text = "";
+			break;
+		default:
+			break;
+		}
 	}
 }
