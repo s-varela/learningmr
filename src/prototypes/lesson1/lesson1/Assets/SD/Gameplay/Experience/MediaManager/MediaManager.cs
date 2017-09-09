@@ -27,6 +27,8 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject keyboard;
     [SerializeField] Text keyboardInp;
 	[SerializeField] TextMesh Sub;
+	[SerializeField] GameObject gifTick;
+	[SerializeField] GameObject gifCross;
 
 
 	[SerializeField] NavigationPanel navigationPanel;
@@ -38,6 +40,7 @@ public class MediaManager : MonoBehaviour {
     //private ArrayList arrSubtitles = new ArrayList();
     private string[] arrSubtitles;
 	private string[] arrayText;
+	private Color originalColor;
 
     private AudioSource sfx;
     private Stopwatch counterVideo;
@@ -59,6 +62,7 @@ public class MediaManager : MonoBehaviour {
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
 		experience.ResetIndice ();
+		originalColor = Sub.color;
         
 		//Inicializar variables
 		InitializeVariables();
@@ -162,6 +166,8 @@ public class MediaManager : MonoBehaviour {
                     {
                         normalText.text = theSub;
 						answerOK = false;
+						Sub.color = originalColor;
+						gifTick.SetActive (false);
                     }
                     if (dialogType.Pause)
                     {
@@ -477,11 +483,14 @@ public class MediaManager : MonoBehaviour {
 			answerOK = true;
 			sphere.SetActive (false);
 			Sub.color = Color.green;
+			gifTick.SetActive (true);
+			gifCross.SetActive (false);
 		} 
 		else 
 		{
 			Sub.color = Color.red;
 			panelInput.SetActive (true);
+			gifCross.SetActive (true);
 		}
 	}
 }
