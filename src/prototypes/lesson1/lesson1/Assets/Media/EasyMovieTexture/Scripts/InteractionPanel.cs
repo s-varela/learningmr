@@ -21,6 +21,8 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
 	[SerializeField] GameObject teclado;
+    [SerializeField] GameObject hintButton;
+    [SerializeField] GameObject skipButton;
     [SerializeField] Text keyboardInp;
 
 	[SerializeField] private MediaManager mediaManager;
@@ -57,6 +59,8 @@ public class InteractionPanel : MonoBehaviour {
 		panelSub.SetActive (false);
 		panelInput.SetActive (false);
 		teclado.SetActive (true);
+        hintButton.SetActive(false);
+        skipButton.SetActive(false);
         keyboardInp.text = "";
     }
 

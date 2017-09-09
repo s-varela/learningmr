@@ -18,18 +18,27 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private VRGameMenu menu;
 
 	[SerializeField] private LoadPanel loadPanel;
+    [SerializeField] private DialogType dialogType;
 
-	[SerializeField] GameObject panelExt;
+    [SerializeField] GameObject panelExt;
 	[SerializeField] GameObject textInfo;
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
-	[SerializeField] GameObject sphere;
+    [SerializeField] GameObject panelQuestion;
+    [SerializeField] GameObject panelAnswer;
+    [SerializeField] GameObject panelHintButton;
+    [SerializeField] GameObject panelHintText;
+    [SerializeField] GameObject hintButton;
+    [SerializeField] GameObject skipButton;
+    [SerializeField] GameObject sphere;
 	[SerializeField] GameObject keyboard;
     [SerializeField] Text keyboardInp;
 	[SerializeField] TextMesh Sub;
+    [SerializeField] TextMesh userAnswer;
+    [SerializeField] TextMesh givenHint;
 
 
-	[SerializeField] NavigationPanel navigationPanel;
+    [SerializeField] NavigationPanel navigationPanel;
 
     private SubtitleReader subReader;
     private AudioManager audioManager;
@@ -109,6 +118,7 @@ public class MediaManager : MonoBehaviour {
             subReader = new SubtitleReader();
             audioManager = new AudioManager();
             processAnswer = new ProcessAnswer();
+            dialogType = new DialogType();
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
@@ -131,7 +141,7 @@ public class MediaManager : MonoBehaviour {
                 long seconds = counterVideo.ElapsedMilliseconds;
                 // search if duration is in last subtitle second (in miliseconds)
 
-                DialogType dialogType = subReader.ReadSubtitleLine(seconds);
+                dialogType = subReader.ReadSubtitleLine(seconds);
 
                 if (dialogType != null)
                 {
@@ -160,7 +170,11 @@ public class MediaManager : MonoBehaviour {
                         showUserInput = true;
 						pause = false;
 						panelInput.SetActive(true);
-						PauseMedia();
+                        panelAnswer.SetActive(true);
+                        panelQuestion.SetActive(true);
+                        panelHintButton.SetActive(true);
+                        panelHintText.SetActive(true);
+                        PauseMedia();
 
 						counterDelay.Reset();
 						counterDelay.Start();
@@ -228,13 +242,27 @@ public class MediaManager : MonoBehaviour {
 	public void KeyboardExitButton(){
         keyboardInp.text = "";
         keyboard.SetActive(false);
-		panelSub.SetActive(true);
+		panelSub.SetActive(false);
 		panelInput.SetActive(true);
+        panelAnswer.SetActive(true);
+        panelQuestion.SetActive(true);
+        panelHintButton.SetActive(true);
+        hintButton.SetActive(true);
+        skipButton.SetActive(true);
+        panelHintText.SetActive(true);
     }
 
 	public void KeyboardOKButton(){
 		string answer = keyboardInp.text;
 		validateAnswer (answer);
+        panelSub.SetActive(false);
+        panelInput.SetActive(true);
+        panelAnswer.SetActive(true);
+        panelQuestion.SetActive(true);
+        panelHintButton.SetActive(true);
+        panelHintText.SetActive(true);
+        hintButton.SetActive(true);
+        skipButton.SetActive(true);
     }
 
     private void PauseMedia()
@@ -323,6 +351,17 @@ public class MediaManager : MonoBehaviour {
             {
 				if(!videoName.Equals("Error"))
 				{
+                    int videoNumber = experience.GetIndice();
+                    if (videoNumber == 4)
+                    {
+                        panelSub.SetActive(false);
+                        panelAnswer.SetActive(true);
+                        panelQuestion.SetActive(true);
+                        panelHintButton.SetActive(true);
+                        panelHintText.SetActive(true);
+                    } else {
+                        panelSub.SetActive(true);
+                    }
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
 					Sub.text = "";
@@ -403,6 +442,13 @@ public class MediaManager : MonoBehaviour {
 		mesh.enabled = v;
 	}
 
+    public void giveHint(TextMesh theQuestion) {
+        string questionText = theQuestion.text;
+
+        givenHint.text = "My ____ ____ ____  ";
+    }
+
+
 	public void SelectVideo(int indice)
 	{
 		try
@@ -419,13 +465,27 @@ public class MediaManager : MonoBehaviour {
 			{
 				if(!videoName.Equals("Error"))
 				{
+                    
 					navigationPanel.materialOriginal();
 					Sub.text="";
 					normalText.text = "";
 					panelExt.SetActive(false);
 					panelInput.SetActive(false);
-					sphere.SetActive(false);
-					panelSub.SetActive(true);
+                    //TODO: NO DEJAR ESTO HARDCODEADO ARREGLAR
+                    //SE ESTA IDENTIFICANDO SI EL VIDEO ES EL 5 PARA CAMBIAR LOS PANELES DE RESPUESTA
+                    if (indice == 4)
+                    {
+                        panelSub.SetActive(false);
+                        panelAnswer.SetActive(true);
+                        panelQuestion.SetActive(true);
+                        panelHintButton.SetActive(true);
+                        panelHintText.SetActive(true);
+                    }
+                    else {
+                        panelSub.SetActive(true);
+                    }
+                    //panelSub.SetActive(true);
+                    sphere.SetActive(false);
 					navigationPanel.colorPart();
 					subReader.RestFileReader(videoName);
 					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
@@ -450,10 +510,9 @@ public class MediaManager : MonoBehaviour {
 	public void validateAnswer(string answer)
 	{
 		keyboard.SetActive(false);
-		panelSub.SetActive(true);
-		panelInput.SetActive (false);
+		//panelSub.SetActive(true);
 
-		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer);
+        bool evaluatedAnswer = processAnswer.evaluateAnswer(answer);
 
 		if (evaluatedAnswer) {
 			pause = false;
@@ -461,7 +520,8 @@ public class MediaManager : MonoBehaviour {
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
-		} 
+            userAnswer.text = answer;
+        } 
 		else 
 		{
 			panelInput.SetActive (true);
