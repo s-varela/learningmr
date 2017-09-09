@@ -52,6 +52,7 @@ public class MediaManager : MonoBehaviour {
 	private bool answerOK = false;
 
     private int indiceAudio;
+    private DialogType dialogType;
 
     // Use this for initialization
 
@@ -131,7 +132,7 @@ public class MediaManager : MonoBehaviour {
                 long seconds = counterVideo.ElapsedMilliseconds;
                 // search if duration is in last subtitle second (in miliseconds)
 
-                DialogType dialogType = subReader.ReadSubtitleLine(seconds);
+                dialogType = subReader.ReadSubtitleLine(seconds);
 
                 if (dialogType != null)
                 {
@@ -453,7 +454,7 @@ public class MediaManager : MonoBehaviour {
 		panelSub.SetActive(true);
 		panelInput.SetActive (false);
 
-		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer);
+		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
 		if (evaluatedAnswer) {
 			pause = false;
