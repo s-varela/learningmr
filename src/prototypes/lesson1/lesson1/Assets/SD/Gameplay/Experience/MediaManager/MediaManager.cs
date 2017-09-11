@@ -55,8 +55,7 @@ public class MediaManager : MonoBehaviour {
     private bool changeSub;
     private bool showUserInput;
     private bool pause;
-    //[SerializeField] public GUIText theGuiText;
-    //[SerializeField] private Text theText;
+
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
 
@@ -68,7 +67,10 @@ public class MediaManager : MonoBehaviour {
     {
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
-        changeSub = false;
+		experience.ResetIndice ();
+        
+		//Inicializar variables
+		InitializeVariables();
 
         if (audioLeft != null)
         {
@@ -105,6 +107,24 @@ public class MediaManager : MonoBehaviour {
         ManagerVideo();
 
     }
+
+	void InitializeVariables()
+	{
+		changeSub = false;
+		answerOK = false;
+		showUserInput = false;
+		pause = false;
+		DesactiveObject(panelExt);
+		DesactiveObject(textInfo);
+		panelSub.SetActive(true);
+		panelInput.SetActive(false);
+		sphere.SetActive(false);
+		keyboard.SetActive(false);
+		loadPanel.DeleteSub();
+		Sub.text="";
+		normalText.text = "";
+		indiceAudio = 0;
+	}
 
     void Awake()
     {
@@ -486,10 +506,11 @@ public class MediaManager : MonoBehaviour {
                     }
                     //panelSub.SetActive(true);
                     sphere.SetActive(false);
+					InitializeVariables();
 					navigationPanel.colorPart();
+					navigationPanel.OcultarPart();
 					subReader.RestFileReader(videoName);
 					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
-					loadPanel.DeleteSub();
 					media.Play();
                     counterVideo.Start();
 				}
@@ -520,10 +541,14 @@ public class MediaManager : MonoBehaviour {
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
-            userAnswer.text = answer;
-        } 
+      userAnswer.text = answer;
+    } 
+
+			Sub.color = Color.green;
+		} 
 		else 
 		{
+			Sub.color = Color.red;
 			panelInput.SetActive (true);
 		}
 	}

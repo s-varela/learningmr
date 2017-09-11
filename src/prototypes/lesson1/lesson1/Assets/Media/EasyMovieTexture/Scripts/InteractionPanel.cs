@@ -12,8 +12,7 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] private float distance = 5;
 
 	[SerializeField] private VRUIAnimationClick btnTeclado;
-	[SerializeField] private VRUIAnimationClick btnStart;
-	[SerializeField] private VRUIAnimationClick btnStop;
+	[SerializeField] private VRUIAnimationClick btnRec;
 
 	[SerializeField] private TextMesh speechRecognitionResult;
 	[SerializeField] private GCSpeechRecognition speechRecognition;
@@ -25,18 +24,18 @@ public class InteractionPanel : MonoBehaviour {
     [SerializeField] GameObject skipButton;
     [SerializeField] Text keyboardInp;
 
+	[SerializeField] Material UI_SpeechStart;
+	[SerializeField] Material UI_SpeechStop;
+
+
 	[SerializeField] private MediaManager mediaManager;
 
     // Use this for initialization
     void Start () {
 
-		if(btnStart != null)
+		if(btnRec != null)
 		{
-			btnStart.OnAnimationComplete += StartRecordButtonOnClickHandler;
-		}
-		if (btnStop != null)
-		{
-			btnStop.OnAnimationComplete += StopRecordButtonOnClickHandler;
+			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
 		}
 		if (btnTeclado != null) 
 		{
@@ -74,12 +73,26 @@ public class InteractionPanel : MonoBehaviour {
 
 	private void StartRecordButtonOnClickHandler()
 	{
+		
 		speechRecognitionResult.text = string.Empty;
+		speechRecognitionResult.text = "Recording...";
+		if(btnRec != null)
+		{
+			btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
+			btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
+			btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+		}
 		speechRecognition.StartRecord(false);
 	}
 
 	private void StopRecordButtonOnClickHandler()
 	{
+		if(btnRec != null)
+		{
+			btnRec.GetComponent<Renderer>().material = UI_SpeechStart;
+			btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
+			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
+		}
 		speechRecognitionResult.text = "Stopped Recording";
 		speechRecognition.StopRecord();
 	}

@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Experience.unity
     guid: 5b60aff4e68ad954899340eea8fcb069
   - enabled: 0
-    path: Assets/Scenes/instrucTeclado.unity
+    path: 
     guid: f90109b931b33194e988f6dcae88f0f5
   - enabled: 0
-    path: Assets/Scenes/instrucVoz.unity
+    path: 
     guid: b69b64b605d9a574e93d9a1f12135834

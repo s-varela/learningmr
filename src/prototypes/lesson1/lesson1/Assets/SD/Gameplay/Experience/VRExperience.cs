@@ -131,4 +131,9 @@ public class VRExperience : MonoBehaviour {
 	{
 		return indiceVideo;
 	}
+
+	internal void ResetIndice()
+	{
+		indiceVideo = -1;
+	}
 }
