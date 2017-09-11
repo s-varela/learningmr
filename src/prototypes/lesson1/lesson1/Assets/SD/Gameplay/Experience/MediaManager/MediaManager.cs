@@ -36,6 +36,8 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] TextMesh Sub;
     [SerializeField] TextMesh userAnswer;
     [SerializeField] TextMesh givenHint;
+	[SerializeField] GameObject gifTick;
+	[SerializeField] GameObject gifCross;
 
 
     [SerializeField] NavigationPanel navigationPanel;
@@ -47,6 +49,7 @@ public class MediaManager : MonoBehaviour {
     //private ArrayList arrSubtitles = new ArrayList();
     private string[] arrSubtitles;
 	private string[] arrayText;
+	private Color originalColor;
 
     private AudioSource sfx;
     private Stopwatch counterVideo;
@@ -68,7 +71,8 @@ public class MediaManager : MonoBehaviour {
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
 		experience.ResetIndice ();
-        
+		originalColor = Sub.color;
+
 		//Inicializar variables
 		InitializeVariables();
 
@@ -155,7 +159,7 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-      
+
             if (!pause && !showUserInput)
             {
                 long seconds = counterVideo.ElapsedMilliseconds;
@@ -172,11 +176,13 @@ public class MediaManager : MonoBehaviour {
                     {
                         normalText.text = theSub;
 						answerOK = false;
+						Sub.color = originalColor;
+						gifTick.SetActive (false);
                     }
                     if (dialogType.Pause)
                     {
                         //arrSubtitles = loadPanel.ArrayText();
-					
+
                         pause = true;
                         counterAudio.Start();
 
@@ -220,9 +226,9 @@ public class MediaManager : MonoBehaviour {
                     arrSubtitles = loadPanel.ArrayText();
                     if (indiceAudio < arrSubtitles.Length)
                     {
-                      
+
                         string sub = arrSubtitles[indiceAudio];
-                        
+
                         PlayAudio(sub);
 						if(indiceAudio == 0)
 						{
@@ -235,7 +241,7 @@ public class MediaManager : MonoBehaviour {
                         counterAudio.Start();
 						indiceAudio++;
                     }
-                    else { 
+                    else {
                         indiceAudio = 0; //reseteo el contador
                         counterAudio.Stop();
                         counterAudio.Reset();
@@ -249,7 +255,7 @@ public class MediaManager : MonoBehaviour {
 				sphere.SetActive(true);
                 //mostrar panel interaccion
             }
-            
+
         }
         catch (System.Exception ex)
         {
@@ -485,7 +491,7 @@ public class MediaManager : MonoBehaviour {
 			{
 				if(!videoName.Equals("Error"))
 				{
-                    
+
 					navigationPanel.materialOriginal();
 					Sub.text="";
 					normalText.text = "";
@@ -542,14 +548,17 @@ public class MediaManager : MonoBehaviour {
 			answerOK = true;
 			sphere.SetActive (false);
       userAnswer.text = answer;
-    } 
+    }
 
 			Sub.color = Color.green;
-		} 
-		else 
+			gifTick.SetActive (true);
+			gifCross.SetActive (false);
+		}
+		else
 		{
 			Sub.color = Color.red;
 			panelInput.SetActive (true);
+			gifCross.SetActive (true);
 		}
 	}
 }
