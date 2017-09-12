@@ -59,10 +59,8 @@ public class SubtitleReader : MonoBehaviour
 
                 if (subtitleText.Contains("&I"))
                 {
-                    Debug.Log("SubtitleReader. answers" + subtitleText);
                     int iInput = subtitleText.IndexOf("&I")+2;
-                    Debug.Log("SubtitleReader. answer iInput= "+iInput);
-                    Debug.Log("SubtitleReader. answers" + subtitleText.Substring(iInput, subtitleText.Length-iInput));
+   
                     string[] answers = subtitleText.Substring(iInput, subtitleText.Length- iInput).Split('#');
                     
                     foreach (string answer in answers){
@@ -75,6 +73,11 @@ public class SubtitleReader : MonoBehaviour
                 else if (subtitleText.Contains("&P"))
                 {
                     dialogType.Pause = true;
+                    dialogType.Text = subtitleText.Split('&')[0];
+                }
+                else if (subtitleText.Contains("&E"))
+                {
+                    dialogType.Finish = true;
                     dialogType.Text = subtitleText.Split('&')[0];
                 }
                 else
@@ -124,7 +127,6 @@ public class SubtitleReader : MonoBehaviour
 
     }*/
 
-
     /*public static System.String toJSon(DialogType dialog)
     { 
             // Here we convert Java Object to JSO
@@ -134,8 +136,7 @@ public class SubtitleReader : MonoBehaviour
            
             return jsonObj.Print();
     }*/
-
-
+    
     /*void accessData(JSONObject obj)
     {
         switch (obj.type)
