@@ -478,4 +478,17 @@ public class MediaManager : MonoBehaviour {
 			panelInput.SetActive (true);
 		}
 	}
+
+    public void ExecuteSkip()
+    {
+        if (dialogType.RequiredInput)
+
+            pause = false;
+            ResumeMedia();
+            showUserInput = false;
+            answerOK = true;
+            sphere.SetActive(false);
+        }
+     
+    }
 }
