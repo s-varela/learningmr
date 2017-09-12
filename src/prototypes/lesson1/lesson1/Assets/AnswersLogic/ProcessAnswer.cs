@@ -14,15 +14,17 @@ namespace Assets.AnswersLogic
         public bool evaluateAnswer(String userAnswer, DialogType dialogType)
         {
             ArrayList answers = dialogType.Answers;
+            String userAnswerAux = userAnswer;
 
-			if (userAnswer != null && userAnswer != "") 
+            if (userAnswer != null && userAnswer != "") 
 			{
                 
                 foreach (string answer in answers)
                 {
                     Debug.Log("["+ this.GetType().Name+"."+System.Reflection.MethodBase.GetCurrentMethod()+"][ answer: " + answer +"]");
+                    String answerAux = answer;
 
-                    if (userAnswer.ToLower().Contains(answer.ToLower()))
+                    if (userAnswerAux.ToLower().Contains(answerAux.ToLower()))
                     {
                         return true;
                     }

@@ -224,7 +224,7 @@ public class MediaManager : MonoBehaviour {
                 //mostrar panel interaccion
             } else if (dialogType.Finish && counterDelay.ElapsedMilliseconds > 2000)
             {
-                FinishLessonPart();
+                FinishExperience();
             }
             
         }
