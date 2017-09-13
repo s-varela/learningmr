@@ -124,9 +124,15 @@ public class MediaManager : MonoBehaviour {
 		panelInput.SetActive(false);
 		sphere.SetActive(false);
 		keyboard.SetActive(false);
+		panelAnswer.SetActive(false);
+		panelQuestion.SetActive(false);
+		panelHintButton.SetActive(false);
+		panelHintText.SetActive(false);
 		loadPanel.DeleteSub();
 		Sub.text="";
 		normalText.text = "";
+		userAnswer.text = "";
+		givenHint.text = "";
 		indiceAudio = 0;
 	}
 
@@ -200,6 +206,7 @@ public class MediaManager : MonoBehaviour {
                         panelQuestion.SetActive(true);
                         panelHintButton.SetActive(true);
                         panelHintText.SetActive(true);
+						panelSub.SetActive(false);
                         PauseMedia();
 
 						counterDelay.Reset();
@@ -474,6 +481,17 @@ public class MediaManager : MonoBehaviour {
         givenHint.text = "My ____ ____ ____  ";
     }
 
+	public void ExecuteSkip()
+	{
+		if (dialogType.RequiredInput) {
+			pause = false;
+			ResumeMedia ();
+			showUserInput = false;
+			answerOK = true;
+			sphere.SetActive (false);
+		}
+	}
+
 
 	public void SelectVideo(int indice)
 	{
@@ -495,7 +513,8 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					Sub.text="";
 					normalText.text = "";
-					panelExt.SetActive(false);
+					DesactiveObject(panelExt);
+					DesactiveObject(textInfo);
 					panelInput.SetActive(false);
                     //TODO: NO DEJAR ESTO HARDCODEADO ARREGLAR
                     //SE ESTA IDENTIFICANDO SI EL VIDEO ES EL 5 PARA CAMBIAR LOS PANELES DE RESPUESTA
@@ -547,16 +566,15 @@ public class MediaManager : MonoBehaviour {
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
-      userAnswer.text = answer;
-    }
-
-			Sub.color = Color.green;
+      		userAnswer.text = answer;
+	
+			userAnswer.color = Color.green;
 			gifTick.SetActive (true);
 			gifCross.SetActive (false);
 		}
 		else
 		{
-			Sub.color = Color.red;
+			userAnswer.color = Color.red;
 			panelInput.SetActive (true);
 			gifCross.SetActive (true);
 		}
