@@ -58,11 +58,14 @@ public class MediaManager : MonoBehaviour {
     private bool changeSub;
     private bool showUserInput;
     private bool pause;
-
+    private bool finish;
+    //[SerializeField] public GUIText theGuiText;
+    //[SerializeField] private Text theText;
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
 
     private int indiceAudio;
+    private DialogType dialogType;
 
     // Use this for initialization
 
@@ -70,6 +73,8 @@ public class MediaManager : MonoBehaviour {
     {
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
+        dialogType = new DialogType();
+        changeSub = false;
 		experience.ResetIndice ();
 		originalColor = Sub.color;
 
@@ -105,9 +110,6 @@ public class MediaManager : MonoBehaviour {
 
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
-
-        //media.OnEnd += FinishLessonPart;
-        //media.OnEnd += ManagerVideo;
         ManagerVideo();
 
     }
@@ -155,7 +157,9 @@ public class MediaManager : MonoBehaviour {
 
             pause = false;
             showUserInput = false;
+            finish=false;
             indiceAudio = 0;
+            dialogType = new DialogType();
         }
     }
 
@@ -165,8 +169,8 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-
-            if (!pause && !showUserInput)
+      
+            if (!pause && !showUserInput && !finish)
             {
                 long seconds = counterVideo.ElapsedMilliseconds;
                 // search if duration is in last subtitle second (in miliseconds)
@@ -213,6 +217,12 @@ public class MediaManager : MonoBehaviour {
 						counterDelay.Start();
                         //normalText.text = " INPUT USUARIO ....";
                         //Wait(5.0f);
+                    }else if (dialogType.Finish)
+                    {
+                        finish = true;
+                        pause = false;
+                        counterDelay.Reset();
+                        counterDelay.Start();
                     }
 
                 }
@@ -261,6 +271,9 @@ public class MediaManager : MonoBehaviour {
             {
 				sphere.SetActive(true);
                 //mostrar panel interaccion
+            } else if (dialogType.Finish && counterDelay.ElapsedMilliseconds > 2000)
+            {
+                FinishExperience();
             }
 
         }
@@ -558,7 +571,7 @@ public class MediaManager : MonoBehaviour {
 		keyboard.SetActive(false);
 		//panelSub.SetActive(true);
 
-        bool evaluatedAnswer = processAnswer.evaluateAnswer(answer);
+		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
 		if (evaluatedAnswer) {
 			pause = false;
@@ -579,4 +592,17 @@ public class MediaManager : MonoBehaviour {
 			gifCross.SetActive (true);
 		}
 	}
+
+    public void ExecuteSkip()
+    {
+        if (dialogType.RequiredInput)
+
+            pause = false;
+            ResumeMedia();
+            showUserInput = false;
+            answerOK = true;
+            sphere.SetActive(false);
+        }
+     
+    }
 }
