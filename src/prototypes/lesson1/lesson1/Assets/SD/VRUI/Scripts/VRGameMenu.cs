@@ -23,13 +23,13 @@ public class VRGameMenu : MonoBehaviour {
     // Use this for initialization
     void Start () {
         input.OnCancel += ToggleMenu;
-        if(btnOK != null)
+		if(btnOK != null)
         {
-            btnOK.OnAnimationComplete += ExitExperience;
+			btnOK.OnAnimationComplete += ExitExperience;
         }
-        if (btnCancel != null)
+		if (btnCancel != null)
         {
-            btnCancel.OnAnimationComplete += CloseMenu;
+			btnCancel.OnAnimationComplete += CloseMenu;
         }
 	}
 	
