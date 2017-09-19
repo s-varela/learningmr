@@ -18,7 +18,6 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private VRGameMenu menu;
 
 	[SerializeField] private LoadPanel loadPanel;
-    [SerializeField] private DialogType dialogType;
 
     [SerializeField] GameObject panelExt;
 	[SerializeField] GameObject textInfo;
@@ -66,7 +65,7 @@ public class MediaManager : MonoBehaviour {
 
     private int indiceAudio;
     private DialogType dialogType;
-
+	private int i=-1;
     // Use this for initialization
 
     void Start()
@@ -203,6 +202,7 @@ public class MediaManager : MonoBehaviour {
                     }
 					else if (dialogType.RequiredInput && !answerOK)
                     {
+						i=-1;
                         showUserInput = true;
 						pause = false;
 						panelInput.SetActive(true);
@@ -491,7 +491,7 @@ public class MediaManager : MonoBehaviour {
     public void giveHint(TextMesh theQuestion) {
         string questionText = theQuestion.text;
 
-        givenHint.text = "My ____ ____ ____  ";
+		givenHint.text+= " "+ dialogType.Answers[0].ToString().Split(' ')[++i];
     }
 
 	public void ExecuteSkip()
@@ -502,6 +502,7 @@ public class MediaManager : MonoBehaviour {
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
+
 		}
 	}
 
@@ -592,17 +593,5 @@ public class MediaManager : MonoBehaviour {
 			gifCross.SetActive (true);
 		}
 	}
-
-    public void ExecuteSkip()
-    {
-        if (dialogType.RequiredInput)
-
-            pause = false;
-            ResumeMedia();
-            showUserInput = false;
-            answerOK = true;
-            sphere.SetActive(false);
-        }
-     
-    }
+		
 }
