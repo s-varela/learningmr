@@ -296,6 +296,8 @@ public class MediaManager : MonoBehaviour {
         hintButton.SetActive(true);
         skipButton.SetActive(true);
         panelHintText.SetActive(true);
+		gifCross.SetActive (false);
+		gifTick.SetActive (false);
     }
 
 	public void KeyboardOKButton(){
