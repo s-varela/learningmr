@@ -15,7 +15,7 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private AudioSource audioLeft;
     [SerializeField] private AudioSource audioRight;
     [SerializeField] private MediaManagerData data;
-    [SerializeField] private VRGameMenu menu;
+	[SerializeField] private VRGameMenu menu;
 
 	[SerializeField] private LoadPanel loadPanel;
 

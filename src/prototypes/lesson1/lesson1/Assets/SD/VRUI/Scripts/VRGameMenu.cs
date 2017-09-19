@@ -14,6 +14,8 @@ public class VRGameMenu : MonoBehaviour {
     [SerializeField] private VRUIAnimationClick btnCancel;
     [SerializeField] private GameObject cameraReticle;
     [SerializeField] private bool pauseOnDisplay;
+	[SerializeField] GameObject sphere;
+
 
     private bool active = false;
 
@@ -45,6 +47,7 @@ public class VRGameMenu : MonoBehaviour {
             if(OnMenuShow != null && pauseOnDisplay)
                 OnMenuHide();
 
+			sphere.SetActive (false);
             menuBase.SetActive(false);
             cameraReticle.SetActive(false);
             active = false;
@@ -59,6 +62,7 @@ public class VRGameMenu : MonoBehaviour {
                 menuBase.transform.position = posMenu;
                 menuBase.transform.forward = -cameraTransform.forward;
             }
+			sphere.SetActive (true);
             menuBase.SetActive(true);
             cameraReticle.SetActive(true);
             active = true;
