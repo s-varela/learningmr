@@ -63,6 +63,8 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
 
+    private bool emptyKeyboardAnswer = false;
+
     private int indiceAudio;
     private DialogType dialogType;
 	private int i=-1;
@@ -301,16 +303,29 @@ public class MediaManager : MonoBehaviour {
     }
 
 	public void KeyboardOKButton(){
-		string answer = keyboardInp.text;
-		validateAnswer (answer);
-        panelSub.SetActive(false);
-        panelInput.SetActive(true);
-        panelAnswer.SetActive(true);
-        panelQuestion.SetActive(true);
-        panelHintButton.SetActive(true);
-        panelHintText.SetActive(true);
-        hintButton.SetActive(true);
-        skipButton.SetActive(true);
+
+        string answer = keyboardInp.text;
+        if (answer.Equals("") || answer.Equals("Respuesta vacia"))
+        {
+            emptyKeyboardAnswer = true;
+        }
+        else {
+            emptyKeyboardAnswer = false;
+        }
+
+        if (!emptyKeyboardAnswer)
+        {
+            emptyKeyboardAnswer = false;
+            validateAnswer(answer);
+            panelSub.SetActive(false);
+            panelInput.SetActive(true);
+            panelAnswer.SetActive(true);
+            panelQuestion.SetActive(true);
+            panelHintButton.SetActive(true);
+            panelHintText.SetActive(true);
+            hintButton.SetActive(true);
+            skipButton.SetActive(true);
+        }
     }
 
     private void PauseMedia()
@@ -583,8 +598,9 @@ public class MediaManager : MonoBehaviour {
 			answerOK = true;
 			sphere.SetActive (false);
       		userAnswer.text = answer;
-	
-			userAnswer.color = Color.green;
+            givenHint.text = "";
+
+            userAnswer.color = Color.green;
 			gifTick.SetActive (true);
 			gifCross.SetActive (false);
 		}
