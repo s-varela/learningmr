@@ -29,6 +29,9 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] GameObject panelHint;
 	[SerializeField] GameObject panelHintText;
 
+	[SerializeField] GameObject gifRipple;
+	[SerializeField] GameObject gifProcessing;
+
 	[SerializeField] Material UI_SpeechStart;
 	[SerializeField] Material UI_SpeechStop;
 
@@ -85,6 +88,7 @@ public class InteractionPanel : MonoBehaviour {
 		
 		speechRecognitionResult.text = string.Empty;
 		speechRecognitionResult.text = "Recording...";
+		gifRipple.SetActive (true);
 		if(btnRec != null)
 		{
 			btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
@@ -103,7 +107,9 @@ public class InteractionPanel : MonoBehaviour {
 			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
 		}
 		speechRecognitionResult.text = "Stopped Recording";
+		gifRipple.SetActive (false);
 		speechRecognition.StopRecord();
+		gifProcessing.SetActive (true);
 	}
 
 	private void LanguageDropdownOnValueChanged(int value)
@@ -140,6 +146,7 @@ public class InteractionPanel : MonoBehaviour {
 		{
 			speechRecognitionResult.text = "No words were detected.";
 		}
+		gifProcessing.SetActive (false);
 		mediaManager.validateAnswer (speechRecognitionResult.text);
 	}
 }
