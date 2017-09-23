@@ -1,4 +1,4 @@
-﻿    public class Constants
+    public class Constants
     {
         public const string LONG_RECOGNIZE_REQUEST_URL = "https://speech.googleapis.com/v1/speech:longrunningrecognize";
         public const string RECOGNIZE_REQUEST_URL = "https://speech.googleapis.com/v1/speech:recognize";

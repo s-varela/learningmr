@@ -59,7 +59,7 @@ public class MediaManager : MonoBehaviour {
     private bool finish;
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
-
+    private bool emptyKeyboardAnswer = fals
     private int indiceAudio;
     private DialogType dialogType;
 	private int i=-1;
@@ -134,7 +134,6 @@ public class MediaManager : MonoBehaviour {
 		userAnswer.text = "";
 		givenHint.text = "";
 		indiceAudio = 0;
-
 	}
 
     void Awake()
@@ -347,16 +346,30 @@ public class MediaManager : MonoBehaviour {
     }
 
 	public void KeyboardOKButton(){
-		string answer = keyboardInp.text;
-		validateAnswer (answer);
-        panelSub.SetActive(false);
-        panelInput.SetActive(true);
-        panelAnswer.SetActive(true);
-        panelQuestion.SetActive(true);
-        panelHintButton.SetActive(true);
-        panelHintText.SetActive(true);
-        hintButton.SetActive(true);
-        skipButton.SetActive(true);
+        string answer = keyboardInp.text;
+
+        if (answer.Equals("") || answer.Equals("Respuesta vacia"))
+        {
+            emptyKeyboardAnswer = true;
+        }
+        else
+        {
+            emptyKeyboardAnswer = false;
+        }
+        
+        if (!emptyKeyboardAnswer)
+        {
+            emptyKeyboardAnswer = false;
+            validateAnswer(answer);
+            panelSub.SetActive(false);
+            panelInput.SetActive(true);
+            panelAnswer.SetActive(true);
+            panelQuestion.SetActive(true);
+            panelHintButton.SetActive(true);
+            panelHintText.SetActive(true);
+            hintButton.SetActive(true);
+            skipButton.SetActive(true);
+        }
     }
 
     private void PauseMedia()
@@ -560,32 +573,32 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
-    public void validateAnswer(string answer)
-    {
-        keyboard.SetActive(false);
+	public void validateAnswer(string answer)
+	{
+		keyboard.SetActive(false);
+		//panelSub.SetActive(true);
 
-        bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
+		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
-        if (evaluatedAnswer)
-        {
-            pause = false;
-            ResumeMedia();
-            showUserInput = false;
-            answerOK = true;
-            sphere.SetActive(false);
-            userAnswer.text = answer;
+		if (evaluatedAnswer) {
+			pause = false;
+			ResumeMedia();
+			showUserInput = false;
+			answerOK = true;
+			sphere.SetActive (false);
+      		userAnswer.text = answer;
             givenHint.text = "";
             userAnswer.color = Color.green;
-            gifTick.SetActive(true);
-            gifCross.SetActive(false);
-        }
-        else
-        {
+			gifTick.SetActive (true);
+			gifCross.SetActive (false);
+		}
+		else
+		{
             userAnswer.text = answer;
             userAnswer.color = Color.red;
-            panelInput.SetActive(true);
-            gifCross.SetActive(true);
-        }
-    }
-
+            panelInput.SetActive (true);
+			gifCross.SetActive (true);
+		}
+	}
+		
 }

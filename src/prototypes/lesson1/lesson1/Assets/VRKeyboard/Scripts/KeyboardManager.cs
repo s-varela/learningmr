@@ -42,7 +42,17 @@ namespace VRKeyboard.Utils {
                 keysDictionary.Add(key, _text);
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
-                    GenerateInput(_text.text);
+                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals("Respuesta vacia")))
+                    {
+                        inputText.color = Color.red;
+                        Input = "Respuesta vacia";
+                    }
+                    else {
+
+                        if (Input.Equals("Respuesta vacia")) { Input = ""; }
+                            inputText.color = Color.white;
+                            GenerateInput(_text.text);
+                    }
                 });
             }
 
