@@ -255,7 +255,7 @@ public class MediaManager : MonoBehaviour {
                         FinishLessonPart();
                     }
                 }
-			} else if (showUserInput && ElapsedTime(500))
+			} else if (showUserInput && ElapsedTime(500) && !keyboard.activeSelf)
             {
                 PauseMedia();
                 EnableInterationMenu();
@@ -582,7 +582,6 @@ public class MediaManager : MonoBehaviour {
 
 		if (evaluatedAnswer) {
 			pause = false;
-			ResumeMedia();
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
@@ -591,6 +590,8 @@ public class MediaManager : MonoBehaviour {
             userAnswer.color = Color.green;
 			gifTick.SetActive (true);
 			gifCross.SetActive (false);
+			skip = true;
+			StartDelayTime ();
 		}
 		else
 		{
