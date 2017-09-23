@@ -45,7 +45,6 @@ public class MediaManager : MonoBehaviour {
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
     private string pathVideos = "/lesson1-data/videos/";
-    //private ArrayList arrSubtitles = new ArrayList();
     private string[] arrSubtitles;
 	private string[] arrayText;
 	private Color originalColor;
@@ -58,14 +57,14 @@ public class MediaManager : MonoBehaviour {
     private bool showUserInput;
     private bool pause;
     private bool finish;
-    //[SerializeField] public GUIText theGuiText;
-    //[SerializeField] private Text theText;
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
     private bool emptyKeyboardAnswer = fals
     private int indiceAudio;
     private DialogType dialogType;
 	private int i=-1;
+    private int dynamicDelay = 0;
+    private bool skip = false;
     // Use this for initialization
 
     void Start()
@@ -168,12 +167,14 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-      
-            if (!pause && !showUserInput && !finish)
+          
+            if (!pause && !showUserInput && !finish && !skip)
             {
+                dynamicDelay = 0;
+
                 long seconds = counterVideo.ElapsedMilliseconds;
                 // search if duration is in last subtitle second (in miliseconds)
-
+               
                 dialogType = subReader.ReadSubtitleLine(seconds);
 
                 if (dialogType != null)
@@ -190,14 +191,10 @@ public class MediaManager : MonoBehaviour {
                     }
                     if (dialogType.Pause)
                     {
-                        //arrSubtitles = loadPanel.ArrayText();
-
                         pause = true;
                         counterAudio.Start();
-
 						counterDelay.Reset();
 						counterDelay.Start();
-                        //FinishLessonPart();
 
                     }
 					else if (dialogType.RequiredInput && !answerOK)
@@ -205,18 +202,10 @@ public class MediaManager : MonoBehaviour {
 						i=-1;
                         showUserInput = true;
 						pause = false;
-						panelInput.SetActive(true);
-                        panelAnswer.SetActive(true);
-                        panelQuestion.SetActive(true);
-                        panelHintButton.SetActive(true);
-                        panelHintText.SetActive(true);
-						panelSub.SetActive(false);
-                        PauseMedia();
 
 						counterDelay.Reset();
 						counterDelay.Start();
-                        //normalText.text = " INPUT USUARIO ....";
-                        //Wait(5.0f);
+       
                     }else if (dialogType.Finish)
                     {
                         finish = true;
@@ -227,7 +216,7 @@ public class MediaManager : MonoBehaviour {
 
                 }
             }
-			else if (pause && counterDelay.ElapsedMilliseconds>2000)//se termino la sub leccion, muestro panel frontal y reproduzco audios
+			else if (pause && ElapsedTime(2000))//se termino la sub leccion, muestro panel frontal y reproduzco audios
             {
                 PauseMedia();
 				ActiveObject(panelExt);
@@ -237,8 +226,7 @@ public class MediaManager : MonoBehaviour {
 				panelSub.SetActive(false);
                 counterVideo.Stop();
 
-                long counter = counterAudio.ElapsedMilliseconds;
-                if (counter >= 4000) //Espero x tiempo
+                if (ElapsedAudioTime(4000)) //Espero x tiempo
                 {
                     arrSubtitles = loadPanel.ArrayText();
                     if (indiceAudio < arrSubtitles.Length)
@@ -267,13 +255,22 @@ public class MediaManager : MonoBehaviour {
                         FinishLessonPart();
                     }
                 }
-			} else if (showUserInput)
+			} else if (showUserInput && ElapsedTime(500))
             {
-				sphere.SetActive(true);
-                //mostrar panel interaccion
-            } else if (dialogType.Finish && counterDelay.ElapsedMilliseconds > 2000)
+                PauseMedia();
+                EnableInterationMenu();
+               
+            } else if (dialogType.Finish && ElapsedTime(2000))
             {
                 FinishExperience();
+
+            }else if (skip && ElapsedTime(2000))
+            {
+                DisableInterationMenu();
+                ResumeMedia();
+                answerOK = true;
+                skip = false;
+                givenHint.text = "";
             }
 
         }
@@ -285,7 +282,55 @@ public class MediaManager : MonoBehaviour {
         }
     }
 
-	public void KeyboardExitButton(){
+    private bool ElapsedTime(int seconds)
+    {
+        return counterDelay.ElapsedMilliseconds > seconds;
+    }
+
+    private bool ElapsedAudioTime(int seconds)
+    {
+        return counterAudio.ElapsedMilliseconds > seconds;
+    }
+
+    private void StartDelayTime()
+    {
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+    public void EnableInterationMenu()
+    {
+        sphere.SetActive(true);
+        panelSub.SetActive(false);
+        panelInput.SetActive(true);
+        panelAnswer.SetActive(true);
+     
+        panelQuestion.SetActive(true);
+
+        TextMesh textObject = GameObject.Find("QuestionText").GetComponent<TextMesh>();
+        textObject.text = dialogType.Text; ;
+
+        panelHintButton.SetActive(true);
+        panelHintText.SetActive(true);
+        gifCross.SetActive(false);
+        gifTick.SetActive(false);
+
+    }
+
+    public void DisableInterationMenu()
+    {
+        pause = false;
+        showUserInput = false;
+        sphere.SetActive(false);
+        panelInput.SetActive(false);
+        panelSub.SetActive(true);
+        panelAnswer.SetActive(false);
+        panelQuestion.SetActive(false);
+        panelHintButton.SetActive(false);
+        panelHintText.SetActive(false);
+    }
+
+    public void KeyboardExitButton(){
         keyboardInp.text = "";
         keyboard.SetActive(false);
 		panelSub.SetActive(false);
@@ -329,42 +374,12 @@ public class MediaManager : MonoBehaviour {
 
     private void PauseMedia()
     {
-        /*  if (data.audioAssetKey != null)
-          {
-              sfx.Pause();
-          }
-
-          if (audioLeft != null)
-          {
-              audioLeft.Pause();
-          }
-
-          if (audioRight)
-          {
-              audioRight.Pause();
-          }*/
-
         media.Pause();
         counterVideo.Stop();
     }
 
     private void ResumeMedia()
     {
-        /* if (data.audioAssetKey != null)
-         {
-             sfx.UnPause();
-         }
-
-         if (audioLeft != null)
-         {
-             audioLeft.UnPause();
-         }
-
-         if (audioRight)
-         {
-             audioRight.UnPause();
-         }*/
-
         media.Play();
         counterVideo.Start();
     }
@@ -413,17 +428,6 @@ public class MediaManager : MonoBehaviour {
             {
 				if(!videoName.Equals("Error"))
 				{
-                    int videoNumber = experience.GetIndice();
-                    if (videoNumber == 4)
-                    {
-                        panelSub.SetActive(false);
-                        panelAnswer.SetActive(true);
-                        panelQuestion.SetActive(true);
-                        panelHintButton.SetActive(true);
-                        panelHintText.SetActive(true);
-                    } else {
-                        panelSub.SetActive(true);
-                    }
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
 					Sub.text = "";
@@ -513,13 +517,12 @@ public class MediaManager : MonoBehaviour {
 	public void ExecuteSkip()
 	{
 		if (dialogType.RequiredInput) {
-			pause = false;
-			ResumeMedia ();
-			showUserInput = false;
-			answerOK = true;
-			sphere.SetActive (false);
-
-		}
+            
+            givenHint.text = dialogType.Answers[0].ToString() + " ... ";
+            StartDelayTime();
+            skip = true;
+            showUserInput = false;
+        }
 	}
 
 
@@ -546,20 +549,7 @@ public class MediaManager : MonoBehaviour {
 					DesactiveObject(panelExt);
 					DesactiveObject(textInfo);
 					panelInput.SetActive(false);
-                    //TODO: NO DEJAR ESTO HARDCODEADO ARREGLAR
-                    //SE ESTA IDENTIFICANDO SI EL VIDEO ES EL 5 PARA CAMBIAR LOS PANELES DE RESPUESTA
-                    if (indice == 4)
-                    {
-                        panelSub.SetActive(false);
-                        panelAnswer.SetActive(true);
-                        panelQuestion.SetActive(true);
-                        panelHintButton.SetActive(true);
-                        panelHintText.SetActive(true);
-                    }
-                    else {
-                        panelSub.SetActive(true);
-                    }
-                    //panelSub.SetActive(true);
+           
                     sphere.SetActive(false);
 					InitializeVariables();
 					navigationPanel.colorPart();
