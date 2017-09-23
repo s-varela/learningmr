@@ -588,8 +588,6 @@ public class MediaManager : MonoBehaviour {
 	{
 		keyboard.SetActive(false);
 
-		//panelSub.SetActive(true);
-		userAnswer.text = answer; // May be wrong, may be right. But we want to see what it is anyway.
 		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
 		if (evaluatedAnswer) {
@@ -609,7 +607,6 @@ public class MediaManager : MonoBehaviour {
 		{
             userAnswer.text = answer;
             userAnswer.color = Color.red;
-
 			panelInput.SetActive (true);
 			gifCross.SetActive (true);
 		}

@@ -115,7 +115,6 @@ public class InteractionPanel : MonoBehaviour {
 	private void SpeechRecognizedFailedEventHandler(string obj, long requestIndex)
 	{
 		speechRecognitionResult.text = "Error: " + obj;
-		mediaManager.validateAnswer (speechRecognitionResult.text);
 	}
 
 	private void SpeechRecognizedSuccessEventHandler(RecognitionResponse obj, long requestIndex)
