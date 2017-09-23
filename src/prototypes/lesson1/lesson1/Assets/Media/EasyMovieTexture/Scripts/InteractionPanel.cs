@@ -31,6 +31,7 @@ public class InteractionPanel : MonoBehaviour {
 
 	[SerializeField] GameObject gifRipple;
 	[SerializeField] GameObject gifProcessing;
+	[SerializeField] TextMesh answer;
 
 	[SerializeField] Material UI_SpeechStart;
 	[SerializeField] Material UI_SpeechStop;
@@ -88,7 +89,9 @@ public class InteractionPanel : MonoBehaviour {
 		
 		speechRecognitionResult.text = string.Empty;
 		speechRecognitionResult.text = "Recording...";
+		answer.text = "";
 		gifRipple.SetActive (true);
+		gifProcessing.SetActive (false);
 		if(btnRec != null)
 		{
 			btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
