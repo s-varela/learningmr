@@ -6,7 +6,7 @@
         public const string API_KEY_PARAM = "?key=";
 
 
-        public const string GC_API_KEY = "AIzaSyDSNuCqM9R4Qnn-6aRLK3Sg3ro9ZeqhdbI"; // Google Cloud API Key. Only for test! Use your own API Key in Live!
+        public const string GC_API_KEY = "AIzaSyA4ZSfgB3vhij74g4O5idBFeHSY5OK2C4U"; // Google Cloud API Key. Only for test! Use your own API Key in Live!
 
 
         public const double AUDIO_DETECT_RATIO = 32768.0;
