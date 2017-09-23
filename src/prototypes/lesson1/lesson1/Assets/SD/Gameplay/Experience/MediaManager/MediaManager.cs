@@ -62,7 +62,7 @@ public class MediaManager : MonoBehaviour {
     //[SerializeField] private Text theText;
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
-    private bool emptyKeyboardAnswer = fals
+	private bool emptyKeyboardAnswer = false;
     private int indiceAudio;
     private DialogType dialogType;
 	private int i=-1;
