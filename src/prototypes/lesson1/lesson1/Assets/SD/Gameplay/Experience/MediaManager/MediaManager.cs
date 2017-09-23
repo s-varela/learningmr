@@ -312,8 +312,6 @@ public class MediaManager : MonoBehaviour {
 
         panelHintButton.SetActive(true);
         panelHintText.SetActive(true);
-        gifCross.SetActive(false);
-        gifTick.SetActive(false);
 
     }
 
