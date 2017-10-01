@@ -40,7 +40,7 @@ public class MediaManager : MonoBehaviour {
 
 
     [SerializeField] NavigationPanel navigationPanel;
-
+    private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
@@ -48,7 +48,6 @@ public class MediaManager : MonoBehaviour {
     private string[] arrSubtitles;
 	private string[] arrayText;
 	private Color originalColor;
-
     private AudioSource sfx;
     private Stopwatch counterVideo;
     private Stopwatch counterAudio;
@@ -95,16 +94,6 @@ public class MediaManager : MonoBehaviour {
 			audioRight.volume = experience.GetConfigurationValue<float> (data.videoVolumeConfigValue);
 			audioRight.Play ();
 		}
-
-        /*   if (data.audioAssetKey != null)
-           {
-               sfx = gameObject.AddComponent<AudioSource>();
-
-               sfx.clip = Resources.Load<AudioClip>(data.audioAssetKey);
-              // sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
-               sfx.loop = false;
-               sfx.Play();
-           }*/
 
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
@@ -346,17 +335,14 @@ public class MediaManager : MonoBehaviour {
 	public void KeyboardOKButton(){
         string answer = keyboardInp.text;
 
-        if (answer.Equals("") || answer.Equals("Respuesta vacia"))
-        {
+        if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA)) {
             emptyKeyboardAnswer = true;
         }
-        else
-        {
+        else {
             emptyKeyboardAnswer = false;
         }
         
-        if (!emptyKeyboardAnswer)
-        {
+        if (!emptyKeyboardAnswer) {
             emptyKeyboardAnswer = false;
             validateAnswer(answer);
             panelSub.SetActive(false);
