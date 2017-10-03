@@ -39,46 +39,6 @@ public class LoadPanel : MonoBehaviour
                 info.text = info.text + "\n" + sub.text;
                 //count++;
             }
-            //if (count == 4)
-            //{
-            //    arrayText = info.text.Split('\n');
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        for (int j = 0; j < count; j++)
-            //        {
-            //            if (i == j)
-            //            { info.text = "<color=#0000ffff>" + arrayText[j] + "</color>"; }
-            //            else
-            //            { info.text = info.text + arrayText[j]; }
-            //        }
-            //        info.text = "";
-            //    }
-            //}
-
-
-            //if (count == 0)
-            //{
-            //    subAnt = aux;
-            //    count++;
-            //}
-            //else if (count == 1)
-            //{
-            //    contenido.text = subAnt;
-            //    subAnt = sub.text;
-            //    count++;
-            //}
-            //else if (count > 1 && count < 5)
-            //{
-            //    contenido.text = subAnt + "\n" + contenido.text;
-            //    subAnt = sub.text;
-            //    count++;
-            //}
-            //else if (count == 5)
-            //{
-            //    arrayCont = contenido.text.Split('\n');
-            //    contenido.text = subAnt + "\n" + arrayCont[0] + "\n" + arrayCont[1];
-            //    subAnt = sub.text;
-            //}
         }
     }
 
@@ -92,6 +52,7 @@ public class LoadPanel : MonoBehaviour
 	{
 		info.text = "";
 		count = 0;
+        //AHORA HAY QUE LIMPIAR EL TEXTO DE TODOS LOS PANELES
 	}
 
 	public void colorSub (int indiceAudio, string[] array)

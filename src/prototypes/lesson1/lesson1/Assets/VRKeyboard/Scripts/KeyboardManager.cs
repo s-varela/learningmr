@@ -29,7 +29,7 @@ namespace VRKeyboard.Utils {
         }
 
         private Dictionary<GameObject, Text> keysDictionary = new Dictionary<GameObject, Text>();
-
+        private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
         private bool capslockFlag;
         #endregion
 
@@ -42,14 +42,14 @@ namespace VRKeyboard.Utils {
                 keysDictionary.Add(key, _text);
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
-                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals("Respuesta vacia")))
+                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA)))
                     {
                         inputText.color = Color.red;
-                        Input = "Respuesta vacia";
+                        Input = TECLADO_RESPUESTA_VACIA;
                     }
                     else {
 
-                        if (Input.Equals("Respuesta vacia")) { Input = ""; }
+                        if (Input.Equals(TECLADO_RESPUESTA_VACIA)) { Input = ""; }
                             inputText.color = Color.white;
                             GenerateInput(_text.text);
                     }
