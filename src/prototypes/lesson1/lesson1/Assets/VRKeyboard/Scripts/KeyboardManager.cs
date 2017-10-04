@@ -44,13 +44,16 @@ namespace VRKeyboard.Utils {
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
                     //procesar si son varios espacios dejarlos como uno solo y que indique respuesta
-                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA)))
-                    {
+                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA))) {
+
                         inputText.color = Color.red;
                         Input = TECLADO_RESPUESTA_VACIA;
+
                     } else if (_text.text.Equals("ok") && Input.Trim().Equals("")) {
+
                         inputText.color = Color.red;
                         Input = TECLADO_RESPUESTA_VACIA;
+
                     } else {
 
                         if (Input.Equals(TECLADO_RESPUESTA_VACIA)) { Input = ""; }
