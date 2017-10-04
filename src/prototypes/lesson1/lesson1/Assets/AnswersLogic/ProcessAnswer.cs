@@ -14,11 +14,6 @@ namespace Assets.AnswersLogic
         
         public bool evaluateAnswer(String userAnswer, DialogType dialogType)
         {
-            //delete leading and final white-spaces 
-            userAnswer = userAnswer.Trim();
-            //substitute multiple spaces from within words for one space
-            Regex.Replace(userAnswer, @"\s+", " ");
-
             ArrayList answers = dialogType.Answers;
             String userAnswerAux = userAnswer;
 

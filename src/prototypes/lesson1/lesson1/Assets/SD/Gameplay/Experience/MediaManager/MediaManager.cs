@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System.Diagnostics;
 using Assets.AnswersLogic;
 using System.IO;
-
+using System.Text.RegularExpressions;
 
 public class MediaManager : MonoBehaviour {
 
@@ -341,6 +341,9 @@ public class MediaManager : MonoBehaviour {
 	public void KeyboardOKButton(){
         string answer = keyboardInp.text;
 
+        answer = answer.Trim();
+        answer = Regex.Replace(answer, @"\s+", " ");
+
         if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA)) {
             emptyKeyboardAnswer = true;
         }
@@ -389,6 +392,9 @@ public class MediaManager : MonoBehaviour {
     public void validateAnswerRepeatPanel(string answer)
     {
         keyboard.SetActive(false);
+
+        answer = answer.Trim();
+        answer = Regex.Replace(answer,@"\s+", " ");
 
         bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
@@ -620,8 +626,12 @@ public class MediaManager : MonoBehaviour {
 	public void validateAnswer(string answer)
 	{
         keyboard.SetActive(false);
+        //delete leading and final white-spaces 
+        answer = answer.Trim();
+        //substitute multiple spaces from within words for one space
+        answer = Regex.Replace(answer, @"\s+", " ");
 
-		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
+        bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
 		if (evaluatedAnswer) {
 			pause = false;
