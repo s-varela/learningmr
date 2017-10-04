@@ -43,19 +43,22 @@ namespace VRKeyboard.Utils {
                 keysDictionary.Add(key, _text);
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
-                    //procesar si son varios espacios dejarlos como uno solo y que indique respuesta vacia
-                    string inputAux = Input;
-                    string ifEmpty = Regex.Replace(inputAux, @"\s+", "");
-                    if (_text.text.Equals("ok") && (ifEmpty.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA)))
-                    {
+                    //procesar si son varios espacios dejarlos como uno solo y que indique respuesta
+                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA))) {
+
                         inputText.color = Color.red;
                         Input = TECLADO_RESPUESTA_VACIA;
-                    }
-                    else {
+
+                    } else if (_text.text.Equals("ok") && Input.Trim().Equals("")) {
+
+                        inputText.color = Color.red;
+                        Input = TECLADO_RESPUESTA_VACIA;
+
+                    } else {
 
                         if (Input.Equals(TECLADO_RESPUESTA_VACIA)) { Input = ""; }
-                            inputText.color = Color.white;
-                            GenerateInput(_text.text);
+                        inputText.color = Color.white;
+                        GenerateInput(_text.text);
                     }
                 });
             }
