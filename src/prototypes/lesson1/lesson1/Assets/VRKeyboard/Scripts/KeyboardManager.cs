@@ -6,6 +6,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace VRKeyboard.Utils {
     public class KeyboardManager : MonoBehaviour {
@@ -42,7 +43,10 @@ namespace VRKeyboard.Utils {
                 keysDictionary.Add(key, _text);
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
-                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA)))
+                    //procesar si son varios espacios dejarlos como uno solo y que indique respuesta vacia
+                    string inputAux = Input;
+                    string ifEmpty = Regex.Replace(inputAux, @"\s+", "");
+                    if (_text.text.Equals("ok") && (ifEmpty.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA)))
                     {
                         inputText.color = Color.red;
                         Input = TECLADO_RESPUESTA_VACIA;
