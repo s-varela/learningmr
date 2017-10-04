@@ -6,6 +6,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace VRKeyboard.Utils {
     public class KeyboardManager : MonoBehaviour {
@@ -29,7 +30,7 @@ namespace VRKeyboard.Utils {
         }
 
         private Dictionary<GameObject, Text> keysDictionary = new Dictionary<GameObject, Text>();
-
+        private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
         private bool capslockFlag;
         #endregion
 
@@ -42,7 +43,23 @@ namespace VRKeyboard.Utils {
                 keysDictionary.Add(key, _text);
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
-                    GenerateInput(_text.text);
+                    //procesar si son varios espacios dejarlos como uno solo y que indique respuesta
+                    if (_text.text.Equals("ok") && (Input.Equals("") || Input.Equals(TECLADO_RESPUESTA_VACIA))) {
+
+                        inputText.color = Color.red;
+                        Input = TECLADO_RESPUESTA_VACIA;
+
+                    } else if (_text.text.Equals("ok") && Input.Trim().Equals("")) {
+
+                        inputText.color = Color.red;
+                        Input = TECLADO_RESPUESTA_VACIA;
+
+                    } else {
+
+                        if (Input.Equals(TECLADO_RESPUESTA_VACIA)) { Input = ""; }
+                        inputText.color = Color.white;
+                        GenerateInput(_text.text);
+                    }
                 });
             }
 
