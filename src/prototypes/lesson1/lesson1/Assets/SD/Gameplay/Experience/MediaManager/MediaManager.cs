@@ -19,8 +19,9 @@ public class MediaManager : MonoBehaviour {
 
 	[SerializeField] private LoadPanel loadPanel;
 
-    [SerializeField] GameObject panelExt;
-	[SerializeField] GameObject textInfo;
+    //[SerializeField] GameObject panelExt;
+	//[SerializeField] GameObject textInfo;
+	[SerializeField] GameObject panelInfo;
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
     [SerializeField] GameObject panelQuestion;
@@ -107,8 +108,9 @@ public class MediaManager : MonoBehaviour {
 		answerOK = false;
 		showUserInput = false;
 		pause = false;
-		DesactiveObject(panelExt);
-		DesactiveObject(textInfo);
+		//DesactiveObject(panelExt);
+		//DesactiveObject(textInfo);
+		panelInfo.SetActive(false);
 		panelSub.SetActive(true);
 		panelInput.SetActive(false);
 		sphere.SetActive(false);
@@ -208,8 +210,9 @@ public class MediaManager : MonoBehaviour {
 			else if (pause && ElapsedTime(2000))//se termino la sub leccion, muestro panel frontal y reproduzco audios
             {
                 PauseMedia();
-				ActiveObject(panelExt);
-				ActiveObject(textInfo);
+				//ActiveObject(panelExt);
+				//ActiveObject(textInfo);
+				panelInfo.SetActive(true);
 				sphere.SetActive(true);
 
 				panelSub.SetActive(false);
@@ -390,8 +393,9 @@ public class MediaManager : MonoBehaviour {
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
-		DesactiveObject(panelExt);
-		DesactiveObject(textInfo);
+		//DesactiveObject(panelExt);
+		//DesactiveObject(textInfo);
+		panelInfo.SetActive(false);
 		sphere.SetActive(false);
 		panelSub.SetActive(true);
         ManagerVideo();
@@ -530,8 +534,9 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					Sub.text="";
 					normalText.text = "";
-					DesactiveObject(panelExt);
-					DesactiveObject(textInfo);
+					//DesactiveObject(panelExt);
+					//DesactiveObject(textInfo);
+					panelInfo.SetActive(false);
 					panelInput.SetActive(false);
            
                     sphere.SetActive(false);
