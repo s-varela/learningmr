@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace Assets.AnswersLogic
@@ -13,6 +14,11 @@ namespace Assets.AnswersLogic
         
         public bool evaluateAnswer(String userAnswer, DialogType dialogType)
         {
+            //delete leading and final white-spaces 
+            userAnswer = userAnswer.Trim();
+            //substitute multiple spaces from within words for one space
+            Regex.Replace(userAnswer, @"\s+", " ");
+
             ArrayList answers = dialogType.Answers;
             String userAnswerAux = userAnswer;
 
@@ -21,7 +27,7 @@ namespace Assets.AnswersLogic
                 
                 foreach (string answer in answers)
                 {
-                    Debug.Log("["+ this.GetType().Name+"."+System.Reflection.MethodBase.GetCurrentMethod()+"][ answer: " + answer +"]");
+                    //Debug.Log("["+ this.GetType().Name+"."+System.Reflection.MethodBase.GetCurrentMethod()+"][ answer: " + answer +"]");
                     String answerAux = answer;
 
                     if (userAnswerAux.ToLower().Contains(answerAux.ToLower()))

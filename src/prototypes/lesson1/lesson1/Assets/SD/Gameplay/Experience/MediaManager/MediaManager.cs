@@ -39,8 +39,8 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject gifTick;
 	[SerializeField] GameObject gifCross;
 
-
     [SerializeField] NavigationPanel navigationPanel;
+
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
     private AudioManager audioManager;
@@ -65,19 +65,24 @@ public class MediaManager : MonoBehaviour {
 	private int i=-1;
     private int dynamicDelay = 0;
     private bool skip = false;
+    private ArrayList textForRepeat;
+    private int repeatPage;
     // Use this for initialization
+
 
     void Start()
     {
+        repeatPage = 1;
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
         dialogType = new DialogType();
         changeSub = false;
 		experience.ResetIndice ();
 		originalColor = Sub.color;
+        textForRepeat = new ArrayList();
 
-		//Inicializar variables
-		InitializeVariables();
+        //Inicializar variables
+        InitializeVariables();
 
         if (audioLeft != null)
         {
@@ -172,9 +177,10 @@ public class MediaManager : MonoBehaviour {
                 {
                     string theSub = dialogType.Text;
 
-                    //Si la la frase es nueva pauso el video y reproduce la frase nuevamente
-                    if (!theSub.Equals("") && theSub != normalText.text)
-                    {
+                    if (!theSub.Equals("") && theSub != normalText.text) {
+
+                        //arraylist con texto para repetir
+                        textForRepeat.Add(theSub);
                         normalText.text = theSub;
 						answerOK = false;
 						Sub.color = originalColor;
@@ -359,6 +365,59 @@ public class MediaManager : MonoBehaviour {
         }
     }
 
+    public void keyboardExitRepeatPanel()
+    {
+        keyboardInp.text = "";
+        keyboard.SetActive(false);
+    }
+
+    public void keyboardOKRepeatPanel() {
+        string answer = keyboardInp.text;
+
+        if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA))
+        {
+            emptyKeyboardAnswer = true;
+        }
+        else {
+            emptyKeyboardAnswer = false;
+        }
+
+        if (!emptyKeyboardAnswer)
+        {
+            emptyKeyboardAnswer = false;
+            validateAnswer(answer);
+        }
+    }
+
+    public void validateAnswerRepeatPanel(string answer)
+    {
+        keyboard.SetActive(false);
+
+        bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
+
+        if (evaluatedAnswer)
+        {
+            pause = false;
+            showUserInput = false;
+            answerOK = true;
+            sphere.SetActive(false);
+            userAnswer.text = answer;
+            givenHint.text = "";
+            userAnswer.color = Color.green;
+            gifTick.SetActive(true);
+            gifCross.SetActive(false);
+            skip = true;
+            StartDelayTime();
+        }
+        else
+        {
+            userAnswer.text = answer;
+            userAnswer.color = Color.red;
+            panelInput.SetActive(true);
+            gifCross.SetActive(true);
+        }
+    }
+
     private void PauseMedia()
     {
         media.Pause();
@@ -398,6 +457,7 @@ public class MediaManager : MonoBehaviour {
 		panelInfo.SetActive(false);
 		sphere.SetActive(false);
 		panelSub.SetActive(true);
+        textForRepeat.Clear();
         ManagerVideo();
     }
 
@@ -564,8 +624,7 @@ public class MediaManager : MonoBehaviour {
 
 	public void validateAnswer(string answer)
 	{
-		keyboard.SetActive(false);
-		//panelSub.SetActive(true);
+        keyboard.SetActive(false);
 
 		bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
@@ -590,5 +649,39 @@ public class MediaManager : MonoBehaviour {
 			gifCross.SetActive (true);
 		}
 	}
-		
+
+    //metodo repetir audio panel de resumen
+    public void repeatAudio(TextMesh repeatSub) {
+        PlayAudio(repeatSub.text);
+    }
+
+    //metodo proxima pagina panel de resumen
+    public void nextPage() {
+        repeatPage += 1;
+        textInfoFill();
+    }
+
+    //metodo pagina anterior panel de resumen
+    public void previousPage()
+    {
+        repeatPage -= 1;
+        textInfoFill();
+    }
+
+    //metodo rellenar panel de resumen al final de cada video
+    public void textInfoFill() {
+        int windows = 5;
+        int indice = 0;
+
+        for (int i = 0; i < windows; i ++) {
+            TextMesh textObject = GameObject.Find("TextInfo"+i+1).GetComponent<TextMesh>();
+            indice = repeatPage * windows + i;
+            if (indice < textForRepeat.Count)
+            {
+                string text = textForRepeat[indice].ToString();
+            }
+        }
+
+    }
+
 }
