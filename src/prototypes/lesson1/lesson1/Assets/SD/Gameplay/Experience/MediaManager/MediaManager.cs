@@ -660,9 +660,11 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
+
     //metodo repetir audio panel de resumen
-    public void repeatAudio(TextMesh repeatSub) {
-        PlayAudio(repeatSub.text);
+    public void repeatAudio() {
+        //GameObject.Find("QuestionText").GetComponent<TextMesh>();
+        //PlayAudio(repeatSub.text);
     }
 
     //metodo proxima pagina panel de resumen
