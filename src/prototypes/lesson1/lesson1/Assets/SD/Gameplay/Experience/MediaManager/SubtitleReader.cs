@@ -72,7 +72,7 @@ public class SubtitleReader : MonoBehaviour
                 }
                 else if (subtitleText.Contains("&P"))
                 {
-                    dialogType.Pause = true;
+                    dialogType.Listen = true;
                     dialogType.Text = subtitleText.Split('&')[0];
                 }
                 else if (subtitleText.Contains("&E"))
