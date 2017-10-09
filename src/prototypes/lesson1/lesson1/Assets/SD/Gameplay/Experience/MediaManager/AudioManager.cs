@@ -21,7 +21,7 @@ using System.Collections;
 			hashAudios.Add("Nice to meet you.", "nice_to_meet_you");
             hashAudios.Add("What's your name?", "whats_your_name");
             hashAudios.Add("Yes, I am.", "yes_i_am");
-            hashAudios.Add("No, Im not. Im Michael.", "no_im_not_im_michael");
+            hashAudios.Add("No, I'm not. I'm Michael.", "no_im_not_im_michael");
             hashAudios.Add("Where are you from?", "where_are_you_from");
         }
 
