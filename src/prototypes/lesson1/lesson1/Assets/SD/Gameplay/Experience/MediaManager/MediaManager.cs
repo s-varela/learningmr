@@ -204,13 +204,17 @@ public class MediaManager : MonoBehaviour {
 
                     }
                 }
-                else if (IsListenMode())//se termino la sub leccion, muestro panel frontal y reproduzco audios
+                else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
                 {
-                    if (ElapsedAudioTime(3000)) //Espero x tiempo
+                    sphere.SetActive(true);
+                    panelSub.SetActive(false);
+                    panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
+  
+                    if (ElapsedAudioTime(3000))
                     {
                         try
                         {
-                            RepeatDialog();
+                            RepeatDialog(); //Se reproducen los dialogos 
                         }
                         catch (System.Exception ex)
                         {
@@ -290,15 +294,16 @@ public class MediaManager : MonoBehaviour {
         counterDelay.Start();
     }
 
-
+ 
     private void ConfigListenMode()
     {
+        /**Se oculta panel de informacion y se cargan los textos**/
         indiceAudio = 0;
         listen = true;
         PauseMedia();
         panelInfo.SetActive(true);
-        sphere.SetActive(true);
-        panelSub.SetActive(false);
+        panelInfo.transform.localScale = new Vector3(0, 0, 0); 
+
         TextInfoFill();
         counterAudio.Start();
         counterDelay.Reset();
