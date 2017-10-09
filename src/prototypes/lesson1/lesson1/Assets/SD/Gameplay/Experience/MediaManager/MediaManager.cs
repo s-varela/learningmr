@@ -388,6 +388,9 @@ public class MediaManager : MonoBehaviour {
         panelQuestion.SetActive(false);
         panelHintButton.SetActive(false);
         panelHintText.SetActive(false);
+		userAnswer.text = "";
+		givenHint.text = "";
+		Sub.text = "";
     }
 
     public void KeyboardExitButton(){
