@@ -331,44 +331,61 @@ public class MediaManager : MonoBehaviour {
     }
 
     public void KeyboardExitButton(){
-        keyboardInp.text = "";
-        keyboard.SetActive(false);
-		panelSub.SetActive(false);
-		panelInput.SetActive(true);
-        panelAnswer.SetActive(true);
-        panelQuestion.SetActive(true);
-        panelHintButton.SetActive(true);
-        hintButton.SetActive(true);
-        skipButton.SetActive(true);
-        panelHintText.SetActive(true);
-		gifCross.SetActive (false);
-		gifTick.SetActive (false);
-    }
 
-	public void KeyboardOKButton(){
-        string answer = keyboardInp.text;
-
-        answer = answer.Trim();
-        answer = Regex.Replace(answer, @"\s+", " ");
-
-        if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA)) {
-            emptyKeyboardAnswer = true;
+        if (panelInfo.activeSelf)
+        {
+            keyboardExitRepeatPanel();
         }
         else {
-            emptyKeyboardAnswer = false;
-        }
-        
-        if (!emptyKeyboardAnswer) {
-            emptyKeyboardAnswer = false;
-            validateAnswer(answer);
+            keyboardInp.text = "";
+            keyboard.SetActive(false);
             panelSub.SetActive(false);
             panelInput.SetActive(true);
             panelAnswer.SetActive(true);
             panelQuestion.SetActive(true);
             panelHintButton.SetActive(true);
-            panelHintText.SetActive(true);
             hintButton.SetActive(true);
             skipButton.SetActive(true);
+            panelHintText.SetActive(true);
+            gifCross.SetActive(false);
+            gifTick.SetActive(false);
+        }
+    }
+
+	public void KeyboardOKButton(){
+
+        if (panelInfo.activeSelf)
+        {
+            keyboardOKRepeatPanel();
+        }
+        else {
+
+            string answer = keyboardInp.text;
+
+            answer = answer.Trim();
+            answer = Regex.Replace(answer, @"\s+", " ");
+
+            if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA))
+            {
+                emptyKeyboardAnswer = true;
+            }
+            else {
+                emptyKeyboardAnswer = false;
+            }
+
+            if (!emptyKeyboardAnswer)
+            {
+                emptyKeyboardAnswer = false;
+                validateAnswer(answer);
+                panelSub.SetActive(false);
+                panelInput.SetActive(true);
+                panelAnswer.SetActive(true);
+                panelQuestion.SetActive(true);
+                panelHintButton.SetActive(true);
+                panelHintText.SetActive(true);
+                hintButton.SetActive(true);
+                skipButton.SetActive(true);
+            }
         }
     }
 
@@ -458,7 +475,7 @@ public class MediaManager : MonoBehaviour {
     private void FinishLessonPart()
     {
 		pause = false;
-        loadPanel.DeleteSub();
+        //loadPanel.DeleteSub();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
@@ -664,25 +681,37 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
-    public void selectRadioButton(GameObject radio) {
+    public void selectRadioButton(GameObject radioSelected) {
+        UnityEngine.Debug.Log("[MM][selectRadiobutton][entro]");
         //UI_RadioButton1
-        GameObject.Find("UI_RadioButton1").GetComponent<Renderer>().material = radioButtonNotSelected;
-        //UI_RadioButton2
-        GameObject.Find("UI_RadioButton2").GetComponent<Renderer>().material = radioButtonNotSelected;
-        //UI_RadioButton3
-        GameObject.Find("UI_RadioButton3").GetComponent<Renderer>().material = radioButtonNotSelected;
-        //UI_RadioButton4
-        GameObject.Find("UI_RadioButton4").GetComponent<Renderer>().material = radioButtonNotSelected;
-        //UI_RadioButton5
-        GameObject.Find("UI_RadioButton5").GetComponent<Renderer>().material = radioButtonNotSelected;
+        GameObject r1 = GameObject.Find("UI_RadioButton1");
+        r1.GetComponent<Renderer>().material = radioButtonNotSelected;
 
-        int radioInt = int.Parse(Regex.Match(radio.name, @"\d+").Value);
+        //UI_RadioButton2
+        GameObject r2 = GameObject.Find("UI_RadioButton2");
+        r2.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+        //UI_RadioButton3
+        GameObject r3 = GameObject.Find("UI_RadioButton3");
+        r3.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+        //UI_RadioButton4
+        GameObject r4 = GameObject.Find("UI_RadioButton4");
+        r4.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+        //UI_RadioButton5
+        GameObject r5 = GameObject.Find("UI_RadioButton5");
+        r5.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+        int radioInt = int.Parse(Regex.Match(radioSelected.name, @"\d+").Value);
         selectedString = GameObject.Find("TextInfo" + radioInt).GetComponent<TextMesh>().text;
-        GameObject.Find(radio.name).GetComponent<Renderer>().material = radioButtonSelected;
+        UnityEngine.Debug.Log("selectedstring: " + selectedString);
+        radioSelected.GetComponent<Renderer>().material = radioButtonSelected;
     }
 
     //metodo repetir audio panel de resumen
     public void repeatAudio() {
+        UnityEngine.Debug.Log("selectedstring repeat: " + selectedString);
         PlayAudio(selectedString);
     }
 
