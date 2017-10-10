@@ -8,7 +8,7 @@ public class VRGameMenu : MonoBehaviour {
     [SerializeField] private VRInput input;
     [SerializeField] private VRCameraFade fader;
     [SerializeField] private Transform cameraTransform;
-    [SerializeField] private float distance = 5;
+    [SerializeField] private float distance;
     [SerializeField] private GameObject menuBase;
     [SerializeField] private VRUIAnimationClick btnReturn;
     [SerializeField] private VRUIAnimationClick btnResume;

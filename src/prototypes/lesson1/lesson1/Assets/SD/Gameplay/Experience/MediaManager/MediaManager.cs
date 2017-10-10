@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Assets.AnswersLogic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System;
 
 public class MediaManager : MonoBehaviour {
 
@@ -18,9 +19,6 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] private VRGameMenu menu;
 
 	[SerializeField] private LoadPanel loadPanel;
-
-    //[SerializeField] GameObject panelExt;
-	//[SerializeField] GameObject textInfo;
 	[SerializeField] GameObject panelInfo;
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
@@ -48,7 +46,6 @@ public class MediaManager : MonoBehaviour {
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
     private string pathVideos = "/lesson1-data/videos/";
-    private string[] arrSubtitles;
 	private string[] arrayText;
 	private Color originalColor;
     private AudioSource sfx;
@@ -57,7 +54,7 @@ public class MediaManager : MonoBehaviour {
 	private Stopwatch counterDelay;
     private bool changeSub;
     private bool showUserInput;
-    private bool pause;
+    private bool listen;
     private bool finish;
     [SerializeField] private TextMesh normalText;
 	private bool answerOK = false;
@@ -65,18 +62,19 @@ public class MediaManager : MonoBehaviour {
     private int indiceAudio;
     private DialogType dialogType;
 	private int i=-1;
-    private int dynamicDelay = 0;
     private bool skip = false;
     private ArrayList textForRepeat;
-    private int repeatPage;
     private string selectedString;
+    private int currentPage;
+    private const int windows = 5;
+    private bool wait;
     // Use this for initialization
 
 
     void Start()
     {
         selectedString = "";
-        repeatPage = 1;
+        currentPage = 0;
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
         dialogType = new DialogType();
@@ -116,9 +114,7 @@ public class MediaManager : MonoBehaviour {
 		changeSub = false;
 		answerOK = false;
 		showUserInput = false;
-		pause = false;
-		//DesactiveObject(panelExt);
-		//DesactiveObject(textInfo);
+		listen = false;
 		panelInfo.SetActive(false);
 		panelSub.SetActive(true);
 		panelInput.SetActive(false);
@@ -134,7 +130,11 @@ public class MediaManager : MonoBehaviour {
 		userAnswer.text = "";
 		givenHint.text = "";
 		indiceAudio = 0;
-	}
+        textForRepeat = new ArrayList();
+		wait = false;
+        currentPage = 0;
+
+    }
 
     void Awake()
     {
@@ -153,11 +153,12 @@ public class MediaManager : MonoBehaviour {
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
 
-            pause = false;
+            listen = false;
             showUserInput = false;
             finish=false;
             indiceAudio = 0;
             dialogType = new DialogType();
+            textForRepeat = new ArrayList();
         }
     }
 
@@ -167,114 +168,84 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-          
-            if (!pause && !showUserInput && !finish && !skip)
+            if (!wait)
             {
-                dynamicDelay = 0;
-
-                long seconds = counterVideo.ElapsedMilliseconds;
-                // search if duration is in last subtitle second (in miliseconds)
-               
-                dialogType = subReader.ReadSubtitleLine(seconds);
-
-                if (dialogType != null)
+                if (IsDialogMode())
                 {
-                    string theSub = dialogType.Text;
+                    long seconds = counterVideo.ElapsedMilliseconds;
+                    // search if duration is in last subtitle second (in miliseconds)
 
-                    if (!theSub.Equals("") && theSub != normalText.text) {
+                    dialogType = subReader.ReadSubtitleLine(seconds);
 
-                        //arraylist con texto para repetir
-                        textForRepeat.Add(theSub);
-                        normalText.text = theSub;
-						answerOK = false;
-						Sub.color = originalColor;
-						gifTick.SetActive (false);
-                    }
-                    if (dialogType.Pause)
+                    if (dialogType != null)
                     {
-                        pause = true;
-                        counterAudio.Start();
-						counterDelay.Reset();
-						counterDelay.Start();
+                        string theSub = dialogType.Text;
 
-                    }
-					else if (dialogType.RequiredInput && !answerOK)
-                    {
-						i=-1;
-                        showUserInput = true;
-						pause = false;
+                        if (!theSub.Equals("") && theSub != normalText.text)
+                        {
+                            //arraylist con texto para repetir
+                            textForRepeat.Add(theSub);
+                            normalText.text = theSub;
+                            answerOK = false;
+                            Sub.color = originalColor;
+                            gifTick.SetActive(false);
+                        }
 
-						counterDelay.Reset();
-						counterDelay.Start();
-       
-                    }else if (dialogType.Finish)
-                    {
-                        finish = true;
-                        pause = false;
-                        counterDelay.Reset();
-                        counterDelay.Start();
-                    }
+                        if (dialogType.Listen)
+                        {
+                            ConfigListenMode();
 
-                }
-            }
-			else if (pause && ElapsedTime(2000))//se termino la sub leccion, muestro panel frontal y reproduzco audios
-            {
-                PauseMedia();
-				//ActiveObject(panelExt);
-				//ActiveObject(textInfo);
-				panelInfo.SetActive(true);
-				sphere.SetActive(true);
+                        }
+                        else if (dialogType.RequiredInput && !answerOK)
+                        {
+                            ConfigInputMode();
 
-				panelSub.SetActive(false);
-                counterVideo.Stop();
+                        }
+                        else if (dialogType.Finish)
+                        {
+                            ConfigDialogFinishMode();
+                        }
 
-                if (ElapsedAudioTime(4000)) //Espero x tiempo
-                {
-                    arrSubtitles = loadPanel.ArrayText();
-                    if (indiceAudio < arrSubtitles.Length)
-                    {
-
-                        string sub = arrSubtitles[indiceAudio];
-
-                        PlayAudio(sub);
-						if(indiceAudio == 0)
-						{
-							arrayText = loadPanel.ArrayText();
-						}
-						loadPanel.colorSub(indiceAudio, arrayText);
-
-                        counterAudio.Stop();
-                        counterAudio.Reset();
-                        counterAudio.Start();
-						indiceAudio++;
-                    }
-                    else {
-                        indiceAudio = 0; //reseteo el contador
-                        counterAudio.Stop();
-                        counterAudio.Reset();
-                        counterAudio.Start();
-                        pause = false;
-                        FinishLessonPart();
                     }
                 }
-			} else if (showUserInput && ElapsedTime(500) && !keyboard.activeSelf)
-            {
-                PauseMedia();
-                EnableInterationMenu();
-               
-            } else if (dialogType.Finish && ElapsedTime(2000))
-            {
-                FinishExperience();
-
-            }else if (skip && ElapsedTime(2000))
-            {
-                DisableInterationMenu();
-                ResumeMedia();
-                answerOK = true;
-                skip = false;
-                givenHint.text = "";
+                else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
+                {
+                    sphere.SetActive(true);
+                    panelSub.SetActive(false);
+                    panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
+  
+                    if (ElapsedAudioTime(3000))
+                    {
+                        try
+                        {
+                            RepeatDialog(); //Se reproducen los dialogos 
+                        }
+                        catch (System.Exception ex)
+                        {
+                            //TODO logger
+                            UnityEngine.Debug.Log("[MediaManager][update] " + ex.Message);
+                            normalText.text = "Error reproducir audio" + ex.Message;
+                        }
+                    }
+                }
+                else if (IsInputMode())
+                {
+                    PauseMedia();
+                    EnableInterationMenu();
+                }
+                else if (IsFinishMode())
+                {
+                    FinishExperience();
+                }
+                else if (IsSkipMode())
+                {
+                    DisableInterationMenu();
+                    ResumeMedia();
+                    answerOK = true;
+                    skip = false;
+                    givenHint.text = "";
+                }
             }
-
         }
         catch (System.Exception ex)
         {
@@ -282,7 +253,100 @@ public class MediaManager : MonoBehaviour {
             UnityEngine.Debug.Log(ex.Message);
             normalText.text = ex.Message;
         }
+   
     }
+
+    private bool IsSkipMode()
+    {
+        return skip && ElapsedTime(2000);
+    }
+
+    private bool IsFinishMode()
+    {
+        return dialogType.Finish && ElapsedTime(2000);
+    }
+
+    private bool IsInputMode()
+    {
+        return showUserInput && ElapsedTime(500) && !keyboard.activeSelf;
+    }
+
+    private bool IsListenMode()
+    {
+        return listen && ElapsedTime(2000);
+    }
+
+    private bool IsDialogMode()
+    {
+        return !listen && !showUserInput && !finish && !skip;
+    }
+
+    private void ConfigDialogFinishMode()
+    {
+        finish = true;
+        listen = false;
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+    private void ConfigInputMode()
+    {
+        i = -1;
+        showUserInput = true;
+        listen = false;
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+ 
+    private void ConfigListenMode()
+    {
+        /**Se oculta panel de informacion y se cargan los textos**/
+        indiceAudio = 0;
+        listen = true;
+        PauseMedia();
+        panelInfo.SetActive(true);
+        panelInfo.transform.localScale = new Vector3(0, 0, 0); 
+
+        TextInfoFill();
+        counterAudio.Start();
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+    private void RepeatDialog()
+    {
+        if (indiceAudio < windows)
+        {
+            TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
+            textObject.color = Color.yellow;
+            PlayAudio(textObject.text);
+     
+            if (indiceAudio > 0)
+            {
+                TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
+                textObjectBefore.color = Color.white;
+            }
+
+            counterAudio.Stop();
+            counterAudio.Reset();
+            counterAudio.Start();
+            indiceAudio++;
+        }
+        else //Se reprodujeron todos los audios, epero 
+        {
+            TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
+            textObjectBefore.color = Color.white;
+
+            indiceAudio = 0; //reseteo el contador
+            counterAudio.Stop();
+            counterAudio.Reset();
+            counterAudio.Start();
+            listen = false;
+            wait = true;
+        }
+    }
+
 
     private bool ElapsedTime(int seconds)
     {
@@ -319,7 +383,7 @@ public class MediaManager : MonoBehaviour {
 
     public void DisableInterationMenu()
     {
-        pause = false;
+        listen = false;
         showUserInput = false;
         sphere.SetActive(false);
         panelInput.SetActive(false);
@@ -328,17 +392,29 @@ public class MediaManager : MonoBehaviour {
         panelQuestion.SetActive(false);
         panelHintButton.SetActive(false);
         panelHintText.SetActive(false);
+		userAnswer.text = "";
+		givenHint.text = "";
+		Sub.text = "";
     }
 
     public void KeyboardExitButton(){
 
+        string answer = keyboardInp.text;
+
         if (panelInfo.activeSelf)
         {
-            keyboardExitRepeatPanel();
+            KeyboardExitRepeatPanel();
         }
         else {
+
             keyboardInp.text = "";
             keyboard.SetActive(false);
+            emptyKeyboardAnswer = false;
+        }
+        
+        if (!emptyKeyboardAnswer) {
+            emptyKeyboardAnswer = false;
+            ValidateAnswer(answer);
             panelSub.SetActive(false);
             panelInput.SetActive(true);
             panelAnswer.SetActive(true);
@@ -376,7 +452,7 @@ public class MediaManager : MonoBehaviour {
             if (!emptyKeyboardAnswer)
             {
                 emptyKeyboardAnswer = false;
-                validateAnswer(answer);
+                ValidateAnswer(answer);
                 panelSub.SetActive(false);
                 panelInput.SetActive(true);
                 panelAnswer.SetActive(true);
@@ -389,7 +465,7 @@ public class MediaManager : MonoBehaviour {
         }
     }
 
-    public void keyboardExitRepeatPanel()
+    public void KeyboardExitRepeatPanel()
     {
         keyboardInp.text = "";
         keyboard.SetActive(false);
@@ -409,11 +485,13 @@ public class MediaManager : MonoBehaviour {
         if (!emptyKeyboardAnswer)
         {
             emptyKeyboardAnswer = false;
-            validateAnswerRepeatPanel(answer);
+
+            ValidateAnswerRepeatPanel(answer);
+
         }
     }
 
-    public void validateAnswerRepeatPanel(string answer)
+    public void ValidateAnswerRepeatPanel(string answer)
     {
         keyboard.SetActive(false);
 
@@ -424,7 +502,7 @@ public class MediaManager : MonoBehaviour {
 
         if (evaluatedAnswer)
         {
-            pause = false;
+            listen = false;
             showUserInput = false;
             answerOK = true;
             sphere.SetActive(false);
@@ -474,13 +552,12 @@ public class MediaManager : MonoBehaviour {
 
     private void FinishLessonPart()
     {
-		pause = false;
         //loadPanel.DeleteSub();
+		listen = false;
+        loadPanel.DeleteSub();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
-		//DesactiveObject(panelExt);
-		//DesactiveObject(textInfo);
 		panelInfo.SetActive(false);
 		sphere.SetActive(false);
 		panelSub.SetActive(true);
@@ -505,9 +582,8 @@ public class MediaManager : MonoBehaviour {
 				{
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
-					Sub.text = "";
-					normalText.text = "";
-                	subReader.RestFileReader(videoName);
+                    InitializeVariables();
+                    subReader.RestFileReader(videoName);
                 	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
                 	media.Play();
                 	counterVideo.Start();
@@ -621,8 +697,6 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					Sub.text="";
 					normalText.text = "";
-					//DesactiveObject(panelExt);
-					//DesactiveObject(textInfo);
 					panelInfo.SetActive(false);
 					panelInput.SetActive(false);
            
@@ -649,7 +723,7 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
-	public void validateAnswer(string answer)
+	public void ValidateAnswer(string answer)
 	{
         keyboard.SetActive(false);
         //delete leading and final white-spaces 
@@ -660,7 +734,7 @@ public class MediaManager : MonoBehaviour {
         bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
 		if (evaluatedAnswer) {
-			pause = false;
+			listen = false;
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
@@ -715,30 +789,59 @@ public class MediaManager : MonoBehaviour {
         PlayAudio(selectedString);
     }
 
+    public void RepeatAudio(TextMesh repeatSub) {
+        PlayAudio(repeatSub.text);
+    }
+
     //metodo proxima pagina panel de resumen
-    public void nextPage() {
-        repeatPage += 1;
-        textInfoFill();
+    public void NextPage() {
+      
+        currentPage += 1;
+        if (currentPage * windows < textForRepeat.Count)
+        {
+            ConfigListenMode();
+            wait = false;
+        }
+        else {
+            FinishLessonPart();
+        }
+      
     }
 
     //metodo pagina anterior panel de resumen
-    public void previousPage()
+    public void PreviousPage()
     {
-        repeatPage -= 1;
-        textInfoFill();
+		if (currentPage > 0) {
+			currentPage -= 1;
+            ConfigListenMode();
+            wait = false;
+        }
     }
 
+
     //metodo rellenar panel de resumen al final de cada video
-    public void textInfoFill() {
-        int windows = 5;
+    public void TextInfoFill() {
         int indice = 0;
+        UnityEngine.Debug.Log("[MediaManager][TextInfoFill] currentPage: " + currentPage);
 
         for (int i = 0; i < windows; i ++) {
-            TextMesh textObject = GameObject.Find("TextInfo"+i+1).GetComponent<TextMesh>();
-            indice = repeatPage * windows + i;
+
+            UnityEngine.Debug.Log("[MediaManager][TextInfoFill] buscando TextInfo"+i+1);
+            TextMesh textObject = GameObject.Find("TextInfo"+(i+1)).GetComponent<TextMesh>();
+            indice = currentPage * windows + i;
+
+            UnityEngine.Debug.Log("[MediaManager][TextInfoFill] indice: " + indice);
+
             if (indice < textForRepeat.Count)
             {
                 string text = textForRepeat[indice].ToString();
+                textObject.text = text;
+                textObject.color = Color.white;
+
+                UnityEngine.Debug.Log("[MediaManager][TextInfoFill] text: " + text);
+            }
+            else {
+                textObject.text = "";
             }
         }
 

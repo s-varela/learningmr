@@ -150,6 +150,6 @@ public class InteractionPanel : MonoBehaviour {
 			speechRecognitionResult.text = "No words were detected.";
 		}
 		gifProcessing.SetActive (false);
-		mediaManager.validateAnswer (speechRecognitionResult.text);
+		mediaManager.ValidateAnswer (speechRecognitionResult.text);
 	}
 }
