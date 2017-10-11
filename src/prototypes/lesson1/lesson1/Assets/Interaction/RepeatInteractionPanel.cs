@@ -23,6 +23,7 @@ namespace Assets.Interaction
         [SerializeField] private GCSpeechRecognition speechRecognition;
 
         [SerializeField] GameObject teclado;
+        [SerializeField] GameObject panelInfo;
         [SerializeField] Text keyboardInp;
 
        // [SerializeField] GameObject gifRipple;
@@ -67,6 +68,7 @@ namespace Assets.Interaction
         private void ButtonTecladoOnClick()
         {
             teclado.SetActive(true);
+            panelInfo.SetActive(false);
             keyboardInp.text = "";
         }
 
@@ -147,7 +149,7 @@ namespace Assets.Interaction
                 speechRecognitionResult.text = "No words were detected.";
             }
             //gifProcessing.SetActive(false);
-            mediaManager.validateAnswer(speechRecognitionResult.text);
+            mediaManager.ValidateAnswer(speechRecognitionResult.text);
         }
 
     }

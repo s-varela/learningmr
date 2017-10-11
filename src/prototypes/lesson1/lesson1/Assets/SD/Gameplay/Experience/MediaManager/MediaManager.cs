@@ -38,7 +38,7 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject gifCross;
     [SerializeField] Material radioButtonSelected;
     [SerializeField] Material radioButtonNotSelected;
-
+    [SerializeField] private TextMesh normalText;
     [SerializeField] NavigationPanel navigationPanel;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
@@ -56,7 +56,7 @@ public class MediaManager : MonoBehaviour {
     private bool showUserInput;
     private bool listen;
     private bool finish;
-    [SerializeField] private TextMesh normalText;
+   
 	private bool answerOK = false;
     private bool emptyKeyboardAnswer = false;
     private int indiceAudio;
@@ -73,7 +73,7 @@ public class MediaManager : MonoBehaviour {
 
     void Start()
     {
-        selectedString = "";
+      //  selectedString = "";
         currentPage = 0;
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
@@ -468,6 +468,7 @@ public class MediaManager : MonoBehaviour {
     public void KeyboardExitRepeatPanel()
     {
         keyboardInp.text = "";
+        panelInfo.SetActive(true);
         keyboard.SetActive(false);
     }
 
@@ -485,7 +486,7 @@ public class MediaManager : MonoBehaviour {
         if (!emptyKeyboardAnswer)
         {
             emptyKeyboardAnswer = false;
-
+            panelInfo.SetActive(true);
             ValidateAnswerRepeatPanel(answer);
 
         }
@@ -755,7 +756,7 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
-    public void selectRadioButton(GameObject radioSelected) {
+    public void selectRadioButton(GameObject radioSelected, int radioInt) {
         UnityEngine.Debug.Log("[MM][selectRadiobutton][entro]");
         //UI_RadioButton1
         GameObject r1 = GameObject.Find("UI_RadioButton1");
@@ -776,21 +777,17 @@ public class MediaManager : MonoBehaviour {
         //UI_RadioButton5
         GameObject r5 = GameObject.Find("UI_RadioButton5");
         r5.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-        int radioInt = int.Parse(Regex.Match(radioSelected.name, @"\d+").Value);
+        
         selectedString = GameObject.Find("TextInfo" + radioInt).GetComponent<TextMesh>().text;
-        UnityEngine.Debug.Log("selectedstring: " + selectedString);
+        UnityEngine.Debug.Log("selectedstring radio button : " + selectedString);
         radioSelected.GetComponent<Renderer>().material = radioButtonSelected;
+        PlayAudio(selectedString);
     }
 
     //metodo repetir audio panel de resumen
     public void repeatAudio() {
-        UnityEngine.Debug.Log("selectedstring repeat: " + selectedString);
+        UnityEngine.Debug.Log("repeticionDeBoton: " + selectedString);
         PlayAudio(selectedString);
-    }
-
-    public void RepeatAudio(TextMesh repeatSub) {
-        PlayAudio(repeatSub.text);
     }
 
     //metodo proxima pagina panel de resumen

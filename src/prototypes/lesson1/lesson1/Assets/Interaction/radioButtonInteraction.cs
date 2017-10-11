@@ -57,31 +57,31 @@ namespace Assets.Interaction
 
         private void radioButton1() {
             GameObject rad = GameObject.Find("UI_RadioButton1");
-            mediaManager.selectRadioButton(rad);
+            mediaManager.selectRadioButton(rad,1);
         }
 
         private void radioButton2()
         {
             GameObject rad = GameObject.Find("UI_RadioButton2");
-            mediaManager.selectRadioButton(rad);
+            mediaManager.selectRadioButton(rad,2);
         }
 
         private void radioButton3()
         {
             GameObject rad = GameObject.Find("UI_RadioButton3");
-            mediaManager.selectRadioButton(rad);
+            mediaManager.selectRadioButton(rad,3);
         }
 
         private void radioButton4()
         {
             GameObject rad = GameObject.Find("UI_RadioButton4");
-            mediaManager.selectRadioButton(rad);
+            mediaManager.selectRadioButton(rad,4);
         }
 
         private void radioButton5()
         {
             GameObject rad = GameObject.Find("UI_RadioButton5");
-            mediaManager.selectRadioButton(rad);
+            mediaManager.selectRadioButton(rad,5);
         }
 
     }
