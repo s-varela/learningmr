@@ -215,6 +215,8 @@ public class MediaManager : MonoBehaviour {
             }
 			else if (pause && ElapsedTime(2000))//se termino la sub leccion, muestro panel frontal y reproduzco audios
             {
+				menu.OnMenuShow += PauseMedia;
+				menu.OnMenuHide += ResumeMedia;
                 PauseMedia();
 				//ActiveObject(panelExt);
 				//ActiveObject(textInfo);
