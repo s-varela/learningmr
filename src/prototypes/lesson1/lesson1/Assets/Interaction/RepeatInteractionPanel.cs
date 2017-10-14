@@ -82,7 +82,6 @@ namespace Assets.Interaction
             speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
         }
 
-
         private void StartRecordButtonOnClickHandler()
         {
 
@@ -129,28 +128,14 @@ namespace Assets.Interaction
         {
             if (obj != null && obj.results.Length > 0)
             {
-                speechRecognitionResult.text = /*"Speech Recognition succeeded!\n Best match: " + */obj.results[0].alternatives[0].transcript;
-
-                //			string other = "\nAlternatives: ";
-                //
-                //			foreach (var result in obj.results)
-                //			{ 
-                //				foreach (var alternative in result.alternatives)
-                //				{
-                //					if (obj.results[0].alternatives[0] != alternative)
-                //						other += alternative.transcript + ",\n";
-                //				}
-                //			}
-
-                //speechRecognitionResult.text += other;
+                speechRecognitionResult.text = obj.results[0].alternatives[0].transcript;
             }
             else
             {
                 speechRecognitionResult.text = "No words were detected.";
             }
             //gifProcessing.SetActive(false);
-            mediaManager.ValidateAnswer(speechRecognitionResult.text);
+            mediaManager.ValidateAnswerRepeatPanel(speechRecognitionResult.text);
         }
-
     }
 }

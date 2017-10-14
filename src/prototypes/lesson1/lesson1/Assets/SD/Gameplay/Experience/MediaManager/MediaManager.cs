@@ -365,6 +365,8 @@ public class MediaManager : MonoBehaviour {
         else //Se reprodujeron todos los audios, espero 
         {
             GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.yellow;
+            GameObject lastRad = GameObject.Find("UI_RadioButton5");
+            lastRad.GetComponent<Renderer>().material = radioButtonNotSelected;
             GameObject firstRad = GameObject.Find("UI_RadioButton1");
             firstRad.GetComponent<Renderer>().material = radioButtonSelected;
             TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
@@ -544,19 +546,18 @@ public class MediaManager : MonoBehaviour {
         answer = answer.Trim();
         answer = Regex.Replace(answer, @"\s+", " ");
 
-        probandoValidate.text = answer;
+        selectedString = selectedString.Replace("!", string.Empty);
+        selectedString = selectedString.Replace(".", string.Empty);
 
-        bool evaluatedAnswer = answer.ToLower().Equals(selectedString.ToLower());
+        probandoValidate.text = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+
+        bool evaluatedAnswer = answer.ToLower().Contains(selectedString.ToLower());
 
         if (evaluatedAnswer)
         {
             listen = false;
             showUserInput = false;
             answerOK = true;
-            //  sphere.SetActive(false);
-            //  userAnswer.text = answer;
-            //  givenHint.text = "";
-            //  userAnswer.color = 
             GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
@@ -564,10 +565,6 @@ public class MediaManager : MonoBehaviour {
             GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.green;
             PlayAudio("correct");
-            //  gifTick.SetActive(true);
-            //  gifCross.SetActive(false);
-            //skip = true;
-           // StartDelayTime();
         }
         else
         {
@@ -578,10 +575,6 @@ public class MediaManager : MonoBehaviour {
             GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.red;
             PlayAudio("incorrect");
-            //userAnswer.text = answer;
-            //  userAnswer.color = Color.red;
-            // panelInput.SetActive(true);
-            // gifCross.SetActive(true);
         }
     }
 
