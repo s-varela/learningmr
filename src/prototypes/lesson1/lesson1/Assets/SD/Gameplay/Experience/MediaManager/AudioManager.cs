@@ -23,7 +23,9 @@ using System.Collections;
             hashAudios.Add("Yes, I am.", "yes_i_am");
             hashAudios.Add("No, I'm not. I'm Michael.", "no_im_not_im_michael");
             hashAudios.Add("Where are you from?", "where_are_you_from");
-        }
+        hashAudios.Add("correct", "correct");
+        hashAudios.Add("incorrect", "incorrect");
+    }
 
         public String getAudioPathName(string name)
         {

@@ -14,28 +14,22 @@ namespace Assets.Interaction
         [SerializeField] private VRCameraFade fader;
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private float distance = 5;
-
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
         [SerializeField] private VRUIAnimationClick btnRepeat;
-
         [SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
-
         [SerializeField] GameObject teclado;
         [SerializeField] GameObject panelInfo;
         [SerializeField] Text keyboardInp;
-
-       // [SerializeField] GameObject gifRipple;
-      //  [SerializeField] GameObject gifProcessing;
-       // [SerializeField] TextMesh answer;
-
         [SerializeField] Material UI_SpeechStart;
         [SerializeField] Material UI_SpeechStop;
-
-
+        [SerializeField] Material radioButtonSelected;
+        [SerializeField] Material radioButtonNotSelected;
         [SerializeField] private MediaManager mediaManager;
 
+
+        public int selectedNumberRadio;
         // Use this for initialization
         void Start()
         {
@@ -73,7 +67,13 @@ namespace Assets.Interaction
         }
 
         private void repeatAudio() {
-            mediaManager.repeatAudio();
+
+            string selectedString = "";
+            radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
+            int selecRadio = selectedRadio.WhichRadioSelected();
+            selectedString = GameObject.Find("TextInfo" + selecRadio).GetComponent<TextMesh>().text;
+
+            mediaManager.repeatAudio(selectedString);
         }
 
         private void OnDestroy()
