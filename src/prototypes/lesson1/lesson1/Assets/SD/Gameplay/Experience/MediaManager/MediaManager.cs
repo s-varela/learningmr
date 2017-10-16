@@ -62,6 +62,7 @@ public class MediaManager : MonoBehaviour {
     private bool isInPanelInfoMode = false;
    
 	private bool answerOK = false;
+	private bool menuPause = false;
     private bool emptyKeyboardAnswer = false;
     private int indiceAudio;
     private DialogType dialogType;
@@ -105,8 +106,8 @@ public class MediaManager : MonoBehaviour {
 			audioRight.Play ();
 		}
 
-        menu.OnMenuShow += PauseMedia;
-        menu.OnMenuHide += ResumeMedia;
+        menu.OnMenuShow += MenuPause;
+        menu.OnMenuHide += MenuResume;
         ManagerVideo();
 
     }
@@ -170,7 +171,7 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-            if (!wait)
+			if (!menuPause && !wait)
             {
                 if (IsDialogMode())
                 {
@@ -578,7 +579,22 @@ public class MediaManager : MonoBehaviour {
         }
     }
 
-    private void PauseMedia()
+    
+	private void MenuPause()
+	{
+		menuPause = true;
+		media.Pause();
+		counterVideo.Stop();
+	}
+
+	private void MenuResume()
+	{
+		menuPause = false;
+		media.Play();
+		counterVideo.Start();
+	}
+
+	private void PauseMedia()
     {
         media.Pause();
         counterVideo.Stop();
