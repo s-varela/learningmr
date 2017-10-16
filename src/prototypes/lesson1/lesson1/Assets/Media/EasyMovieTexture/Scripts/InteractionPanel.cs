@@ -86,19 +86,23 @@ public class InteractionPanel : MonoBehaviour {
 
 	private void StartRecordButtonOnClickHandler()
 	{
-		
-		speechRecognitionResult.text = string.Empty;
-		speechRecognitionResult.text = "Recording...";
-		answer.text = "";
-		gifRipple.SetActive (true);
-		gifProcessing.SetActive (false);
-		if(btnRec != null)
+		bool connection = CheckConnectivity.checkInternetStatus ();
+		if (connection) {
+			speechRecognitionResult.text = string.Empty;
+			speechRecognitionResult.text = "Recording...";
+			answer.text = "";
+			gifRipple.SetActive (true);
+			gifProcessing.SetActive (false);
+			if (btnRec != null) {
+				btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
+				btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
+				btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+			}
+			speechRecognition.StartRecord (false);
+		} else 
 		{
-			btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
-			btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
-			btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+			mediaManager.ValidateAnswer ("No hay conexión a Internet");
 		}
-		speechRecognition.StartRecord(false);
 	}
 
 	private void StopRecordButtonOnClickHandler()
@@ -147,7 +151,8 @@ public class InteractionPanel : MonoBehaviour {
 		}
 		else
 		{
-			speechRecognitionResult.text = "No words were detected.";
+			gifProcessing.SetActive (false);
+			speechRecognitionResult.text = "No se detectaron palabras.";
 		}
 		gifProcessing.SetActive (false);
 		mediaManager.ValidateAnswer (speechRecognitionResult.text);
