@@ -86,8 +86,8 @@ namespace Assets.Interaction
         {
             bool connection = CheckConnectivity.checkInternetStatus ();
 		    if (connection) {
-                answer.text = "";
-                answer.text = "Recording...";
+                // answer.text = "";
+                // answer.text = "Recording...";
                 // gifRipple.SetActive (true);
                 // gifProcessing.SetActive (false);
                 if (btnRec != null) {
