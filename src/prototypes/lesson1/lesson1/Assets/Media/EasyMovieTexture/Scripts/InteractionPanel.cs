@@ -31,6 +31,7 @@ public class InteractionPanel : MonoBehaviour {
 
 	[SerializeField] GameObject gifRipple;
 	[SerializeField] GameObject gifProcessing;
+	[SerializeField] GameObject noWifi;
 	[SerializeField] TextMesh answer;
 
 	[SerializeField] Material UI_SpeechStart;
@@ -51,6 +52,7 @@ public class InteractionPanel : MonoBehaviour {
 			btnTeclado.OnAnimationComplete += ButtonTecladoOnClick;
 		}
 
+		noWifi.SetActive (false);
 		speechRecognition = GCSpeechRecognition.Instance;
 		speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
 		speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
@@ -101,7 +103,8 @@ public class InteractionPanel : MonoBehaviour {
 			speechRecognition.StartRecord (false);
 		} else 
 		{
-			mediaManager.ValidateAnswer ("No hay conexión a Internet");
+			noWifi.SetActive (true);
+			mediaManager.DisplayWarningMessage("No hay conexión a Internet");
 		}
 	}
 
@@ -152,7 +155,7 @@ public class InteractionPanel : MonoBehaviour {
 		else
 		{
 			gifProcessing.SetActive (false);
-			speechRecognitionResult.text = "No se detectaron palabras.";
+			mediaManager.DisplayWarningMessage("No se detectaron palabras.");
 		}
 		gifProcessing.SetActive (false);
 		mediaManager.ValidateAnswer (speechRecognitionResult.text);

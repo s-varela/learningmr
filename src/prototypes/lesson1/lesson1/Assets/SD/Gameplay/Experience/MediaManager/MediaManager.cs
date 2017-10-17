@@ -831,6 +831,12 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
+	public void DisplayWarningMessage(string message)
+	{
+		userAnswer.text = message;
+		userAnswer.color = Color.red;
+	}
+
 	public void ValidateAnswer(string answer)
 	{
         keyboard.SetActive(false);

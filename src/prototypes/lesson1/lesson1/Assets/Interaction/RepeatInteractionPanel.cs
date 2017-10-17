@@ -20,14 +20,14 @@ namespace Assets.Interaction
        // [SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
         [SerializeField] GameObject teclado;
-        [SerializeField] GameObject panelInfo;
+		[SerializeField] GameObject panelInfo;
+        [SerializeField] GameObject noWifi;
         [SerializeField] Text keyboardInp;
         [SerializeField] Material UI_SpeechStart;
         [SerializeField] Material UI_SpeechStop;
         [SerializeField] Material radioButtonSelected;
         [SerializeField] Material radioButtonNotSelected;
-        [SerializeField]
-        private MediaManager mediaManager;
+        [SerializeField] private MediaManager mediaManager;
 
         public int selectedNumberRadio;
         // Use this for initialization
@@ -48,6 +48,7 @@ namespace Assets.Interaction
                 btnRepeat.OnAnimationComplete += repeatAudio;
             }
 
+			noWifi.SetActive (false);
             speechRecognition = GCSpeechRecognition.Instance;
             speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
             speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
@@ -94,12 +95,12 @@ namespace Assets.Interaction
                     btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
                     btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
                     btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
-            }
+            	}
 			    speechRecognition.StartRecord (false);
 		    } 
             else 
 		    {
-			    mediaManager.ValidateAnswerRepeatPanelVoice("No hay conexión a Internet");
+				noWifi.SetActive (true);
 		    }
         }
 
