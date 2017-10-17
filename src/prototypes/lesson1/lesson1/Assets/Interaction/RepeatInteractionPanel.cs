@@ -84,15 +84,23 @@ namespace Assets.Interaction
 
         private void StartRecordButtonOnClickHandler()
         {
-           // gifRipple.SetActive(true);
-           // gifProcessing.SetActive(false);
-            if (btnRec != null)
-            {
-                btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
-                btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
-                btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+            bool connection = CheckConnectivity.checkInternetStatus ();
+		    if (connection) {
+                answer.text = "";
+                answer.text = "Recording...";
+                // gifRipple.SetActive (true);
+                // gifProcessing.SetActive (false);
+                if (btnRec != null) {
+                    btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
+                    btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
+                    btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
             }
-            speechRecognition.StartRecord(false);
+			    speechRecognition.StartRecord (false);
+		    } 
+            else 
+		    {
+			    mediaManager.ValidateAnswerRepeatPanelVoice("No hay conexión a Internet");
+		    }
         }
 
         private void StopRecordButtonOnClickHandler()
