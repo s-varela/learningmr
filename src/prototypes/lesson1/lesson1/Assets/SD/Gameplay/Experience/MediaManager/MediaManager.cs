@@ -42,8 +42,6 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private TextMesh normalText;
     [SerializeField] NavigationPanel navigationPanel;
 
-    [SerializeField] TextMesh probandoValidate;
-
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
     private AudioManager audioManager;
@@ -549,7 +547,46 @@ public class MediaManager : MonoBehaviour {
         selectedString = selectedString.Replace("!", string.Empty);
         selectedString = selectedString.Replace(".", string.Empty);
 
-        probandoValidate.text = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+        bool evaluatedAnswer = answer.ToLower().Contains(selectedString.ToLower());
+
+        if (evaluatedAnswer)
+        {
+            listen = false;
+            showUserInput = false;
+            answerOK = true;
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.green;
+            PlayAudio("correct");
+        }
+        else
+        {
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.red;
+            PlayAudio("incorrect");
+        }
+    }
+
+    public void ValidateAnswerRepeatPanelVoice(string answer)
+    {
+        radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
+        int numberRadioSelected = selectedRadio.WhichRadioSelected();
+        string selectedString = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+
+        answer = answer.Trim();
+        answer = Regex.Replace(answer, @"\s+", " ");
+
+        selectedString = selectedString.Replace("!", string.Empty);
+        selectedString = selectedString.Replace(".", string.Empty);
+        selectedString = selectedString.Replace(",", string.Empty);
+        selectedString = selectedString.Replace("?", string.Empty);
 
         bool evaluatedAnswer = answer.ToLower().Contains(selectedString.ToLower());
 

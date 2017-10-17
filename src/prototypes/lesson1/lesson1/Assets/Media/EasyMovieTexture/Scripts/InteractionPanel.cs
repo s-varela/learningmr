@@ -42,7 +42,7 @@ public class InteractionPanel : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-		if(btnRec != null)
+        if (btnRec != null)
 		{
 			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
 		}
