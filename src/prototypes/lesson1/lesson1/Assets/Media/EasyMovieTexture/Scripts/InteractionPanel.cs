@@ -40,6 +40,8 @@ public class InteractionPanel : MonoBehaviour {
 
 	[SerializeField] private MediaManager mediaManager;
 
+	private Blinker blinker;
+
     // Use this for initialization
     void Start () {
 
@@ -103,7 +105,9 @@ public class InteractionPanel : MonoBehaviour {
 			speechRecognition.StartRecord (false);
 		} else 
 		{
-			noWifi.SetActive (true);
+			// noWifi.SetActive (true);
+			blinker = new Blinker ();
+			blinker.Trigger(noWifi);
 			mediaManager.DisplayWarningMessage("No hay conexión a Internet");
 		}
 	}
