@@ -371,6 +371,8 @@ public class MediaManager : MonoBehaviour {
             TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
             textObjectBefore.color = Color.white;
 
+            //activar botones interaccion
+
             indiceAudio = 0; //reseteo el contador
             counterAudio.Stop();
             counterAudio.Reset();
@@ -450,7 +452,6 @@ public class MediaManager : MonoBehaviour {
             if (!emptyKeyboardAnswer)
             {
                 emptyKeyboardAnswer = false;
-                ValidateAnswer(answer);
                 panelSub.SetActive(false);
                 panelInput.SetActive(true);
                 panelAnswer.SetActive(true);
