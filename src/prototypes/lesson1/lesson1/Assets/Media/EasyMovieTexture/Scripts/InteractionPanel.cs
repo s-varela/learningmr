@@ -31,6 +31,7 @@ public class InteractionPanel : MonoBehaviour {
 
 	[SerializeField] GameObject gifRipple;
 	[SerializeField] GameObject gifProcessing;
+	[SerializeField] GameObject noWifi;
 	[SerializeField] TextMesh answer;
 
 	[SerializeField] Material UI_SpeechStart;
@@ -42,7 +43,7 @@ public class InteractionPanel : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-		if(btnRec != null)
+        if (btnRec != null)
 		{
 			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
 		}
@@ -51,6 +52,7 @@ public class InteractionPanel : MonoBehaviour {
 			btnTeclado.OnAnimationComplete += ButtonTecladoOnClick;
 		}
 
+		noWifi.SetActive (false);
 		speechRecognition = GCSpeechRecognition.Instance;
 		speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
 		speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
@@ -86,19 +88,24 @@ public class InteractionPanel : MonoBehaviour {
 
 	private void StartRecordButtonOnClickHandler()
 	{
-		
-		speechRecognitionResult.text = string.Empty;
-		speechRecognitionResult.text = "Recording...";
-		answer.text = "";
-		gifRipple.SetActive (true);
-		gifProcessing.SetActive (false);
-		if(btnRec != null)
+		bool connection = CheckConnectivity.checkInternetStatus ();
+		if (connection) {
+			speechRecognitionResult.text = string.Empty;
+			speechRecognitionResult.text = "Recording...";
+			answer.text = "";
+			gifRipple.SetActive (true);
+			gifProcessing.SetActive (false);
+			if (btnRec != null) {
+				btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
+				btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
+				btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+			}
+			speechRecognition.StartRecord (false);
+		} else 
 		{
-			btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
-			btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
-			btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+			noWifi.SetActive (true);
+			mediaManager.DisplayWarningMessage("No hay conexión a Internet");
 		}
-		speechRecognition.StartRecord(false);
 	}
 
 	private void StopRecordButtonOnClickHandler()
@@ -147,9 +154,10 @@ public class InteractionPanel : MonoBehaviour {
 		}
 		else
 		{
-			speechRecognitionResult.text = "No words were detected.";
+			gifProcessing.SetActive (false);
+			mediaManager.DisplayWarningMessage("No se detectaron palabras.");
 		}
 		gifProcessing.SetActive (false);
-		mediaManager.validateAnswer (speechRecognitionResult.text);
+		mediaManager.ValidateAnswer (speechRecognitionResult.text);
 	}
 }

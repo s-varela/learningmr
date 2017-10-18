@@ -6,6 +6,8 @@ using System.Diagnostics;
 using Assets.AnswersLogic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System;
+using Assets.Interaction;
 
 public class MediaManager : MonoBehaviour {
 
@@ -18,9 +20,6 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] private VRGameMenu menu;
 
 	[SerializeField] private LoadPanel loadPanel;
-
-    //[SerializeField] GameObject panelExt;
-	//[SerializeField] GameObject textInfo;
 	[SerializeField] GameObject panelInfo;
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
@@ -38,7 +37,9 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] TextMesh givenHint;
 	[SerializeField] GameObject gifTick;
 	[SerializeField] GameObject gifCross;
-
+    [SerializeField] Material radioButtonSelected;
+    [SerializeField] Material radioButtonNotSelected;
+    [SerializeField] private TextMesh normalText;
     [SerializeField] NavigationPanel navigationPanel;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
@@ -46,7 +47,6 @@ public class MediaManager : MonoBehaviour {
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
     private string pathVideos = "/lesson1-data/videos/";
-    private string[] arrSubtitles;
 	private string[] arrayText;
 	private Color originalColor;
     private AudioSource sfx;
@@ -55,24 +55,27 @@ public class MediaManager : MonoBehaviour {
 	private Stopwatch counterDelay;
     private bool changeSub;
     private bool showUserInput;
-    private bool pause;
+    private bool listen;
     private bool finish;
-    [SerializeField] private TextMesh normalText;
+    private bool isInPanelInfoMode = false;
+   
 	private bool answerOK = false;
+	private bool menuPause = false;
     private bool emptyKeyboardAnswer = false;
     private int indiceAudio;
     private DialogType dialogType;
 	private int i=-1;
-    private int dynamicDelay = 0;
     private bool skip = false;
     private ArrayList textForRepeat;
-    private int repeatPage;
+    private int currentPage;
+    private const int windows = 5;
+    private bool wait;
     // Use this for initialization
 
 
     void Start()
     {
-        repeatPage = 1;
+        currentPage = 0;
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
         dialogType = new DialogType();
@@ -101,8 +104,8 @@ public class MediaManager : MonoBehaviour {
 			audioRight.Play ();
 		}
 
-        menu.OnMenuShow += PauseMedia;
-        menu.OnMenuHide += ResumeMedia;
+        menu.OnMenuShow += MenuPause;
+        menu.OnMenuHide += MenuResume;
         ManagerVideo();
 
     }
@@ -112,9 +115,7 @@ public class MediaManager : MonoBehaviour {
 		changeSub = false;
 		answerOK = false;
 		showUserInput = false;
-		pause = false;
-		//DesactiveObject(panelExt);
-		//DesactiveObject(textInfo);
+		listen = false;
 		panelInfo.SetActive(false);
 		panelSub.SetActive(true);
 		panelInput.SetActive(false);
@@ -124,13 +125,17 @@ public class MediaManager : MonoBehaviour {
 		panelQuestion.SetActive(false);
 		panelHintButton.SetActive(false);
 		panelHintText.SetActive(false);
-		loadPanel.DeleteSub();
+		//loadPanel.DeleteSub();
 		Sub.text="";
 		normalText.text = "";
 		userAnswer.text = "";
 		givenHint.text = "";
 		indiceAudio = 0;
-	}
+        textForRepeat = new ArrayList();
+		wait = false;
+        currentPage = 0;
+
+    }
 
     void Awake()
     {
@@ -149,11 +154,12 @@ public class MediaManager : MonoBehaviour {
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
 
-            pause = false;
+            listen = false;
             showUserInput = false;
             finish=false;
             indiceAudio = 0;
             dialogType = new DialogType();
+            textForRepeat = new ArrayList();
         }
     }
 
@@ -163,116 +169,88 @@ public class MediaManager : MonoBehaviour {
     {
         try
         {
-          
-            if (!pause && !showUserInput && !finish && !skip)
+			if (!menuPause && !wait)
             {
-                dynamicDelay = 0;
-
-                long seconds = counterVideo.ElapsedMilliseconds;
-                // search if duration is in last subtitle second (in miliseconds)
-               
-                dialogType = subReader.ReadSubtitleLine(seconds);
-
-                if (dialogType != null)
+                if (IsDialogMode())
                 {
-                    string theSub = dialogType.Text;
+                    long seconds = counterVideo.ElapsedMilliseconds;
+                    // search if duration is in last subtitle second (in miliseconds)
 
-                    if (!theSub.Equals("") && theSub != normalText.text) {
+                    dialogType = subReader.ReadSubtitleLine(seconds);
 
-                        //arraylist con texto para repetir
-                        textForRepeat.Add(theSub);
-                        normalText.text = theSub;
-						answerOK = false;
-						Sub.color = originalColor;
-						gifTick.SetActive (false);
-                    }
-                    if (dialogType.Pause)
+                    if (dialogType != null)
                     {
-                        pause = true;
-                        counterAudio.Start();
-						counterDelay.Reset();
-						counterDelay.Start();
+                        string theSub = dialogType.Text;
 
-                    }
-					else if (dialogType.RequiredInput && !answerOK)
-                    {
-						i=-1;
-                        showUserInput = true;
-						pause = false;
+                        if (!theSub.Equals("") && theSub != normalText.text)
+                        {
+                            //arraylist con texto para repetir
+                            textForRepeat.Add(theSub);
+                            normalText.text = theSub;
+                            answerOK = false;
+                            Sub.color = originalColor;
+                            gifTick.SetActive(false);
+                        }
 
-						counterDelay.Reset();
-						counterDelay.Start();
-       
-                    }else if (dialogType.Finish)
-                    {
-                        finish = true;
-                        pause = false;
-                        counterDelay.Reset();
-                        counterDelay.Start();
-                    }
+                        if (dialogType.Listen)
+                        {
+                            ConfigListenMode();
 
-                }
-            }
-			else if (pause && ElapsedTime(2000))//se termino la sub leccion, muestro panel frontal y reproduzco audios
-            {
-				menu.OnMenuShow += PauseMedia;
-				menu.OnMenuHide += ResumeMedia;
-                PauseMedia();
-				//ActiveObject(panelExt);
-				//ActiveObject(textInfo);
-				panelInfo.SetActive(true);
-				sphere.SetActive(true);
+                        }
+                        else if (dialogType.RequiredInput && !answerOK)
+                        {
+                            ConfigInputMode();
 
-				panelSub.SetActive(false);
-                counterVideo.Stop();
+                        }
+                        else if (dialogType.Finish)
+                        {
+                            ConfigDialogFinishMode();
+                        }
 
-                if (ElapsedAudioTime(4000)) //Espero x tiempo
-                {
-                    arrSubtitles = loadPanel.ArrayText();
-                    if (indiceAudio < arrSubtitles.Length)
-                    {
-
-                        string sub = arrSubtitles[indiceAudio];
-
-                        PlayAudio(sub);
-						if(indiceAudio == 0)
-						{
-							arrayText = loadPanel.ArrayText();
-						}
-						loadPanel.colorSub(indiceAudio, arrayText);
-
-                        counterAudio.Stop();
-                        counterAudio.Reset();
-                        counterAudio.Start();
-						indiceAudio++;
-                    }
-                    else {
-                        indiceAudio = 0; //reseteo el contador
-                        counterAudio.Stop();
-                        counterAudio.Reset();
-                        counterAudio.Start();
-                        pause = false;
-                        FinishLessonPart();
                     }
                 }
-			} else if (showUserInput && ElapsedTime(500) && !keyboard.activeSelf)
-            {
-                PauseMedia();
-                EnableInterationMenu();
-               
-            } else if (dialogType.Finish && ElapsedTime(2000))
-            {
-                FinishExperience();
-
-            }else if (skip && ElapsedTime(2000))
-            {
-                DisableInterationMenu();
-                ResumeMedia();
-                answerOK = true;
-                skip = false;
-                givenHint.text = "";
+                else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
+                {
+                    isInPanelInfoMode = true;
+                    sphere.SetActive(true);
+                    panelSub.SetActive(false);
+                    panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
+  
+                    if (ElapsedAudioTime(3000))
+                    {
+                        try
+                        {
+                            RepeatDialog(); //Se reproducen los dialogos 
+                        }
+                        catch (System.Exception ex)
+                        {
+                            //TODO logger
+                            UnityEngine.Debug.Log("[MediaManager][update] " + ex.Message);
+                            normalText.text = "Error reproducir audio" + ex.Message;
+                        }
+                    }
+                }
+                else if (IsInputMode())
+                {
+                    isInPanelInfoMode = false;
+                    PauseMedia();
+                    EnableInterationMenu();
+                }
+                else if (IsFinishMode())
+                {
+                    isInPanelInfoMode = false;
+                    FinishExperience();
+                }
+                else if (IsSkipMode())
+                {
+                    isInPanelInfoMode = false;
+                    DisableInterationMenu();
+                    ResumeMedia();
+                    answerOK = true;
+                    skip = false;
+                    givenHint.text = "";
+                }
             }
-
         }
         catch (System.Exception ex)
         {
@@ -280,7 +258,132 @@ public class MediaManager : MonoBehaviour {
             UnityEngine.Debug.Log(ex.Message);
             normalText.text = ex.Message;
         }
+   
     }
+
+    private bool IsSkipMode()
+    {
+        return skip && ElapsedTime(2000);
+    }
+
+    private bool IsFinishMode()
+    {
+        return dialogType.Finish && ElapsedTime(2000);
+    }
+
+    private bool IsInputMode()
+    {
+        return showUserInput && ElapsedTime(500) && !keyboard.activeSelf;
+    }
+
+    private bool IsListenMode()
+    {
+        return listen && ElapsedTime(2000);
+    }
+
+    private bool IsDialogMode()
+    {
+        return !listen && !showUserInput && !finish && !skip;
+    }
+
+    private void ConfigDialogFinishMode()
+    {
+        finish = true;
+        listen = false;
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+    private void ConfigInputMode()
+    {
+        i = -1;
+        showUserInput = true;
+        listen = false;
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+ 
+    private void ConfigListenMode()
+    {
+        /**Se oculta panel de informacion y se cargan los textos**/
+        indiceAudio = 0;
+        listen = true;
+        PauseMedia();
+        panelInfo.SetActive(true);
+        panelInfo.transform.localScale = new Vector3(0, 0, 0); 
+
+        TextInfoFill();
+        counterAudio.Start();
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+    private void RepeatDialog()
+    {
+        if (indiceAudio < windows)
+        {
+            TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
+            //UI_RadioButton1
+            GameObject r1 = GameObject.Find("UI_RadioButton1");
+            r1.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+            //UI_RadioButton2
+            GameObject r2 = GameObject.Find("UI_RadioButton2");
+            r2.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+            //UI_RadioButton3
+            GameObject r3 = GameObject.Find("UI_RadioButton3");
+            r3.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+            //UI_RadioButton4
+            GameObject r4 = GameObject.Find("UI_RadioButton4");
+            r4.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+            //UI_RadioButton5
+            GameObject r5 = GameObject.Find("UI_RadioButton5");
+            r5.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+            //assign selected material to selected radio button and paint selected text in yellow
+            GameObject radioSelected = GameObject.Find("UI_RadioButton" + (indiceAudio + 1));
+            radioSelected.GetComponent<Renderer>().material = radioButtonSelected;
+            textObject.color = Color.yellow;
+            PlayAudio(textObject.text);
+     
+            if (indiceAudio > 0)
+            {
+                TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
+                textObjectBefore.color = Color.white;
+            }
+
+            counterAudio.Stop();
+            counterAudio.Reset();
+            counterAudio.Start();
+            indiceAudio++;
+        }
+        else //Se reprodujeron todos los audios, espero 
+        {
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.yellow;
+            GameObject lastRad = GameObject.Find("UI_RadioButton5");
+            lastRad.GetComponent<Renderer>().material = radioButtonNotSelected;
+            GameObject firstRad = GameObject.Find("UI_RadioButton1");
+            firstRad.GetComponent<Renderer>().material = radioButtonSelected;
+            TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
+            textObjectBefore.color = Color.white;
+
+            //activar botones interaccion
+
+            indiceAudio = 0; //reseteo el contador
+            counterAudio.Stop();
+            counterAudio.Reset();
+            counterAudio.Start();
+            listen = false;
+            wait = true;
+            isInPanelInfoMode = true;
+            
+        }
+    }
+
 
     private bool ElapsedTime(int seconds)
     {
@@ -317,7 +420,7 @@ public class MediaManager : MonoBehaviour {
 
     public void DisableInterationMenu()
     {
-        pause = false;
+        listen = false;
         showUserInput = false;
         sphere.SetActive(false);
         panelInput.SetActive(false);
@@ -331,56 +434,88 @@ public class MediaManager : MonoBehaviour {
 		Sub.text = "";
     }
 
-    public void KeyboardExitButton(){
-        keyboardInp.text = "";
-        keyboard.SetActive(false);
-		panelSub.SetActive(false);
-		panelInput.SetActive(true);
-        panelAnswer.SetActive(true);
-        panelQuestion.SetActive(true);
-        panelHintButton.SetActive(true);
-        hintButton.SetActive(true);
-        skipButton.SetActive(true);
-        panelHintText.SetActive(true);
-		gifCross.SetActive (false);
-		gifTick.SetActive (false);
+    public void KeyboardExitButton() {
+
+        string answer = keyboardInp.text;
+
+        if (isInPanelInfoMode) {
+
+            KeyboardExitRepeatPanel();
+
+        } else {
+
+            keyboardInp.text = "";
+            keyboard.SetActive(false);
+            emptyKeyboardAnswer = false;
+
+
+            if (!emptyKeyboardAnswer)
+            {
+                emptyKeyboardAnswer = false;
+                panelSub.SetActive(false);
+                panelInput.SetActive(true);
+                panelAnswer.SetActive(true);
+                panelQuestion.SetActive(true);
+                panelHintButton.SetActive(true);
+                hintButton.SetActive(true);
+                skipButton.SetActive(true);
+                panelHintText.SetActive(true);
+                gifCross.SetActive(false);
+                gifTick.SetActive(false);
+            }
+
+        }
     }
 
 	public void KeyboardOKButton(){
-        string answer = keyboardInp.text;
 
+        string answer = keyboardInp.text;
         answer = answer.Trim();
         answer = Regex.Replace(answer, @"\s+", " ");
 
-        if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA)) {
-            emptyKeyboardAnswer = true;
-        }
-        else {
-            emptyKeyboardAnswer = false;
-        }
-        
-        if (!emptyKeyboardAnswer) {
-            emptyKeyboardAnswer = false;
-            validateAnswer(answer);
-            panelSub.SetActive(false);
-            panelInput.SetActive(true);
-            panelAnswer.SetActive(true);
-            panelQuestion.SetActive(true);
-            panelHintButton.SetActive(true);
-            panelHintText.SetActive(true);
-            hintButton.SetActive(true);
-            skipButton.SetActive(true);
+        if (isInPanelInfoMode) {
+
+            keyboardOKRepeatPanel();
+
+        } else {
+
+            if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA))
+            {
+                emptyKeyboardAnswer = true;
+            }
+            else {
+                emptyKeyboardAnswer = false;
+            }
+
+            if (!emptyKeyboardAnswer)
+            {
+                emptyKeyboardAnswer = false;
+                ValidateAnswer(answer);
+                panelSub.SetActive(false);
+                panelInput.SetActive(true);
+                panelAnswer.SetActive(true);
+                panelQuestion.SetActive(true);
+                panelHintButton.SetActive(true);
+                panelHintText.SetActive(true);
+                hintButton.SetActive(true);
+                skipButton.SetActive(true);
+            }
         }
     }
 
-    public void keyboardExitRepeatPanel()
+    public void KeyboardExitRepeatPanel()
     {
         keyboardInp.text = "";
+        panelInfo.SetActive(true);
         keyboard.SetActive(false);
     }
 
     public void keyboardOKRepeatPanel() {
+
+        panelInfo.SetActive(true);
+        keyboard.SetActive(false);
         string answer = keyboardInp.text;
+        answer = answer.Replace(".", string.Empty);
 
         if (answer.Equals("") || answer.Equals(TECLADO_RESPUESTA_VACIA))
         {
@@ -393,43 +528,111 @@ public class MediaManager : MonoBehaviour {
         if (!emptyKeyboardAnswer)
         {
             emptyKeyboardAnswer = false;
-            validateAnswer(answer);
+            ValidateAnswerRepeatPanel(answer);
+
         }
     }
-
-    public void validateAnswerRepeatPanel(string answer)
+     
+    public void ValidateAnswerRepeatPanel(string answer)
     {
+        radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
+        int numberRadioSelected = selectedRadio.WhichRadioSelected();
+        string selectedString = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+
         keyboard.SetActive(false);
 
+        answer = answer.Replace("!", string.Empty);
+        answer = answer.Replace(".", string.Empty);
         answer = answer.Trim();
-        answer = Regex.Replace(answer,@"\s+", " ");
+        answer = Regex.Replace(answer, @"\s+", " ");
 
-        bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
+        selectedString = selectedString.Replace("!", string.Empty);
+        selectedString = selectedString.Replace(".", string.Empty);
+
+        bool evaluatedAnswer = answer.ToLower().Contains(selectedString.ToLower());
 
         if (evaluatedAnswer)
         {
-            pause = false;
+            listen = false;
             showUserInput = false;
             answerOK = true;
-            sphere.SetActive(false);
-            userAnswer.text = answer;
-            givenHint.text = "";
-            userAnswer.color = Color.green;
-            gifTick.SetActive(true);
-            gifCross.SetActive(false);
-            skip = true;
-            StartDelayTime();
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.green;
+            PlayAudio("correct");
         }
         else
         {
-            userAnswer.text = answer;
-            userAnswer.color = Color.red;
-            panelInput.SetActive(true);
-            gifCross.SetActive(true);
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.red;
+            PlayAudio("incorrect");
         }
     }
 
-    private void PauseMedia()
+    public void ValidateAnswerRepeatPanelVoice(string answer)
+    {
+        radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
+        int numberRadioSelected = selectedRadio.WhichRadioSelected();
+        string selectedString = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+
+        answer = answer.Trim();
+        answer = Regex.Replace(answer, @"\s+", " ");
+
+        selectedString = selectedString.Replace("!", string.Empty);
+        selectedString = selectedString.Replace(".", string.Empty);
+        selectedString = selectedString.Replace(",", string.Empty);
+        selectedString = selectedString.Replace("?", string.Empty);
+
+        bool evaluatedAnswer = answer.ToLower().Contains(selectedString.ToLower());
+
+        if (evaluatedAnswer)
+        {
+            listen = false;
+            showUserInput = false;
+            answerOK = true;
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.green;
+            PlayAudio("correct");
+        }
+        else
+        {
+            GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.red;
+            PlayAudio("incorrect");
+        }
+    }
+
+    
+	private void MenuPause()
+	{
+		menuPause = true;
+		media.Pause();
+		counterVideo.Stop();
+	}
+
+	private void MenuResume()
+	{
+		menuPause = false;
+		media.Play();
+		counterVideo.Start();
+	}
+
+	private void PauseMedia()
     {
         media.Pause();
         counterVideo.Stop();
@@ -458,13 +661,12 @@ public class MediaManager : MonoBehaviour {
 
     private void FinishLessonPart()
     {
-		pause = false;
+        //loadPanel.DeleteSub();
+		listen = false;
         loadPanel.DeleteSub();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
-		//DesactiveObject(panelExt);
-		//DesactiveObject(textInfo);
 		panelInfo.SetActive(false);
 		sphere.SetActive(false);
 		panelSub.SetActive(true);
@@ -489,9 +691,8 @@ public class MediaManager : MonoBehaviour {
 				{
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
-					Sub.text = "";
-					normalText.text = "";
-                	subReader.RestFileReader(videoName);
+                    InitializeVariables();
+                    subReader.RestFileReader(videoName);
                 	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
                 	media.Play();
                 	counterVideo.Start();
@@ -605,8 +806,6 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					Sub.text="";
 					normalText.text = "";
-					//DesactiveObject(panelExt);
-					//DesactiveObject(textInfo);
 					panelInfo.SetActive(false);
 					panelInput.SetActive(false);
            
@@ -633,7 +832,13 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
-	public void validateAnswer(string answer)
+	public void DisplayWarningMessage(string message)
+	{
+		userAnswer.text = message;
+		userAnswer.color = Color.red;
+	}
+
+	public void ValidateAnswer(string answer)
 	{
         keyboard.SetActive(false);
         //delete leading and final white-spaces 
@@ -644,7 +849,7 @@ public class MediaManager : MonoBehaviour {
         bool evaluatedAnswer = processAnswer.evaluateAnswer(answer, this.dialogType);
 
 		if (evaluatedAnswer) {
-			pause = false;
+			listen = false;
 			showUserInput = false;
 			answerOK = true;
 			sphere.SetActive (false);
@@ -665,35 +870,94 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
+    public void selectRadioButton(GameObject radioSelected, int radioInt) {
+        //paint all texts white and deselect all radio buttons
+
+        //UI_RadioButton1
+        GameObject r1 = GameObject.Find("UI_RadioButton1");
+        r1.GetComponent<Renderer>().material = radioButtonNotSelected;
+        GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
+
+        //UI_RadioButton2
+        GameObject r2 = GameObject.Find("UI_RadioButton2");
+        r2.GetComponent<Renderer>().material = radioButtonNotSelected;
+        GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
+
+        //UI_RadioButton3
+        GameObject r3 = GameObject.Find("UI_RadioButton3");
+        r3.GetComponent<Renderer>().material = radioButtonNotSelected;
+        GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
+
+        //UI_RadioButton4
+        GameObject r4 = GameObject.Find("UI_RadioButton4");
+        r4.GetComponent<Renderer>().material = radioButtonNotSelected;
+        GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
+
+        //UI_RadioButton5
+        GameObject r5 = GameObject.Find("UI_RadioButton5");
+        r5.GetComponent<Renderer>().material = radioButtonNotSelected;
+        GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
+
+        //assign selected material to selected radio button and paint selected text in yellow
+        radioSelected.GetComponent<Renderer>().material = radioButtonSelected;
+        string selectedString = GameObject.Find("TextInfo" + radioInt).GetComponent<TextMesh>().text;
+        GameObject.Find("TextInfo" + radioInt).GetComponent<TextMesh>().color = Color.yellow;
+    }
+
     //metodo repetir audio panel de resumen
-    public void repeatAudio(TextMesh repeatSub) {
-        PlayAudio(repeatSub.text);
+    public void repeatAudio(string selectedString) {
+        PlayAudio(selectedString);
     }
 
     //metodo proxima pagina panel de resumen
-    public void nextPage() {
-        repeatPage += 1;
-        textInfoFill();
+    public void NextPage() {
+      
+        currentPage += 1;
+        if (currentPage * windows < textForRepeat.Count)
+        {
+            ConfigListenMode();
+            wait = false;
+        }
+        else {
+            FinishLessonPart();
+        }
+      
     }
 
     //metodo pagina anterior panel de resumen
-    public void previousPage()
+    public void PreviousPage()
     {
-        repeatPage -= 1;
-        textInfoFill();
+		if (currentPage > 0) {
+			currentPage -= 1;
+            ConfigListenMode();
+            wait = false;
+        }
     }
 
+
     //metodo rellenar panel de resumen al final de cada video
-    public void textInfoFill() {
-        int windows = 5;
+    public void TextInfoFill() {
         int indice = 0;
+        UnityEngine.Debug.Log("[MediaManager][TextInfoFill] currentPage: " + currentPage);
 
         for (int i = 0; i < windows; i ++) {
-            TextMesh textObject = GameObject.Find("TextInfo"+i+1).GetComponent<TextMesh>();
-            indice = repeatPage * windows + i;
+
+            UnityEngine.Debug.Log("[MediaManager][TextInfoFill] buscando TextInfo"+i+1);
+            TextMesh textObject = GameObject.Find("TextInfo"+(i+1)).GetComponent<TextMesh>();
+            indice = currentPage * windows + i;
+
+            UnityEngine.Debug.Log("[MediaManager][TextInfoFill] indice: " + indice);
+
             if (indice < textForRepeat.Count)
             {
                 string text = textForRepeat[indice].ToString();
+                textObject.text = text;
+                textObject.color = Color.white;
+
+                UnityEngine.Debug.Log("[MediaManager][TextInfoFill] text: " + text);
+            }
+            else {
+                textObject.text = "";
             }
         }
 
