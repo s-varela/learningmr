@@ -8,25 +8,17 @@ using UnityEngine.SceneManagement;
 
 public class VRMenuRoom : MonoBehaviour {
 
-    [SerializeField] private SelectionSlider startControl;
+    //[SerializeField] private SelectionSlider startControl;
+	[SerializeField] private VRUIAnimationClick UI_Btn1;
     [SerializeField] private VRCameraFade fader;
     [SerializeField] private AudioClip bgmMenu;
     [SerializeField] private GameObject[] dataControls;
 
     // Use this for initialization
     void Start () {
-        if (bgmMenu != null)
+		if(UI_Btn1 != null)
         {
-            AudioSource source = gameObject.AddComponent<AudioSource>();
-            source.clip = bgmMenu;
-            source.volume = 0.1f;
-            source.loop = true;
-            source.Play();
-        }
-
-	    if(startControl != null)
-        {
-            startControl.OnBarFilled += HandleStartControl;
+			UI_Btn1.OnAnimationComplete += HandleStartControl;
         }
 
         InitializeControls();
@@ -74,6 +66,14 @@ public class VRMenuRoom : MonoBehaviour {
 
     private void HandleStartControl()
     {
+		if (bgmMenu != null)
+		{
+			AudioSource source = gameObject.AddComponent<AudioSource>();
+			source.clip = bgmMenu;
+			//source.volume = 0.1f;
+			//source.loop = true;
+			source.Play();
+		}
         StartCoroutine(StartExperience());
     }
 
