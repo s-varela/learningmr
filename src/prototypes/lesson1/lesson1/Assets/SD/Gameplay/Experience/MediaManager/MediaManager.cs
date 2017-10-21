@@ -134,7 +134,6 @@ public class MediaManager : MonoBehaviour {
         textForRepeat = new ArrayList();
 		wait = false;
         currentPage = 0;
-
     }
 
     void Awake()
@@ -215,6 +214,7 @@ public class MediaManager : MonoBehaviour {
                     sphere.SetActive(true);
                     panelSub.SetActive(false);
                     panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
+					DisablePanelInteration ();
   
                     if (ElapsedAudioTime(3000))
                     {
@@ -321,6 +321,7 @@ public class MediaManager : MonoBehaviour {
 
     private void RepeatDialog()
     {
+		DisablePanelInteration ();
         if (indiceAudio < windows)
         {
             TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
@@ -372,6 +373,7 @@ public class MediaManager : MonoBehaviour {
             textObjectBefore.color = Color.white;
 
             //activar botones interaccion
+			EnablePanelInteration ();
 
             indiceAudio = 0; //reseteo el contador
             counterAudio.Stop();
@@ -963,4 +965,24 @@ public class MediaManager : MonoBehaviour {
 
     }
 
+	public void DisablePanelInteration()
+	{
+		Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
+		GameObject InteraccionBasePanelInfo = GameObject.Find("UI_InteraccionBasePanelInfo");
+		InteraccionBasePanelInfo.transform.localScale = apagar;
+
+		GameObject Paginado = GameObject.Find("UI_Paginado");
+		Paginado.transform.localScale = apagar;
+	}
+
+	public void EnablePanelInteration()
+	{
+		Vector3 interaccionScale = new Vector3(0.02f,0.09f,0.075f);
+		Vector3 paginadoScale = new Vector3(0.08f,0.018f,0.075f);
+
+		GameObject InteraccionBasePanelInfo = GameObject.Find("UI_InteraccionBasePanelInfo");
+		InteraccionBasePanelInfo.transform.localScale = interaccionScale;
+		GameObject Paginado = GameObject.Find("UI_Paginado");
+		Paginado.transform.localScale = paginadoScale;
+	}
 }
