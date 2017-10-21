@@ -38,8 +38,9 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject gifCross;
     [SerializeField] Material radioButtonSelected;
     [SerializeField] Material radioButtonNotSelected;
-
     [SerializeField] NavigationPanel navigationPanel;
+    [SerializeField] GameObject mediaDialogMenuPanel;
+    VRMediaMenu mediaDialogMenu;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
@@ -68,8 +69,8 @@ public class MediaManager : MonoBehaviour {
     private int currentPage;
     private const int windows = 5;
     private bool wait;
-    // Use this for initialization
 
+    public event Action OnDialogShow;
 
     void Start()
     {
@@ -103,13 +104,47 @@ public class MediaManager : MonoBehaviour {
 			audioRight.Play ();
 		}
 
+
+        //mediaDialogMenu= GameObject.Find("SkipMenu").GetComponent<VRMediaMenu>();
+      
+        mediaDialogMenu = mediaDialogMenuPanel.GetComponent<VRMediaMenu>();
+    
+        mediaDialogMenu.OnAcceptClick += DialogAcceptHandle;
+        mediaDialogMenu.OnCancelClick += DialogCancelHandle;
+        mediaDialogMenu.transform.localScale = new Vector3(0, 0, 0); //Oculto panel de dialogo
+
         menu.OnMenuShow += PauseMedia;
         menu.OnMenuHide += ResumeMedia;
         ManagerVideo();
 
     }
 
-	void InitializeVariables()
+    private void DialogCancelHandle()
+    {
+        givenHint.text = "CANCEL";
+       // mediaDialogMenu.transform.localScale = new Vector3(0, 0, 0); //Oculto panel de dialogo
+    }
+
+    private void DialogAcceptHandle()
+    {
+        //skip = true;
+        //showUserInput = false;
+        givenHint.text = "ACCEPT";
+        //mediaDialogMenu.transform.localScale = new Vector3(0, 0, 0); //Oculto panel de dialogo
+
+    }
+
+    private void DialogHidenHandle()
+    {
+        givenHint.text = "HIDEN";
+    }
+
+    private void DialogShowHandle()
+    {
+        givenHint.text = "SHOW";
+    }
+
+    void InitializeVariables()
 	{
 		changeSub = false;
 		answerOK = false;
@@ -133,6 +168,7 @@ public class MediaManager : MonoBehaviour {
         textForRepeat = new ArrayList();
 		wait = false;
         currentPage = 0;
+        //mediaDialogMenuPanel.SetActive(false);
 
     }
 
@@ -667,17 +703,21 @@ public class MediaManager : MonoBehaviour {
 
 	public void ExecuteSkip()
 	{
-		if (dialogType.RequiredInput) {
-            
-            givenHint.text = dialogType.Answers[0].ToString() + " ... ";
-            StartDelayTime();
-            skip = true;
-            showUserInput = false;
-        }
-	}
+        givenHint.text = "PUTOOOOO"; 
+       UnityEngine.Debug.Log("[MediaManager][ExecuteSkip] " + "Ejecutando Skip");
+        //GameObject menuSkip= GameObject.Find("SkipMenu");
+
+        mediaDialogMenu.transform.position = new Vector3(0.4f, -3.2f, 2.9f); 
+        mediaDialogMenu.transform.localScale = new Vector3(1, 1, 1); //Muestro panel de dialogo
+        //mediaDialogMenuPanel.SetActive(true);
+        //menuSkip.SetActive(true);
+       // mediaDialogMenuPanel.SetActive(true);
+        //OnDialogShow();
+
+    }
 
 
-	public void SelectVideo(int indice)
+    public void SelectVideo(int indice)
 	{
 		try
 		{
