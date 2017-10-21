@@ -211,16 +211,6 @@ public class MediaManager : MonoBehaviour {
                 else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
                 {
                     isInPanelInfoMode = true;
-//                    sphere.SetActive(true);
-//                    panelSub.SetActive(false);
-//                    panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
-//
-//					if(currentPage == 0){
-//						Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
-//						GameObject BtnAnterior = GameObject.Find ("UI_BtnAnterior");
-//						BtnAnterior.transform.localScale = apagar;
-//					}
-//					DisablePanelInteration ();
   
                     if (ElapsedAudioTime(3000))
                     {
@@ -336,7 +326,8 @@ public class MediaManager : MonoBehaviour {
     private void RepeatDialog()
     {
 		DisablePanelInteration ();
-        if (indiceAudio < windows)
+		int textRepeat = textForRepeat.Count - currentPage*windows;
+		if (indiceAudio < windows && indiceAudio < textRepeat)
         {
             TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
             //UI_RadioButton1
@@ -379,10 +370,26 @@ public class MediaManager : MonoBehaviour {
         else //Se reprodujeron todos los audios, espero 
         {
             GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.yellow;
-            GameObject lastRad = GameObject.Find("UI_RadioButton5");
-            lastRad.GetComponent<Renderer>().material = radioButtonNotSelected;
+           	
+			//UI_RadioButton1
             GameObject firstRad = GameObject.Find("UI_RadioButton1");
             firstRad.GetComponent<Renderer>().material = radioButtonSelected;
+
+			//UI_RadioButton2
+			GameObject r2 = GameObject.Find("UI_RadioButton2");
+			r2.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+			//UI_RadioButton3
+			GameObject r3 = GameObject.Find("UI_RadioButton3");
+			r3.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+			//UI_RadioButton4
+			GameObject r4 = GameObject.Find("UI_RadioButton4");
+			r4.GetComponent<Renderer>().material = radioButtonNotSelected;
+
+			//UI_RadioButton5
+			GameObject r5 = GameObject.Find("UI_RadioButton5");
+			r5.GetComponent<Renderer>().material = radioButtonNotSelected;
             TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
             textObjectBefore.color = Color.white;
 
@@ -956,30 +963,34 @@ public class MediaManager : MonoBehaviour {
 
     //metodo rellenar panel de resumen al final de cada video
     public void TextInfoFill() {
+		//primero activa todo los radioButton y los panelInfo
+		Vector3 prender = new Vector3(0.6f,0.1f,1f);
+		for (int i = 1; i <= windows; i++) {
+			GameObject.Find("UI_RadioButton"+i).transform.localScale = prender;
+			GameObject.Find ("PanelInfo"+i).transform.localScale = prender;
+		}
+
         int indice = 0;
-        UnityEngine.Debug.Log("[MediaManager][TextInfoFill] currentPage: " + currentPage);
-
         for (int i = 0; i < windows; i ++) {
-
-            UnityEngine.Debug.Log("[MediaManager][TextInfoFill] buscando TextInfo"+i+1);
             TextMesh textObject = GameObject.Find("TextInfo"+(i+1)).GetComponent<TextMesh>();
             indice = currentPage * windows + i;
-
-            UnityEngine.Debug.Log("[MediaManager][TextInfoFill] indice: " + indice);
 
             if (indice < textForRepeat.Count)
             {
                 string text = textForRepeat[indice].ToString();
                 textObject.text = text;
                 textObject.color = Color.white;
-
-                UnityEngine.Debug.Log("[MediaManager][TextInfoFill] text: " + text);
             }
             else {
                 textObject.text = "";
             }
         }
-
+		int textRepeat = textForRepeat.Count - currentPage * windows;
+		Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
+		for (int i = textRepeat + 1; i <= windows; i++) {
+			GameObject.Find("UI_RadioButton"+i).transform.localScale = apagar;
+			GameObject.Find ("PanelInfo"+i).transform.localScale = apagar;
+		}
     }
 
 	public void DisablePanelInteration()
