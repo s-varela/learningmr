@@ -211,10 +211,16 @@ public class MediaManager : MonoBehaviour {
                 else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
                 {
                     isInPanelInfoMode = true;
-                    sphere.SetActive(true);
-                    panelSub.SetActive(false);
-                    panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
-					DisablePanelInteration ();
+//                    sphere.SetActive(true);
+//                    panelSub.SetActive(false);
+//                    panelInfo.transform.localScale = new Vector3(3, 2, 0.008f); //Muestro el panel
+//
+//					if(currentPage == 0){
+//						Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
+//						GameObject BtnAnterior = GameObject.Find ("UI_BtnAnterior");
+//						BtnAnterior.transform.localScale = apagar;
+//					}
+//					DisablePanelInteration ();
   
                     if (ElapsedAudioTime(3000))
                     {
@@ -311,7 +317,15 @@ public class MediaManager : MonoBehaviour {
         listen = true;
         PauseMedia();
         panelInfo.SetActive(true);
-        panelInfo.transform.localScale = new Vector3(0, 0, 0); 
+		sphere.SetActive(true);
+		panelSub.SetActive(false);
+
+		if(currentPage == 0){
+			Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
+			GameObject BtnAnterior = GameObject.Find ("UI_BtnAnterior");
+			BtnAnterior.transform.localScale = apagar;
+		}
+		DisablePanelInteration ();
 
         TextInfoFill();
         counterAudio.Start();
@@ -917,6 +931,9 @@ public class MediaManager : MonoBehaviour {
         currentPage += 1;
         if (currentPage * windows < textForRepeat.Count)
         {
+			Vector3 prender = new Vector3(0.15f,0.8f,1f);
+			GameObject BtnAnterior = GameObject.Find ("UI_BtnAnterior");
+			BtnAnterior.transform.localScale = prender;
             ConfigListenMode();
             wait = false;
         }
