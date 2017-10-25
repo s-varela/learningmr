@@ -42,6 +42,8 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private TextMesh normalText;
     [SerializeField] NavigationPanel navigationPanel;
 
+	[SerializeField] TextMesh textRespuesta;
+
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
     private AudioManager audioManager;
@@ -309,6 +311,7 @@ public class MediaManager : MonoBehaviour {
         panelInfo.SetActive(true);
 		sphere.SetActive(true);
 		panelSub.SetActive(false);
+		textRespuesta.text = "";
 
 		if(currentPage == 0){
 			Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
@@ -938,7 +941,7 @@ public class MediaManager : MonoBehaviour {
         currentPage += 1;
         if (currentPage * windows < textForRepeat.Count)
         {
-			Vector3 prender = new Vector3(0.15f,0.8f,1f);
+			Vector3 prender = new Vector3(0.4f,0.8f,1f);
 			GameObject BtnAnterior = GameObject.Find ("UI_BtnAnterior");
 			BtnAnterior.transform.localScale = prender;
             ConfigListenMode();
@@ -1006,7 +1009,7 @@ public class MediaManager : MonoBehaviour {
 	public void EnablePanelInteration()
 	{
 		Vector3 interaccionScale = new Vector3(0.02f,0.09f,0.075f);
-		Vector3 paginadoScale = new Vector3(0.08f,0.018f,0.075f);
+		Vector3 paginadoScale = new Vector3(0.03f,0.018f,0.075f);
 
 		GameObject InteraccionBasePanelInfo = GameObject.Find("UI_InteraccionBasePanelInfo");
 		InteraccionBasePanelInfo.transform.localScale = interaccionScale;

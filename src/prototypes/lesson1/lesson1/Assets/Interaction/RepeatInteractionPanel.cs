@@ -17,7 +17,7 @@ namespace Assets.Interaction
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
         [SerializeField] private VRUIAnimationClick btnRepeat;
-       // [SerializeField] private TextMesh speechRecognitionResult;
+       	[SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
         [SerializeField] GameObject teclado;
 		[SerializeField] GameObject panelInfo;
@@ -28,6 +28,10 @@ namespace Assets.Interaction
         [SerializeField] Material radioButtonSelected;
         [SerializeField] Material radioButtonNotSelected;
         [SerializeField] private MediaManager mediaManager;
+
+		[SerializeField] GameObject gifRipple;
+		[SerializeField] GameObject gifProcessing;
+		[SerializeField] TextMesh answer;
 
         public int selectedNumberRadio;
         // Use this for initialization
@@ -90,10 +94,11 @@ namespace Assets.Interaction
 
             bool connection = CheckConnectivity.checkInternetStatus ();
 		    if (connection) {
-                // answer.text = "";
-                // answer.text = "Recording...";
-                // gifRipple.SetActive (true);
-                // gifProcessing.SetActive (false);
+				//speechRecognitionResult.text = string.Empty;
+                answer.text = "";
+                //answer.text = "Recording...";
+                gifRipple.SetActive (true);
+                gifProcessing.SetActive (false);
                 if (btnRec != null) {
                     btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
                     btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
@@ -115,9 +120,9 @@ namespace Assets.Interaction
                 btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
                 btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
             }
-            //gifRipple.SetActive(false);
+            gifRipple.SetActive(false);
             speechRecognition.StopRecord();
-            //gifProcessing.SetActive(true);
+            gifProcessing.SetActive(true);
         }
 
         private void LanguageDropdownOnValueChanged(int value)
@@ -144,7 +149,8 @@ namespace Assets.Interaction
             {
                 result = "No words were detected.";
             }
-            //gifProcessing.SetActive(false);
+            gifProcessing.SetActive(false);
+			answer.text = result.Trim ();
             mediaManager.ValidateAnswerRepeatPanelVoice(result);
 			speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
 			speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
