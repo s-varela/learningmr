@@ -17,7 +17,7 @@ namespace Assets.Interaction
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
         [SerializeField] private VRUIAnimationClick btnRepeat;
-       // [SerializeField] private TextMesh speechRecognitionResult;
+       	[SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
         [SerializeField] GameObject teclado;
 		[SerializeField] GameObject panelInfo;
@@ -31,6 +31,7 @@ namespace Assets.Interaction
 
 		[SerializeField] GameObject gifRipple;
 		[SerializeField] GameObject gifProcessing;
+		[SerializeField] TextMesh answer;
 
         public int selectedNumberRadio;
         // Use this for initialization
@@ -90,8 +91,9 @@ namespace Assets.Interaction
         {
             bool connection = CheckConnectivity.checkInternetStatus ();
 		    if (connection) {
-                // answer.text = "";
-                // answer.text = "Recording...";
+				//speechRecognitionResult.text = string.Empty;
+                answer.text = "";
+                //answer.text = "Recording...";
                 gifRipple.SetActive (true);
                 gifProcessing.SetActive (false);
                 if (btnRec != null) {
@@ -143,6 +145,7 @@ namespace Assets.Interaction
                 result = "No words were detected.";
             }
             gifProcessing.SetActive(false);
+			answer.text = result.Trim ();
             mediaManager.ValidateAnswerRepeatPanelVoice(result);
         }
     }
