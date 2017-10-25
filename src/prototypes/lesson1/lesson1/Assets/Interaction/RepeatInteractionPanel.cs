@@ -29,6 +29,9 @@ namespace Assets.Interaction
         [SerializeField] Material radioButtonNotSelected;
         [SerializeField] private MediaManager mediaManager;
 
+		[SerializeField] GameObject gifRipple;
+		[SerializeField] GameObject gifProcessing;
+
         public int selectedNumberRadio;
         // Use this for initialization
         void Start()
@@ -89,8 +92,8 @@ namespace Assets.Interaction
 		    if (connection) {
                 // answer.text = "";
                 // answer.text = "Recording...";
-                // gifRipple.SetActive (true);
-                // gifProcessing.SetActive (false);
+                gifRipple.SetActive (true);
+                gifProcessing.SetActive (false);
                 if (btnRec != null) {
                     btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
                     btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
@@ -112,9 +115,9 @@ namespace Assets.Interaction
                 btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
                 btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
             }
-            //gifRipple.SetActive(false);
+            gifRipple.SetActive(false);
             speechRecognition.StopRecord();
-            //gifProcessing.SetActive(true);
+            gifProcessing.SetActive(true);
         }
 
         private void LanguageDropdownOnValueChanged(int value)
@@ -139,7 +142,7 @@ namespace Assets.Interaction
             {
                 result = "No words were detected.";
             }
-            //gifProcessing.SetActive(false);
+            gifProcessing.SetActive(false);
             mediaManager.ValidateAnswerRepeatPanelVoice(result);
         }
     }
