@@ -50,8 +50,8 @@ namespace Assets.Interaction
 
 			noWifi.SetActive (false);
             speechRecognition = GCSpeechRecognition.Instance;
-            speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
-            speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
+            speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler; // Posiblemente
+            speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;   // redundantes
         }
 
         // Update is called once per frame
@@ -85,6 +85,9 @@ namespace Assets.Interaction
 
         private void StartRecordButtonOnClickHandler()
         {
+			speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
+			speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
+
             bool connection = CheckConnectivity.checkInternetStatus ();
 		    if (connection) {
                 // answer.text = "";
@@ -126,6 +129,8 @@ namespace Assets.Interaction
         private void SpeechRecognizedFailedEventHandler(string obj, long requestIndex)
         {
             //speechRecognitionResult.text = "Error: " + obj;
+			speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
+			speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
         }
 
         private void SpeechRecognizedSuccessEventHandler(RecognitionResponse obj, long requestIndex)
@@ -141,6 +146,9 @@ namespace Assets.Interaction
             }
             //gifProcessing.SetActive(false);
             mediaManager.ValidateAnswerRepeatPanelVoice(result);
+			speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
+			speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
+
         }
     }
 }
