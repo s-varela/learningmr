@@ -28,7 +28,7 @@ public class SubtitleReader : MonoBehaviour
 
     }
 
-    public void RestFileReader(string videoName)
+    public void RestFileReader(string videoName, string videoPath)
     {
         try
         {
@@ -36,7 +36,7 @@ public class SubtitleReader : MonoBehaviour
             subtitlesLastSeconds = new Hashtable();
             dialogs = new Hashtable();
             string fileName = videoName.Replace("mp4", "txt");
-            StreamReader subtitles = new StreamReader(Application.persistentDataPath + pathSubs + fileName);
+            StreamReader subtitles = new StreamReader(videoPath + fileName);
             int lineCounter = 0;
             //guardo todos los ultimos segundos de los subtitulos y su texto
             while (!subtitles.EndOfStream)

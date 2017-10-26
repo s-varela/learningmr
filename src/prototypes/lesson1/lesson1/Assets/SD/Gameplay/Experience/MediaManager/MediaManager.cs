@@ -48,7 +48,7 @@ public class MediaManager : MonoBehaviour {
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
-    private string pathVideos = "/lesson1-data/videos/";
+    //private string pathVideos = "/lesson1-data/videos/";
 	private string[] arrayText;
 	private Color originalColor;
     private AudioSource sfx;
@@ -718,8 +718,8 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
                     InitializeVariables();
-                    subReader.RestFileReader(videoName);
-                	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+                    subReader.RestFileReader(videoName,experience.ResourcesPath+experience.MatedataPath);
+                	media.Load("file://" + experience.ResourcesPath + experience.VideosPath + videoName);
                 	media.Play();
                 	counterVideo.Start();
 				}
@@ -839,8 +839,9 @@ public class MediaManager : MonoBehaviour {
 					InitializeVariables();
 					navigationPanel.colorPart();
 					navigationPanel.OcultarPart();
-					subReader.RestFileReader(videoName);
-					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+
+                    subReader.RestFileReader(videoName, experience.ResourcesPath + experience.MatedataPath);
+                    media.Load("file://" + experience.ResourcesPath + experience.VideosPath + videoName);
 					media.Play();
                     counterVideo.Start();
 				}

@@ -5,20 +5,22 @@ using VRStandardAssets.Utils;
 using System.Collections.Generic;
 using Assets.SD.VRMenuRoom.Scripts;
 using UnityEngine.SceneManagement;
+using System.Xml;
 
 public class VRMenuRoom : MonoBehaviour {
 
     //[SerializeField] private SelectionSlider startControl;
-	[SerializeField] private VRUIAnimationClick UI_Btn1;
+	[SerializeField] private VRUIAnimationClick UI_Btn;
     [SerializeField] private VRCameraFade fader;
     [SerializeField] private AudioClip bgmMenu;
     [SerializeField] private GameObject[] dataControls;
+    [SerializeField] private int lessonId;
 
     // Use this for initialization
     void Start () {
-		if(UI_Btn1 != null)
+		if(UI_Btn != null)
         {
-			UI_Btn1.OnAnimationComplete += HandleStartControl;
+			UI_Btn.OnAnimationComplete += HandleStartControl;
         }
 
         InitializeControls();
@@ -79,13 +81,82 @@ public class VRMenuRoom : MonoBehaviour {
 
     public Dictionary<string, object> GetMenuSettings()
     {
-        Dictionary<string, object> settings = new Dictionary<string, object>();
-        for(int i = 0; i < dataControls.Length; i ++)
-        {
-            IVRControl current = dataControls[i].GetComponent<IVRControl>();
-            settings.Add(current.GetControlName(), current.GetControlValue());
-        }
 
+        //TextMesh textObject = GameObject.Find("log").GetComponent<TextMesh>();
+        Dictionary<string, object> settings = new Dictionary<string, object>();
+        string log = "";
+
+        try
+        {
+            
+            for (int i = 0; i < dataControls.Length; i++)
+            {
+                IVRControl current = dataControls[i].GetComponent<IVRControl>();
+                settings.Add(current.GetControlName(), current.GetControlValue());
+            }
+
+            string matedataPath = "";
+            string audioPath = "";
+            string videosPath = "";
+            string resourcesPath = Application.persistentDataPath;
+
+          
+            XmlDocument newXml = new XmlDocument();
+            newXml.Load(resourcesPath + "/app-config.xml");
+
+            log += "Cargando archivo: " + resourcesPath + "/app-config.xml \n";
+
+            XmlNode root = newXml.DocumentElement;
+            XmlNode nodeLesson = root.SelectSingleNode("//lesson-data[id="+ lessonId+"]");
+           
+            List<string> videos = new List<string>();
+
+            foreach (XmlNode nodeChild in nodeLesson.ChildNodes)
+            {
+                log += nodeChild.Name+": "+nodeChild.InnerText + "\n";
+
+                if (nodeChild.Name.Equals("metadataPath"))
+                {
+                    matedataPath = nodeChild.InnerText;
+                }
+
+                if (nodeChild.Name.Equals("audioPath"))
+                {
+                    audioPath = nodeChild.InnerText;
+                }
+
+                if (nodeChild.Name.Equals("videosPath"))
+                {
+                    videosPath = nodeChild.InnerText;
+                }
+
+                if (nodeChild.Name.Equals("videos"))
+                {
+                    XmlNodeList nodeListVideos = nodeChild.SelectNodes("name");
+                    foreach (XmlNode nodeVideoName in nodeListVideos)
+                    {
+                        videos.Add(nodeVideoName.InnerText);
+                        log += nodeVideoName.InnerText + "\n";
+                    }
+                }
+            }
+
+            log += "matedataPath: " + matedataPath + "\n";
+            log += "audioPath: " + audioPath + "\n";
+            log += "videosPath: " + videosPath + "\n";
+
+            //textObject.text = log;
+            settings.Add("resourcesPath", resourcesPath);
+            settings.Add("matedataPath", matedataPath);
+            settings.Add("audioPath", audioPath);
+            settings.Add("videosPath", videosPath);
+            settings.Add("videos", videos);
+
+        }catch (Exception e)
+        {
+            log += "Exception: " + e.Message+ "\n" +e.StackTrace;
+            //textObject.text = log;
+        }
         return settings;
     }
 }
