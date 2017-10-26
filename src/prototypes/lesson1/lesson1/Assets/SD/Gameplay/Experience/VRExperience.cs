@@ -10,8 +10,15 @@ public class VRExperience : MonoBehaviour {
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
 
-    private string[] videos = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
+   // private string[] videos; // = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
+   // private string pathSubs = "/lesson1-data/subs/";
+
     private static int indiceVideo = -1;
+
+    public string ResourcesPath { get; private set; }
+    public string MatedataPath { get; private set; }
+    public string AudioPath { get; private set; }
+    public string VideosPath { get; private set; }
 
 
     public static VRExperience Instance
@@ -26,6 +33,9 @@ public class VRExperience : MonoBehaviour {
             return _instance;
         }
     }
+
+    //public string[] Videos { get; private set; }
+    public List<string> Videos { get; private set; }
 
     // Use this for initialization
     void Start() {
@@ -61,6 +71,12 @@ public class VRExperience : MonoBehaviour {
             }
         }
 
+        Videos = (List<string>)configuration["videos"];
+        ResourcesPath = (string)configuration["resourcesPath"];
+        MatedataPath = (string)configuration["matedataPath"];
+        AudioPath = (string)configuration["audioPath"];
+        VideosPath = (string)configuration["videosPath"];
+
         SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
     }
 
@@ -94,8 +110,8 @@ public class VRExperience : MonoBehaviour {
     internal string NextVideo()
     {
         indiceVideo++;
-        if (indiceVideo < videos.Length) {
-            return videos[indiceVideo];
+        if (indiceVideo < Videos.ToArray().Length) {
+            return Videos[indiceVideo];
 
         } else {
             indiceVideo = -1;
@@ -104,8 +120,8 @@ public class VRExperience : MonoBehaviour {
     }
 	internal string CurrentVideo()
 	{
-		if (indiceVideo < videos.Length) {
-			return videos[indiceVideo];
+		if (indiceVideo < Videos.ToArray().Length) {
+			return Videos[indiceVideo];
 
 		} else {
 			return "End";
@@ -114,9 +130,9 @@ public class VRExperience : MonoBehaviour {
 
 	internal string SelectVideo(int indice)
 	{
-		if (indice < videos.Length) {
+		if (indice < Videos.ToArray().Length) {
 			indiceVideo = indice;
-			return videos[indiceVideo];
+			return Videos[indiceVideo];
 		} else {
 			return "Error";
 		}
@@ -124,7 +140,7 @@ public class VRExperience : MonoBehaviour {
 
 	internal int CountVideo()
 	{
-		return videos.Length;
+		return Videos.ToArray().Length;
 	}
 
 	internal int GetIndice()
