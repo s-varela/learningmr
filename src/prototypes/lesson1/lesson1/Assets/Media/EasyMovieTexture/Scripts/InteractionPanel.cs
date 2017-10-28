@@ -39,6 +39,7 @@ public class InteractionPanel : MonoBehaviour {
 
 
 	[SerializeField] private MediaManager mediaManager;
+	[SerializeField] private Blinker blinker;
 
     // Use this for initialization
     void Start () {
@@ -104,6 +105,7 @@ public class InteractionPanel : MonoBehaviour {
 		} else 
 		{
 			noWifi.SetActive (true);
+			blinker.SetComponent (ref noWifi, 10);
 			mediaManager.DisplayWarningMessage("No hay conexión a Internet");
 		}
 	}
