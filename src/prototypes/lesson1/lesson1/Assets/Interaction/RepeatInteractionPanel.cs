@@ -17,7 +17,7 @@ namespace Assets.Interaction
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
         [SerializeField] private VRUIAnimationClick btnRepeat;
-       	[SerializeField] private TextMesh speechRecognitionResult;
+       	//[SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
         [SerializeField] GameObject teclado;
 		[SerializeField] GameObject panelInfo;

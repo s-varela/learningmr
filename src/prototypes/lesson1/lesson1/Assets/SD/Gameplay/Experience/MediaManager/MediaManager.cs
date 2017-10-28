@@ -19,7 +19,6 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private MediaManagerData data;
 	[SerializeField] private VRGameMenu menu;
 
-	[SerializeField] private LoadPanel loadPanel;
 	[SerializeField] GameObject panelInfo;
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
@@ -43,6 +42,7 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] NavigationPanel navigationPanel;
 
 	[SerializeField] TextMesh textRespuesta;
+	[SerializeField] GameObject PanelTextLAR;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
@@ -127,6 +127,7 @@ public class MediaManager : MonoBehaviour {
 		panelQuestion.SetActive(false);
 		panelHintButton.SetActive(false);
 		panelHintText.SetActive(false);
+		PanelTextLAR.SetActive (false);
 		//loadPanel.DeleteSub();
 		Sub.text="";
 		normalText.text = "";
@@ -195,6 +196,7 @@ public class MediaManager : MonoBehaviour {
 
                         if (dialogType.Listen)
                         {
+							//ActivePanelTextLAR();
                             ConfigListenMode();
 
                         }
@@ -214,10 +216,11 @@ public class MediaManager : MonoBehaviour {
                 {
                     isInPanelInfoMode = true;
   
-                    if (ElapsedAudioTime(3000))
+                    if (ElapsedAudioTime(5000))
                     {
                         try
                         {
+							//ConfigListenMode();
                             RepeatDialog(); //Se reproducen los dialogos 
                         }
                         catch (System.Exception ex)
@@ -301,6 +304,15 @@ public class MediaManager : MonoBehaviour {
         counterDelay.Start();
     }
 
+	private void ActivePanelTextLAR()
+	{
+		listen = true;
+		PauseMedia();
+		sphere.SetActive(true);
+		panelSub.SetActive(false);
+		PanelTextLAR.SetActive (true);
+	}
+
  
     private void ConfigListenMode()
     {
@@ -312,9 +324,12 @@ public class MediaManager : MonoBehaviour {
 		sphere.SetActive(true);
 		panelSub.SetActive(false);
 		textRespuesta.text = "";
+		PanelTextLAR.SetActive (true);
+
+		Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
+		panelInfo.transform.localScale = apagar;
 
 		if(currentPage == 0){
-			Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
 			GameObject BtnAnterior = GameObject.Find ("UI_BtnAnterior");
 			BtnAnterior.transform.localScale = apagar;
 		}
@@ -328,7 +343,12 @@ public class MediaManager : MonoBehaviour {
 
     private void RepeatDialog()
     {
-		DisablePanelInteration ();
+		//DisablePanelInteration ();
+		Vector3 panelInfoScale = new Vector3(3f,2f,0.008f);
+		panelInfo.transform.localScale = panelInfoScale;
+
+		PanelTextLAR.SetActive (false);
+
 		int textRepeat = textForRepeat.Count - currentPage*windows;
 		if (indiceAudio < windows && indiceAudio < textRepeat)
         {
@@ -689,7 +709,7 @@ public class MediaManager : MonoBehaviour {
     {
         //loadPanel.DeleteSub();
 		listen = false;
-        loadPanel.DeleteSub();
+        //loadPanel.DeleteSub();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
