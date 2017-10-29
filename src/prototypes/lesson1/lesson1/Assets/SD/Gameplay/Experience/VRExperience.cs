@@ -10,9 +10,7 @@ public class VRExperience : MonoBehaviour {
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
 
-   // private string[] videos; // = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
-   // private string pathSubs = "/lesson1-data/subs/";
-
+    private string[] videos;
     private static int indiceVideo = -1;
 
     public string ResourcesPath { get; private set; }
@@ -33,9 +31,6 @@ public class VRExperience : MonoBehaviour {
             return _instance;
         }
     }
-
-    //public string[] Videos { get; private set; }
-    public List<string> Videos { get; private set; }
 
     // Use this for initialization
     void Start() {
@@ -71,13 +66,20 @@ public class VRExperience : MonoBehaviour {
             }
         }
 
-        Videos = (List<string>)configuration["videos"];
+        videos = ((List<string>)configuration["videos"]).ToArray();
         ResourcesPath = (string)configuration["resourcesPath"];
         MatedataPath = (string)configuration["matedataPath"];
         AudioPath = (string)configuration["audioPath"];
         VideosPath = (string)configuration["videosPath"];
 
         SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+    }
+
+    private void ShowErrorPanel(string msg)
+    {
+        GameObject panelErrorObj = GameObject.Find("ErrorMenu");
+        TextMesh textObject = GameObject.Find("UI_ErrorDialogText").GetComponent<TextMesh>();
+        textObject.text = msg;
     }
 
     public void StartExperience()
@@ -110,8 +112,8 @@ public class VRExperience : MonoBehaviour {
     internal string NextVideo()
     {
         indiceVideo++;
-        if (indiceVideo < Videos.ToArray().Length) {
-            return Videos[indiceVideo];
+        if (indiceVideo < videos.Length) {
+            return videos[indiceVideo];
 
         } else {
             indiceVideo = -1;
@@ -120,8 +122,8 @@ public class VRExperience : MonoBehaviour {
     }
 	internal string CurrentVideo()
 	{
-		if (indiceVideo < Videos.ToArray().Length) {
-			return Videos[indiceVideo];
+		if (indiceVideo < videos.Length) {
+			return videos[indiceVideo];
 
 		} else {
 			return "End";
@@ -130,9 +132,9 @@ public class VRExperience : MonoBehaviour {
 
 	internal string SelectVideo(int indice)
 	{
-		if (indice < Videos.ToArray().Length) {
+		if (indice < videos.Length) {
 			indiceVideo = indice;
-			return Videos[indiceVideo];
+			return videos[indiceVideo];
 		} else {
 			return "Error";
 		}
@@ -140,7 +142,7 @@ public class VRExperience : MonoBehaviour {
 
 	internal int CountVideo()
 	{
-		return Videos.ToArray().Length;
+		return videos.Length;
 	}
 
 	internal int GetIndice()

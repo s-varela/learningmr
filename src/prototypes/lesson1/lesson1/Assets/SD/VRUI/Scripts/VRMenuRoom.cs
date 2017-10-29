@@ -82,7 +82,7 @@ public class VRMenuRoom : MonoBehaviour {
     public Dictionary<string, object> GetMenuSettings()
     {
 
-        //TextMesh textObject = GameObject.Find("log").GetComponent<TextMesh>();
+  
         Dictionary<string, object> settings = new Dictionary<string, object>();
         string log = "";
 
@@ -145,7 +145,7 @@ public class VRMenuRoom : MonoBehaviour {
             log += "audioPath: " + audioPath + "\n";
             log += "videosPath: " + videosPath + "\n";
 
-            //textObject.text = log;
+            //ShowErrorPanel(log);
             settings.Add("resourcesPath", resourcesPath);
             settings.Add("matedataPath", matedataPath);
             settings.Add("audioPath", audioPath);
@@ -155,8 +155,17 @@ public class VRMenuRoom : MonoBehaviour {
         }catch (Exception e)
         {
             log += "Exception: " + e.Message+ "\n" +e.StackTrace;
-            //textObject.text = log;
+
+            //ShowErrorPanel(log);
         }
         return settings;
+    }
+
+
+    private void ShowErrorPanel(string msg)
+    {
+        GameObject panelErrorObj = GameObject.Find("ErrorMenu");
+        TextMesh textObject = GameObject.Find("UI_ErrorDialogText").GetComponent<TextMesh>();
+        textObject.text = msg;
     }
 }
