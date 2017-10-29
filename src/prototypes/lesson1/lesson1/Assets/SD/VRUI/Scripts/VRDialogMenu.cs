@@ -30,9 +30,9 @@ public class VRDialogMenu : MonoBehaviour {
     {
         //input.OnCancel += ToggleMenu;
         UnityEngine.Debug.Log("[VRMediaMenu][Start] " + "Inicializando");
-        //mediaManager.OnDialogShow += ToggleMenu;
+    
 
-        //ToggleMenu();
+        ToggleMenu();
         if (btnCancel != null)
         {
             btnCancel.OnAnimationComplete += CloseMenu;
@@ -43,9 +43,8 @@ public class VRDialogMenu : MonoBehaviour {
         }
     }
     void Start() {
-        //input.OnCancel += ToggleMenu;
-       /* UnityEngine.Debug.Log("[VRMediaMenu][Start] " + "Inicializando");
-        //mediaManager.OnDialogShow += ToggleMenu;
+
+        UnityEngine.Debug.Log("[VRMediaMenu][Start] " + "Inicializando");
 
         ToggleMenu();
         if (btnCancel != null)
@@ -55,7 +54,7 @@ public class VRDialogMenu : MonoBehaviour {
 		if (btnOk != null)
         {
             btnOk.OnAnimationComplete += Accept;
-        }*/
+        }
 	}
 	
 	// Update is called once per frame
@@ -78,12 +77,13 @@ public class VRDialogMenu : MonoBehaviour {
             if(OnDialogHiden != null && pauseOnDisplay)
                 OnDialogShow();
 
-           /* if(cameraTransform != null)
+           if(cameraTransform != null)
             {
                 Vector3 posMenu = cameraTransform.position + cameraTransform.forward * distance;
                 menuBase.transform.position = posMenu;
                 menuBase.transform.forward = -cameraTransform.forward;
-            }*/
+            }
+
 			sphere.SetActive (true);
             menuBase.SetActive(true);
             active = true;
@@ -93,12 +93,12 @@ public class VRDialogMenu : MonoBehaviour {
     private void CloseMenu()
     {
         UnityEngine.Debug.Log("[VRMediaMenu][Cancel] " + "Click en Cancel");
-        //if (active)
-        //{
+        if (active)
+        {
             OnCancelClick();
             //menuBase.SetActive(false);
-           // active = false;
-        //}
+            active = false;
+        }
     }
 
     private void Accept()
@@ -106,7 +106,7 @@ public class VRDialogMenu : MonoBehaviour {
         UnityEngine.Debug.Log("[VRMediaMenu][Accept] " + "Click en Ok");
         OnAcceptClick();
         //menuBase.SetActive(false);
-        //active = false;
+        active = false;
     }
 
 }

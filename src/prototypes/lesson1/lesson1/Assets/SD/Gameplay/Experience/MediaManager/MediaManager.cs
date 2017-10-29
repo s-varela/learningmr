@@ -40,7 +40,7 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] Material radioButtonNotSelected;
     [SerializeField] NavigationPanel navigationPanel;
     [SerializeField] GameObject mediaDialogMenuPanel;
-    VRMediaMenu mediaDialogMenu;
+    VRDialogMenu mediaDialogMenu;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
@@ -107,7 +107,7 @@ public class MediaManager : MonoBehaviour {
 
         //mediaDialogMenu= GameObject.Find("SkipMenu").GetComponent<VRMediaMenu>();
       
-        mediaDialogMenu = mediaDialogMenuPanel.GetComponent<VRMediaMenu>();
+        mediaDialogMenu = mediaDialogMenuPanel.GetComponent<VRDialogMenu>();
     
         mediaDialogMenu.OnAcceptClick += DialogAcceptHandle;
         mediaDialogMenu.OnCancelClick += DialogCancelHandle;
