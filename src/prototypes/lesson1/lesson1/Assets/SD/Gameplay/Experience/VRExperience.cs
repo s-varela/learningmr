@@ -10,8 +10,13 @@ public class VRExperience : MonoBehaviour {
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
 
-    private string[] videos = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
+    private string[] videos;
     private static int indiceVideo = -1;
+
+    public string ResourcesPath { get; private set; }
+    public string MatedataPath { get; private set; }
+    public string AudioPath { get; private set; }
+    public string VideosPath { get; private set; }
 
 
     public static VRExperience Instance
@@ -61,7 +66,20 @@ public class VRExperience : MonoBehaviour {
             }
         }
 
+        videos = ((List<string>)configuration["videos"]).ToArray();
+        ResourcesPath = (string)configuration["resourcesPath"];
+        MatedataPath = (string)configuration["matedataPath"];
+        AudioPath = (string)configuration["audioPath"];
+        VideosPath = (string)configuration["videosPath"];
+
         SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+    }
+
+    private void ShowErrorPanel(string msg)
+    {
+        GameObject panelErrorObj = GameObject.Find("ErrorMenu");
+        TextMesh textObject = GameObject.Find("UI_ErrorDialogText").GetComponent<TextMesh>();
+        textObject.text = msg;
     }
 
     public void StartExperience()

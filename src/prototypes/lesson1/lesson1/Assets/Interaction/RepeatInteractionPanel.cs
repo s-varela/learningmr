@@ -14,27 +14,26 @@ namespace Assets.Interaction
         [SerializeField] private VRCameraFade fader;
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private float distance = 5;
-
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
         [SerializeField] private VRUIAnimationClick btnRepeat;
-
-        [SerializeField] private TextMesh speechRecognitionResult;
+       	//[SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
-
         [SerializeField] GameObject teclado;
+		[SerializeField] GameObject panelInfo;
+        [SerializeField] GameObject noWifi;
         [SerializeField] Text keyboardInp;
-
-       // [SerializeField] GameObject gifRipple;
-      //  [SerializeField] GameObject gifProcessing;
-       // [SerializeField] TextMesh answer;
-
         [SerializeField] Material UI_SpeechStart;
         [SerializeField] Material UI_SpeechStop;
-
-
+        [SerializeField] Material radioButtonSelected;
+        [SerializeField] Material radioButtonNotSelected;
         [SerializeField] private MediaManager mediaManager;
 
+		[SerializeField] GameObject gifRipple;
+		[SerializeField] GameObject gifProcessing;
+		[SerializeField] TextMesh answer;
+
+        public int selectedNumberRadio;
         // Use this for initialization
         void Start()
         {
@@ -53,9 +52,10 @@ namespace Assets.Interaction
                 btnRepeat.OnAnimationComplete += repeatAudio;
             }
 
+			noWifi.SetActive (false);
             speechRecognition = GCSpeechRecognition.Instance;
-            speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
-            speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
+            speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler; // Posiblemente
+            speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;   // redundantes
         }
 
         // Update is called once per frame
@@ -67,11 +67,18 @@ namespace Assets.Interaction
         private void ButtonTecladoOnClick()
         {
             teclado.SetActive(true);
+            panelInfo.SetActive(false);
             keyboardInp.text = "";
         }
 
         private void repeatAudio() {
-            mediaManager.repeatAudio();
+
+            string selectedString = "";
+            radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
+            int selecRadio = selectedRadio.WhichRadioSelected();
+            selectedString = GameObject.Find("TextInfo" + selecRadio).GetComponent<TextMesh>().text;
+
+            mediaManager.repeatAudio(selectedString);
         }
 
         private void OnDestroy()
@@ -80,22 +87,29 @@ namespace Assets.Interaction
             speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
         }
 
-
         private void StartRecordButtonOnClickHandler()
         {
+			speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
+			speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
 
-            speechRecognitionResult.text = string.Empty;
-            speechRecognitionResult.text = "Recording...";
-            //answer.text = "";
-           // gifRipple.SetActive(true);
-           // gifProcessing.SetActive(false);
-            if (btnRec != null)
-            {
-                btnRec.GetComponent<Renderer>().material = UI_SpeechStop;
-                btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
-                btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
-            }
-            speechRecognition.StartRecord(false);
+            bool connection = CheckConnectivity.checkInternetStatus ();
+		    if (connection) {
+				//speechRecognitionResult.text = string.Empty;
+                answer.text = "";
+                //answer.text = "Recording...";
+                gifRipple.SetActive (true);
+                gifProcessing.SetActive (false);
+                if (btnRec != null) {
+                    btnRec.GetComponent<Renderer> ().material = UI_SpeechStop;
+                    btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
+                    btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
+            	}
+			    speechRecognition.StartRecord (false);
+		    } 
+            else 
+		    {
+				noWifi.SetActive (true);
+		    }
         }
 
         private void StopRecordButtonOnClickHandler()
@@ -106,10 +120,9 @@ namespace Assets.Interaction
                 btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
                 btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
             }
-            speechRecognitionResult.text = "Stopped Recording";
-            //gifRipple.SetActive(false);
+            gifRipple.SetActive(false);
             speechRecognition.StopRecord();
-            //gifProcessing.SetActive(true);
+            gifProcessing.SetActive(true);
         }
 
         private void LanguageDropdownOnValueChanged(int value)
@@ -120,35 +133,28 @@ namespace Assets.Interaction
 
         private void SpeechRecognizedFailedEventHandler(string obj, long requestIndex)
         {
-            speechRecognitionResult.text = "Error: " + obj;
+            //speechRecognitionResult.text = "Error: " + obj;
+			speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
+			speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
         }
 
         private void SpeechRecognizedSuccessEventHandler(RecognitionResponse obj, long requestIndex)
         {
+            string result = "";
             if (obj != null && obj.results.Length > 0)
             {
-                speechRecognitionResult.text = /*"Speech Recognition succeeded!\n Best match: " + */obj.results[0].alternatives[0].transcript;
-
-                //			string other = "\nAlternatives: ";
-                //
-                //			foreach (var result in obj.results)
-                //			{ 
-                //				foreach (var alternative in result.alternatives)
-                //				{
-                //					if (obj.results[0].alternatives[0] != alternative)
-                //						other += alternative.transcript + ",\n";
-                //				}
-                //			}
-
-                //speechRecognitionResult.text += other;
+               result = obj.results[0].alternatives[0].transcript;
             }
             else
             {
-                speechRecognitionResult.text = "No words were detected.";
+                result = "No words were detected.";
             }
-            //gifProcessing.SetActive(false);
-            mediaManager.ValidateAnswer(speechRecognitionResult.text);
-        }
+            gifProcessing.SetActive(false);
+			answer.text = result.Trim ();
+            mediaManager.ValidateAnswerRepeatPanelVoice(result);
+			speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
+			speechRecognition.RecognitionFailedEvent -= SpeechRecognizedFailedEventHandler;
 
+        }
     }
 }

@@ -14,8 +14,6 @@ public class VRDialogMenu : MonoBehaviour {
     [SerializeField] private VRUIAnimationClick btnCancel;
     [SerializeField] private bool pauseOnDisplay;
     [SerializeField] GameObject sphere;
-    [SerializeField] private MediaManager mediaManager;
-    //[SerializeField] private float distance;
 
     private bool active = false;
 
@@ -28,11 +26,9 @@ public class VRDialogMenu : MonoBehaviour {
 
     void Awake()
     {
-        //input.OnCancel += ToggleMenu;
-        UnityEngine.Debug.Log("[VRMediaMenu][Start] " + "Inicializando");
-    
-
+   
         ToggleMenu();
+
         if (btnCancel != null)
         {
             btnCancel.OnAnimationComplete += CloseMenu;
@@ -42,11 +38,11 @@ public class VRDialogMenu : MonoBehaviour {
             btnOk.OnAnimationComplete += Accept;
         }
     }
+
     void Start() {
 
-        UnityEngine.Debug.Log("[VRMediaMenu][Start] " + "Inicializando");
-
         ToggleMenu();
+
         if (btnCancel != null)
         {
             btnCancel.OnAnimationComplete += CloseMenu;
@@ -64,49 +60,25 @@ public class VRDialogMenu : MonoBehaviour {
 
     private void ToggleMenu()
     {
-        if (active)
-        {
-            if(OnDialogShow != null && pauseOnDisplay)
-                OnDialogHiden();
-
-			sphere.SetActive (false);
-            menuBase.SetActive(false);
-            active = false;
-        } else
-        {
-            if(OnDialogHiden != null && pauseOnDisplay)
-                OnDialogShow();
-
-           if(cameraTransform != null)
-            {
-                Vector3 posMenu = cameraTransform.position + cameraTransform.forward * distance;
-                menuBase.transform.position = posMenu;
-                menuBase.transform.forward = -cameraTransform.forward;
-            }
-
-			sphere.SetActive (true);
-            menuBase.SetActive(true);
-            active = true;
-        }
+		sphere.SetActive (true);
+        menuBase.SetActive(true);
+        active = true;
     }
 
     private void CloseMenu()
     {
-        UnityEngine.Debug.Log("[VRMediaMenu][Cancel] " + "Click en Cancel");
-        if (active)
-        {
-            OnCancelClick();
-            //menuBase.SetActive(false);
-            active = false;
-        }
+        menuBase.SetActive(false);
+        sphere.SetActive(false);
+        active = false;
+        
     }
 
     private void Accept()
     {
-        UnityEngine.Debug.Log("[VRMediaMenu][Accept] " + "Click en Ok");
-        OnAcceptClick();
-        //menuBase.SetActive(false);
         active = false;
+        OnAcceptClick();
+        menuBase.SetActive(false);
+        sphere.SetActive(false);
     }
 
 }
