@@ -17,7 +17,7 @@ namespace Assets.Interaction
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
         [SerializeField] private VRUIAnimationClick btnRepeat;
-       	//[SerializeField] private TextMesh speechRecognitionResult;
+       	[SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
         [SerializeField] GameObject teclado;
 		[SerializeField] GameObject panelInfo;
@@ -32,6 +32,7 @@ namespace Assets.Interaction
 		[SerializeField] GameObject gifRipple;
 		[SerializeField] GameObject gifProcessing;
 		[SerializeField] TextMesh answer;
+		[SerializeField] private Blinker blinker;
 
         public int selectedNumberRadio;
         // Use this for initialization
@@ -109,6 +110,7 @@ namespace Assets.Interaction
             else 
 		    {
 				noWifi.SetActive (true);
+				blinker.SetComponent (ref noWifi, 10);
 		    }
         }
 
