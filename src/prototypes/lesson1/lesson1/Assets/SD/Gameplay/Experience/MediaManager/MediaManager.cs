@@ -19,6 +19,7 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] private MediaManagerData data;
 	[SerializeField] private VRGameMenu menu;
 
+	[SerializeField] private LoadPanel loadPanel;
 	[SerializeField] GameObject panelInfo;
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
@@ -40,6 +41,8 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] Material radioButtonNotSelected;
     [SerializeField] private TextMesh normalText;
     [SerializeField] NavigationPanel navigationPanel;
+    [SerializeField] GameObject mediaDialogMenuPanel;
+    VRDialogMenu mediaDialogMenu;
 
 	[SerializeField] TextMesh textRespuesta;
 	[SerializeField] GameObject PanelTextLAR;
@@ -48,7 +51,6 @@ public class MediaManager : MonoBehaviour {
     private SubtitleReader subReader;
     private AudioManager audioManager;
     private ProcessAnswer processAnswer;
-    private string pathVideos = "/lesson1-data/videos/";
 	private string[] arrayText;
 	private Color originalColor;
     private AudioSource sfx;
@@ -69,14 +71,14 @@ public class MediaManager : MonoBehaviour {
 	private int i=-1;
     private bool skip = false;
     private ArrayList textForRepeat;
+    private string selectedString;
     private int currentPage;
     private const int windows = 5;
     private bool wait;
-    // Use this for initialization
-
 
     void Start()
     {
+        selectedString = "";
         currentPage = 0;
         audioLeft = new AudioSource();
         experience = VRExperience.Instance;
@@ -106,13 +108,22 @@ public class MediaManager : MonoBehaviour {
 			audioRight.Play ();
 		}
 
-        menu.OnMenuShow += MenuPause;
-        menu.OnMenuHide += MenuResume;
+        mediaDialogMenu = mediaDialogMenuPanel.GetComponent<VRDialogMenu>();
+        mediaDialogMenu.OnAcceptClick += DialogAcceptHandle;
+  
+        menu.OnMenuShow += PauseMedia;
+        menu.OnMenuHide += ResumeMedia;
         ManagerVideo();
 
     }
 
-	void InitializeVariables()
+    private void DialogAcceptHandle()
+    {
+        ConfigDialogMode();
+        mediaDialogMenuPanel.SetActive(false);
+    }
+
+    void InitializeVariables()
 	{
 		changeSub = false;
 		answerOK = false;
@@ -264,7 +275,7 @@ public class MediaManager : MonoBehaviour {
 
     private bool IsSkipMode()
     {
-        return skip && ElapsedTime(2000);
+        return skip && ElapsedTime(500);
     }
 
     private bool IsFinishMode()
@@ -287,6 +298,19 @@ public class MediaManager : MonoBehaviour {
         return !listen && !showUserInput && !finish && !skip;
     }
 
+    private void ConfigDialogMode()
+    {
+        showUserInput = false;
+        listen = false;
+        menuPause = false;
+        wait = false;
+        finish = false;
+        skip = true;
+        counterDelay.Reset();
+        counterDelay.Start();
+    }
+
+
     private void ConfigDialogFinishMode()
     {
         finish = true;
@@ -300,6 +324,8 @@ public class MediaManager : MonoBehaviour {
         i = -1;
         showUserInput = true;
         listen = false;
+        menuPause = false;
+        wait = false;
         counterDelay.Reset();
         counterDelay.Start();
     }
@@ -738,8 +764,8 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
                     InitializeVariables();
-                    subReader.RestFileReader(videoName);
-                	media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+                    subReader.RestFileReader(videoName,experience.ResourcesPath+experience.MatedataPath);
+                	media.Load("file://" + experience.ResourcesPath + experience.VideosPath + videoName);
                 	media.Play();
                 	counterVideo.Start();
 				}
@@ -822,17 +848,11 @@ public class MediaManager : MonoBehaviour {
 
 	public void ExecuteSkip()
 	{
-		if (dialogType.RequiredInput) {
-            
-            givenHint.text = dialogType.Answers[0].ToString() + " ... ";
-            StartDelayTime();
-            skip = true;
-            showUserInput = false;
-        }
-	}
+        mediaDialogMenuPanel.SetActive(true);
+    }
 
 
-	public void SelectVideo(int indice)
+    public void SelectVideo(int indice)
 	{
 		try
 		{
@@ -859,8 +879,9 @@ public class MediaManager : MonoBehaviour {
 					InitializeVariables();
 					navigationPanel.colorPart();
 					navigationPanel.OcultarPart();
-					subReader.RestFileReader(videoName);
-					media.Load("file://" + Application.persistentDataPath + pathVideos + videoName);
+
+                    subReader.RestFileReader(videoName, experience.ResourcesPath + experience.MatedataPath);
+                    media.Load("file://" + experience.ResourcesPath + experience.VideosPath + videoName);
 					media.Play();
                     counterVideo.Start();
 				}
