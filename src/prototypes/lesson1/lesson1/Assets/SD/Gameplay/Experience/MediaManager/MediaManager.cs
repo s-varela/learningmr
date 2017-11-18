@@ -46,6 +46,11 @@ public class MediaManager : MonoBehaviour {
 
 	[SerializeField] TextMesh textRespuesta;
 	[SerializeField] GameObject PanelTextLAR;
+	[SerializeField] GameObject GuiaPanelInfo;
+	[SerializeField] GameObject GuiaPanelInteraccion;
+	[SerializeField] GameObject PanelGuiaVidrioPanelInfo;
+	[SerializeField] GameObject PanelGuiaVidrioPanelInteraccion;
+	[SerializeField] GameObject BtnGuia;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
@@ -62,6 +67,7 @@ public class MediaManager : MonoBehaviour {
     private bool listen;
     private bool finish;
     private bool isInPanelInfoMode = false;
+	private bool isButtonGuiaOn = false;
    
 	private bool answerOK = false;
 	private bool menuPause = false;
@@ -75,6 +81,8 @@ public class MediaManager : MonoBehaviour {
     private int currentPage;
     private const int windows = 5;
     private bool wait;
+	private bool firstTimePanelInfo = true;
+	private bool firstTimePanelInteraccion = true;
 
     void Start()
     {
@@ -139,6 +147,9 @@ public class MediaManager : MonoBehaviour {
 		panelHintButton.SetActive(false);
 		panelHintText.SetActive(false);
 		PanelTextLAR.SetActive (false);
+		PanelGuiaVidrioPanelInfo.SetActive (false);
+		PanelGuiaVidrioPanelInteraccion.SetActive (false);
+		BtnGuia.SetActive (false);
 		//loadPanel.DeleteSub();
 		Sub.text="";
 		normalText.text = "";
@@ -488,6 +499,12 @@ public class MediaManager : MonoBehaviour {
         panelHintButton.SetActive(true);
         panelHintText.SetActive(true);
 
+		BtnGuia.SetActive (true);
+
+		if (firstTimePanelInteraccion) {
+			ButtonGuiaOn();
+			firstTimePanelInteraccion = false;
+		}
     }
 
     public void DisableInterationMenu()
@@ -504,6 +521,7 @@ public class MediaManager : MonoBehaviour {
 		userAnswer.text = "";
 		givenHint.text = "";
 		Sub.text = "";
+		BtnGuia.SetActive (false);
     }
 
     public void KeyboardExitButton() {
@@ -841,6 +859,7 @@ public class MediaManager : MonoBehaviour {
 	}
 
     public void giveHint(TextMesh theQuestion) {
+		SetInactiveButtonGuia ();
         string questionText = theQuestion.text;
 
 		givenHint.text+= " "+ dialogType.Answers[0].ToString().Split(' ')[++i];
@@ -848,6 +867,7 @@ public class MediaManager : MonoBehaviour {
 
 	public void ExecuteSkip()
 	{
+		SetInactiveButtonGuia();
         mediaDialogMenuPanel.SetActive(true);
     }
 
@@ -1056,5 +1076,56 @@ public class MediaManager : MonoBehaviour {
 		InteraccionBasePanelInfo.transform.localScale = interaccionScale;
 		GameObject Paginado = GameObject.Find("UI_Paginado");
 		Paginado.transform.localScale = paginadoScale;
+
+		BtnGuia.SetActive (true);
+
+		if (firstTimePanelInfo) {
+			ButtonGuiaOn();
+			firstTimePanelInfo = false;
+		}
+	}
+
+	public void ButtonGuia()
+	{
+		if (!isButtonGuiaOn) {
+			ButtonGuiaOn ();
+		} else {
+			ButtonGuiaOff ();
+		}
+	}
+
+	private void ButtonGuiaOn()
+	{
+		if (panelInfo.activeSelf) {
+			GuiaPanelInfo.SetActive(true);
+			//PanelGuiaVidrioPanelInfo.SetActive (true);
+			isButtonGuiaOn = true;
+		} else if (panelInput.activeSelf) {
+			GuiaPanelInteraccion.SetActive(true);
+			//PanelGuiaVidrioPanelInteraccion.SetActive (true);
+			isButtonGuiaOn = true;
+		}
+	}
+
+	private void ButtonGuiaOff()
+	{
+		if (panelInfo.activeSelf) {
+			GuiaPanelInfo.SetActive(false);
+			//PanelGuiaVidrioPanelInfo.SetActive (false);
+			isButtonGuiaOn = false;
+		} else if (panelInput.activeSelf) {
+			GuiaPanelInteraccion.SetActive(false);
+			//PanelGuiaVidrioPanelInteraccion.SetActive (false);
+			isButtonGuiaOn = false;
+		}
+	}
+
+	public void SetInactiveButtonGuia()
+	{
+		if (isButtonGuiaOn) {
+			GuiaPanelInfo.SetActive(false);
+			GuiaPanelInteraccion.SetActive(false);
+			isButtonGuiaOn = false;
+		}
 	}
 }
