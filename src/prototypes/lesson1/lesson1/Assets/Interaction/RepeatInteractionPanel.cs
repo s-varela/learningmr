@@ -72,8 +72,9 @@ namespace Assets.Interaction
             keyboardInp.text = "";
         }
 
-        private void repeatAudio() {
-
+        private void repeatAudio() 
+		{
+			mediaManager.SetInactiveButtonGuia ();
             string selectedString = "";
             radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
             int selecRadio = selectedRadio.WhichRadioSelected();
@@ -90,6 +91,7 @@ namespace Assets.Interaction
 
         private void StartRecordButtonOnClickHandler()
         {
+			mediaManager.SetInactiveButtonGuia ();
 			speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
 			speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
 
@@ -116,6 +118,7 @@ namespace Assets.Interaction
 
         private void StopRecordButtonOnClickHandler()
         {
+			mediaManager.SetInactiveButtonGuia ();
             if (btnRec != null)
             {
                 btnRec.GetComponent<Renderer>().material = UI_SpeechStart;

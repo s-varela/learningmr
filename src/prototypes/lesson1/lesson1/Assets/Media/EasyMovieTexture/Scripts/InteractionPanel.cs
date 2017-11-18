@@ -67,6 +67,7 @@ public class InteractionPanel : MonoBehaviour {
 
 	private void ButtonTecladoOnClick()
 	{
+		mediaManager.SetInactiveButtonGuia ();
 		panelSub.SetActive (false);
 		panelInput.SetActive (false);
 		teclado.SetActive (true);
@@ -89,6 +90,7 @@ public class InteractionPanel : MonoBehaviour {
 
 	private void StartRecordButtonOnClickHandler()
 	{
+		mediaManager.SetInactiveButtonGuia ();
 		bool connection = CheckConnectivity.checkInternetStatus ();
 		if (connection) {
 			speechRecognitionResult.text = string.Empty;

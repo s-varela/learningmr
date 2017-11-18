@@ -35,11 +35,13 @@ public class PaginatedPanel : MonoBehaviour {
 
 	private void ButtonNextOnClick()
 	{
+		mediaManager.SetInactiveButtonGuia ();
         mediaManager.NextPage();
     }
 
     private void ButtonPreviousOnClick()
     {
+		mediaManager.SetInactiveButtonGuia ();
         mediaManager.PreviousPage();
     }
 
