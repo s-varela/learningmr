@@ -9,8 +9,9 @@ public class VRExperience : MonoBehaviour {
     private static VRExperience _instance;
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
+    private Dictionary<string, string> gameObjectsText = new Dictionary<string, string>();
 
-    private string[] videos;
+    private String[] videos;
     private static int indiceVideo = -1;
 
     public string ResourcesPath { get; private set; }
@@ -18,6 +19,7 @@ public class VRExperience : MonoBehaviour {
     public string AudioPath { get; private set; }
     public string VideosPath { get; private set; }
 
+    private string log;
 
     public static VRExperience Instance
     {
@@ -56,23 +58,73 @@ public class VRExperience : MonoBehaviour {
         }
     }
 
-    public void StartExperience(Dictionary<string, object> config, bool overwriteSettings)
+    public void StartExperience(Dictionary<string, object> config1, bool overwriteSettings)
     {
-        foreach (KeyValuePair<string, object> pair in config)
+        Util util = Util.Instance;
+        try
         {
-            if (!configuration.ContainsKey(pair.Key) || overwriteSettings)
+            /*foreach (KeyValuePair<string, object> pair in config)
             {
-                configuration[pair.Key] = pair.Value;
+                if (!configuration.ContainsKey(pair.Key) || overwriteSettings)
+                {
+                    configuration[pair.Key] = pair.Value;
+                }
+            }*/
+
+       
+            ConfigManager configManager = ConfigManager.Instance;
+            Dictionary<string, object> config = configManager.Settings;
+
+            log = "VRExperience.StartExperience \n";
+            log += "lesson:" + (int)config["lessonId"] + " \n";
+
+            util.ShowErrorPanel(log);
+
+            if (config.ContainsKey("appSettingtMap"))
+            {
+                Dictionary<string, AppConfigType> appSettingtMap = (Dictionary<string, AppConfigType>)config["appSettingtMap"];
+                int lessonId = (int)config["lessonId"];
+                AppConfigType appConfig = appSettingtMap[lessonId.ToString()];
+
+                log += "ResourcesPath:" + appConfig.ResourcesPath + " \n";
+                log += "MatedataPath:" + appConfig.MetedataPath + " \n";
+                log += "AudioPath:" + appConfig.AudioPath + " \n";
+                log += "VideosPath:" + appConfig.VideosPath + " \n";
+                util.ShowErrorPanel(log);
+
+                videos = (String[])appConfig.Videos.ToArray(typeof(string));
+                ResourcesPath = appConfig.ResourcesPath;
+                MatedataPath = appConfig.MetedataPath;
+                AudioPath = appConfig.AudioPath;
+                VideosPath = appConfig.VideosPath;
+
+                gameObjectsText = (Dictionary<string, string>)config["gameObjectsTexts"];
+
+                SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+            }
+            else
+            {
+                log += "Error. No se puede cargar la leccion. appSettingtMap es nulo \n";
+                util.ShowErrorPanel(log);
+            }
+
+            if (!config.ContainsKey("gameObjectsTexts"))
+            {
+                log += "Error. gameObjectsTexts es nulo \n";
+                util.ShowErrorPanel(log);
+            }
+
+            if (!config.ContainsKey("userConfig"))
+            {
+                log += "Error. userConfig es nulo \n";
+                util.ShowErrorPanel(log);
             }
         }
-
-        videos = ((List<string>)configuration["videos"]).ToArray();
-        ResourcesPath = (string)configuration["resourcesPath"];
-        MatedataPath = (string)configuration["matedataPath"];
-        AudioPath = (string)configuration["audioPath"];
-        VideosPath = (string)configuration["videosPath"];
-
-        SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+        catch (Exception e)
+        {
+            log += "Exception: " + e.Message + "\n" + e.StackTrace;
+            util.ShowErrorPanel(log);
+        }
     }
 
     private void ShowErrorPanel(string msg)
@@ -107,6 +159,15 @@ public class VRExperience : MonoBehaviour {
         {
             return default(T);
         }
+    }
+
+    public string GetGameObjectText(string textObjectId)
+    {
+        if (gameObjectsText.ContainsKey(textObjectId))
+        {
+            return gameObjectsText[textObjectId];
+        }
+        return "";
     }
 
     internal string NextVideo()

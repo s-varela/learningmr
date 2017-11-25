@@ -7,6 +7,7 @@ using Assets.SD.VRMenuRoom.Scripts;
 using UnityEngine.SceneManagement;
 using System.Xml;
 
+
 public class VRMenuRoom : MonoBehaviour {
 
     //[SerializeField] private SelectionSlider startControl;
@@ -15,6 +16,10 @@ public class VRMenuRoom : MonoBehaviour {
     [SerializeField] private AudioClip bgmMenu;
     [SerializeField] private GameObject[] dataControls;
     [SerializeField] private int lessonId;
+
+    private string log = "";
+
+    Util util = Util.Instance;
 
     // Use this for initialization
     void Start () {
@@ -82,90 +87,37 @@ public class VRMenuRoom : MonoBehaviour {
     public Dictionary<string, object> GetMenuSettings()
     {
 
-  
-        Dictionary<string, object> settings = new Dictionary<string, object>();
-        string log = "";
-
+        Dictionary<string, object> settings=null;
         try
-        {
+            {
+            ConfigManager configManager = ConfigManager.Instance;
+  
+            if (configManager != null)
+            {
+                settings = configManager.Settings;
             
-            for (int i = 0; i < dataControls.Length; i++)
-            {
-                IVRControl current = dataControls[i].GetComponent<IVRControl>();
-                settings.Add(current.GetControlName(), current.GetControlValue());
+                if (settings.ContainsKey("lessonId"))
+                {
+                    settings.Remove("lessonId");
+                }
+
+                log = "Seteando lessonId=" + lessonId;
+                settings.Add("lessonId", lessonId);
+
+                util.ShowErrorPanel(log);
+                
+            }else{
+                log += "ERROR. NO se puedo cargar la configuracion del sistema";
+                util.ShowErrorPanel(log);
             }
-
-            string matedataPath = "";
-            string audioPath = "";
-            string videosPath = "";
-            string resourcesPath = Application.persistentDataPath;
-
-          
-            XmlDocument newXml = new XmlDocument();
-            newXml.Load(resourcesPath + "/app-config.xml");
-
-            log += "Cargando archivo: " + resourcesPath + "/app-config.xml \n";
-
-            XmlNode root = newXml.DocumentElement;
-            XmlNode nodeLesson = root.SelectSingleNode("//lesson-data[id="+ lessonId+"]");
            
-            List<string> videos = new List<string>();
-
-            foreach (XmlNode nodeChild in nodeLesson.ChildNodes)
-            {
-                log += nodeChild.Name+": "+nodeChild.InnerText + "\n";
-
-                if (nodeChild.Name.Equals("metadataPath"))
-                {
-                    matedataPath = nodeChild.InnerText;
-                }
-
-                if (nodeChild.Name.Equals("audioPath"))
-                {
-                    audioPath = nodeChild.InnerText;
-                }
-
-                if (nodeChild.Name.Equals("videosPath"))
-                {
-                    videosPath = nodeChild.InnerText;
-                }
-
-                if (nodeChild.Name.Equals("videos"))
-                {
-                    XmlNodeList nodeListVideos = nodeChild.SelectNodes("name");
-                    foreach (XmlNode nodeVideoName in nodeListVideos)
-                    {
-                        videos.Add(nodeVideoName.InnerText);
-                        log += nodeVideoName.InnerText + "\n";
-                    }
-                }
-            }
-
-            log += "matedataPath: " + matedataPath + "\n";
-            log += "audioPath: " + audioPath + "\n";
-            log += "videosPath: " + videosPath + "\n";
-
-            //ShowErrorPanel(log);
-            settings.Add("resourcesPath", resourcesPath);
-            settings.Add("matedataPath", matedataPath);
-            settings.Add("audioPath", audioPath);
-            settings.Add("videosPath", videosPath);
-            settings.Add("videos", videos);
-
-        }catch (Exception e)
+        }
+        catch (Exception e)
         {
             log += "Exception: " + e.Message+ "\n" +e.StackTrace;
 
-            //ShowErrorPanel(log);
+            util.ShowErrorPanel(log);
         }
         return settings;
-    }
-
-
-    private void ShowErrorPanel(string msg)
-    {
-        GameObject panelErrorObj = GameObject.Find("ErrorMenu");
-        TextMesh textObject = GameObject.Find("UI_ErrorDialogText").GetComponent<TextMesh>();
-        textObject.text = msg;
     }
 }
