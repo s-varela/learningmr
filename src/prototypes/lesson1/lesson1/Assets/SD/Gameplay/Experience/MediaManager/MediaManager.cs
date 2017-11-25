@@ -37,8 +37,6 @@ public class MediaManager : MonoBehaviour {
     [SerializeField] TextMesh givenHint;
 	[SerializeField] GameObject gifTick;
 	[SerializeField] GameObject gifCross;
-    [SerializeField] Material radioButtonSelected;
-    [SerializeField] Material radioButtonNotSelected;
     [SerializeField] private TextMesh normalText;
     [SerializeField] NavigationPanel navigationPanel;
     [SerializeField] GameObject mediaDialogMenuPanel;
@@ -48,9 +46,9 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject PanelTextLAR;
 	[SerializeField] GameObject GuiaPanelInfo;
 	[SerializeField] GameObject GuiaPanelInteraccion;
-	[SerializeField] GameObject PanelGuiaVidrioPanelInfo;
-	[SerializeField] GameObject PanelGuiaVidrioPanelInteraccion;
 	[SerializeField] GameObject BtnGuia;
+
+	[SerializeField] Material play;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
@@ -147,10 +145,7 @@ public class MediaManager : MonoBehaviour {
 		panelHintButton.SetActive(false);
 		panelHintText.SetActive(false);
 		PanelTextLAR.SetActive (false);
-		PanelGuiaVidrioPanelInfo.SetActive (false);
-		PanelGuiaVidrioPanelInteraccion.SetActive (false);
 		BtnGuia.SetActive (false);
-		//loadPanel.DeleteSub();
 		Sub.text="";
 		normalText.text = "";
 		userAnswer.text = "";
@@ -218,7 +213,6 @@ public class MediaManager : MonoBehaviour {
 
                         if (dialogType.Listen)
                         {
-							//ActivePanelTextLAR();
                             ConfigListenMode();
 
                         }
@@ -243,7 +237,7 @@ public class MediaManager : MonoBehaviour {
                         try
                         {
 							//ConfigListenMode();
-                            RepeatDialog(); //Se reproducen los dialogos 
+                            RepeatDialog(); //Se reproducen los dialogos
                         }
                         catch (System.Exception ex)
                         {
@@ -252,6 +246,10 @@ public class MediaManager : MonoBehaviour {
                             normalText.text = "Error reproducir audio" + ex.Message;
                         }
                     }
+//					if(!sfx.isPlaying)
+//					{
+//						SetMaterialPlay();
+//					}
                 }
                 else if (IsInputMode())
                 {
@@ -283,6 +281,14 @@ public class MediaManager : MonoBehaviour {
         }
    
     }
+
+//	private void SetMaterialPlay()
+//	{
+//		for (int i = 1; i <= 5; i++) {
+//			GameObject ri = GameObject.Find ("UI_Replay"+i);
+//			ri.GetComponent<Renderer> ().material = play;
+//		}
+//	}
 
     private bool IsSkipMode()
     {
@@ -380,7 +386,6 @@ public class MediaManager : MonoBehaviour {
 
     private void RepeatDialog()
     {
-		//DisablePanelInteration ();
 		Vector3 panelInfoScale = new Vector3(3f,2f,0.008f);
 		panelInfo.transform.localScale = panelInfoScale;
 
@@ -390,29 +395,6 @@ public class MediaManager : MonoBehaviour {
 		if (indiceAudio < windows && indiceAudio < textRepeat)
         {
             TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
-            //UI_RadioButton1
-            GameObject r1 = GameObject.Find("UI_RadioButton1");
-            r1.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-            //UI_RadioButton2
-            GameObject r2 = GameObject.Find("UI_RadioButton2");
-            r2.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-            //UI_RadioButton3
-            GameObject r3 = GameObject.Find("UI_RadioButton3");
-            r3.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-            //UI_RadioButton4
-            GameObject r4 = GameObject.Find("UI_RadioButton4");
-            r4.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-            //UI_RadioButton5
-            GameObject r5 = GameObject.Find("UI_RadioButton5");
-            r5.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-            //assign selected material to selected radio button and paint selected text in yellow
-            GameObject radioSelected = GameObject.Find("UI_RadioButton" + (indiceAudio + 1));
-            radioSelected.GetComponent<Renderer>().material = radioButtonSelected;
             textObject.color = Color.yellow;
             PlayAudio(textObject.text);
      
@@ -431,25 +413,6 @@ public class MediaManager : MonoBehaviour {
         {
             GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.yellow;
            	
-			//UI_RadioButton1
-            GameObject firstRad = GameObject.Find("UI_RadioButton1");
-            firstRad.GetComponent<Renderer>().material = radioButtonSelected;
-
-			//UI_RadioButton2
-			GameObject r2 = GameObject.Find("UI_RadioButton2");
-			r2.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-			//UI_RadioButton3
-			GameObject r3 = GameObject.Find("UI_RadioButton3");
-			r3.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-			//UI_RadioButton4
-			GameObject r4 = GameObject.Find("UI_RadioButton4");
-			r4.GetComponent<Renderer>().material = radioButtonNotSelected;
-
-			//UI_RadioButton5
-			GameObject r5 = GameObject.Find("UI_RadioButton5");
-			r5.GetComponent<Renderer>().material = radioButtonNotSelected;
             TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
             textObjectBefore.color = Color.white;
 
@@ -466,7 +429,6 @@ public class MediaManager : MonoBehaviour {
             
         }
     }
-
 
     private bool ElapsedTime(int seconds)
     {
@@ -625,9 +587,9 @@ public class MediaManager : MonoBehaviour {
      
     public void ValidateAnswerRepeatPanel(string answer)
     {
-        radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
-        int numberRadioSelected = selectedRadio.WhichRadioSelected();
-        string selectedString = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+		PanelInfoText selectedText = PanelInfoText.Instance;
+		int numberTextSelected = selectedText.WhichTextSelected();
+		string selectedString = GameObject.Find("TextInfo" + numberTextSelected).GetComponent<TextMesh>().text;
 
         keyboard.SetActive(false);
 
@@ -651,7 +613,7 @@ public class MediaManager : MonoBehaviour {
             GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
-            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.green;
+			GameObject.Find("TextInfo" + numberTextSelected).GetComponent<TextMesh>().color = Color.green;
             PlayAudio("correct");
         }
         else
@@ -661,16 +623,16 @@ public class MediaManager : MonoBehaviour {
             GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
-            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.red;
+			GameObject.Find("TextInfo" + numberTextSelected).GetComponent<TextMesh>().color = Color.red;
             PlayAudio("incorrect");
         }
     }
 
     public void ValidateAnswerRepeatPanelVoice(string answer)
     {
-        radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
-        int numberRadioSelected = selectedRadio.WhichRadioSelected();
-        string selectedString = GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().text;
+		PanelInfoText selectedText = PanelInfoText.Instance;
+		int numberTextSelected = selectedText.WhichTextSelected();
+		string selectedString = GameObject.Find("TextInfo" + numberTextSelected).GetComponent<TextMesh>().text;
 
         answer = answer.Trim();
         answer = Regex.Replace(answer, @"\s+", " ");
@@ -692,7 +654,7 @@ public class MediaManager : MonoBehaviour {
             GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
-            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.green;
+			GameObject.Find("TextInfo" + numberTextSelected).GetComponent<TextMesh>().color = Color.green;
             PlayAudio("correct");
         }
         else
@@ -702,11 +664,10 @@ public class MediaManager : MonoBehaviour {
             GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
             GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
-            GameObject.Find("TextInfo" + numberRadioSelected).GetComponent<TextMesh>().color = Color.red;
+			GameObject.Find("TextInfo" + numberTextSelected).GetComponent<TextMesh>().color = Color.red;
             PlayAudio("incorrect");
         }
     }
-
     
 	private void MenuPause()
 	{
@@ -751,9 +712,7 @@ public class MediaManager : MonoBehaviour {
 
     private void FinishLessonPart()
     {
-        //loadPanel.DeleteSub();
 		listen = false;
-        //loadPanel.DeleteSub();
         counterVideo.Reset();
         counterVideo.Stop();
         counterVideo.Start();
@@ -782,6 +741,9 @@ public class MediaManager : MonoBehaviour {
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
                     InitializeVariables();
+
+					media.UnLoad();
+
                     subReader.RestFileReader(videoName,experience.ResourcesPath+experience.MatedataPath);
                 	media.Load("file://" + experience.ResourcesPath + experience.VideosPath + videoName);
                 	media.Play();
@@ -813,13 +775,14 @@ public class MediaManager : MonoBehaviour {
                 if (pathSounds != null)
                 {
                     sfx.clip = Resources.Load<AudioClip>(pathSounds) as AudioClip;
-                    //sfx.volume = experience.GetConfigurationValue<float>(data.audioVolumeConfigValue);
                     sfx.loop = false;
                     sfx.volume = 1.0f;
                     sfx.ignoreListenerPause = true;
                     sfx.enabled = false;
                     sfx.enabled = true;
                     sfx.Play();
+
+					//SetMaterialPlay();
                 }
                 else
                 {
@@ -957,38 +920,15 @@ public class MediaManager : MonoBehaviour {
 		}
 	}
 
-    public void selectRadioButton(GameObject radioSelected, int radioInt) {
-        //paint all texts white and deselect all radio buttons
-
-        //UI_RadioButton1
-        GameObject r1 = GameObject.Find("UI_RadioButton1");
-        r1.GetComponent<Renderer>().material = radioButtonNotSelected;
-        GameObject.Find("TextInfo1").GetComponent<TextMesh>().color = Color.white;
-
-        //UI_RadioButton2
-        GameObject r2 = GameObject.Find("UI_RadioButton2");
-        r2.GetComponent<Renderer>().material = radioButtonNotSelected;
-        GameObject.Find("TextInfo2").GetComponent<TextMesh>().color = Color.white;
-
-        //UI_RadioButton3
-        GameObject r3 = GameObject.Find("UI_RadioButton3");
-        r3.GetComponent<Renderer>().material = radioButtonNotSelected;
-        GameObject.Find("TextInfo3").GetComponent<TextMesh>().color = Color.white;
-
-        //UI_RadioButton4
-        GameObject r4 = GameObject.Find("UI_RadioButton4");
-        r4.GetComponent<Renderer>().material = radioButtonNotSelected;
-        GameObject.Find("TextInfo4").GetComponent<TextMesh>().color = Color.white;
-
-        //UI_RadioButton5
-        GameObject r5 = GameObject.Find("UI_RadioButton5");
-        r5.GetComponent<Renderer>().material = radioButtonNotSelected;
-        GameObject.Find("TextInfo5").GetComponent<TextMesh>().color = Color.white;
-
-        //assign selected material to selected radio button and paint selected text in yellow
-        radioSelected.GetComponent<Renderer>().material = radioButtonSelected;
-        string selectedString = GameObject.Find("TextInfo" + radioInt).GetComponent<TextMesh>().text;
-        GameObject.Find("TextInfo" + radioInt).GetComponent<TextMesh>().color = Color.yellow;
+    public void selectTextInfo(int TextInt) {
+        //paint all texts white
+		for (int i = 1; i <= 5; i++) 
+		{
+			GameObject.Find("TextInfo"+i).GetComponent<TextMesh>().color = Color.white;
+		}
+        //assign selected material to selected Text and paint selected text in yellow
+        string selectedString = GameObject.Find("TextInfo" + TextInt).GetComponent<TextMesh>().text;
+        GameObject.Find("TextInfo" + TextInt).GetComponent<TextMesh>().color = Color.yellow;
     }
 
     //metodo repetir audio panel de resumen
@@ -1028,9 +968,8 @@ public class MediaManager : MonoBehaviour {
     //metodo rellenar panel de resumen al final de cada video
     public void TextInfoFill() {
 		//primero activa todo los radioButton y los panelInfo
-		Vector3 prender = new Vector3(0.6f,0.1f,1f);
+		Vector3 prender = new Vector3(1f,0.133f,1f);
 		for (int i = 1; i <= windows; i++) {
-			GameObject.Find("UI_RadioButton"+i).transform.localScale = prender;
 			GameObject.Find ("PanelInfo"+i).transform.localScale = prender;
 		}
 
@@ -1052,7 +991,6 @@ public class MediaManager : MonoBehaviour {
 		int textRepeat = textForRepeat.Count - currentPage * windows;
 		Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
 		for (int i = textRepeat + 1; i <= windows; i++) {
-			GameObject.Find("UI_RadioButton"+i).transform.localScale = apagar;
 			GameObject.Find ("PanelInfo"+i).transform.localScale = apagar;
 		}
     }
@@ -1065,23 +1003,42 @@ public class MediaManager : MonoBehaviour {
 
 		GameObject Paginado = GameObject.Find("UI_Paginado");
 		Paginado.transform.localScale = apagar;
+
+		GameObject Replay = GameObject.Find("UI_ReplayPanel");
+		Replay.transform.localScale = apagar;
 	}
 
 	public void EnablePanelInteration()
 	{
 		Vector3 interaccionScale = new Vector3(0.02f,0.09f,0.075f);
 		Vector3 paginadoScale = new Vector3(0.03f,0.018f,0.075f);
+		Vector3 replayScale = new Vector3(0.01f,0.09f,1f);
 
 		GameObject InteraccionBasePanelInfo = GameObject.Find("UI_InteraccionBasePanelInfo");
 		InteraccionBasePanelInfo.transform.localScale = interaccionScale;
 		GameObject Paginado = GameObject.Find("UI_Paginado");
 		Paginado.transform.localScale = paginadoScale;
+		GameObject Replay = GameObject.Find("UI_ReplayPanel");
+		Replay.transform.localScale = replayScale;
 
 		BtnGuia.SetActive (true);
 
 		if (firstTimePanelInfo) {
 			ButtonGuiaOn();
 			firstTimePanelInfo = false;
+		}
+
+		//Primero los prendo a todos
+		Vector3 prender = new Vector3(0.7f,0.12f,1f);
+		for (int i = 1; i <= windows; i++) {
+			GameObject.Find("UI_Replay"+i).transform.localScale = prender;
+		}
+
+		//Luego apago las que no corresponden
+		int textRepeat = textForRepeat.Count - currentPage * windows;
+		Vector3 apagar = new Vector3(0.00001f,0.00001f,0.00001f);
+		for (int i = textRepeat + 1; i <= windows; i++) {
+			GameObject.Find("UI_Replay"+i).transform.localScale = apagar;
 		}
 	}
 
@@ -1098,11 +1055,9 @@ public class MediaManager : MonoBehaviour {
 	{
 		if (panelInfo.activeSelf) {
 			GuiaPanelInfo.SetActive(true);
-			//PanelGuiaVidrioPanelInfo.SetActive (true);
 			isButtonGuiaOn = true;
 		} else if (panelInput.activeSelf) {
 			GuiaPanelInteraccion.SetActive(true);
-			//PanelGuiaVidrioPanelInteraccion.SetActive (true);
 			isButtonGuiaOn = true;
 		}
 	}
@@ -1111,11 +1066,9 @@ public class MediaManager : MonoBehaviour {
 	{
 		if (panelInfo.activeSelf) {
 			GuiaPanelInfo.SetActive(false);
-			//PanelGuiaVidrioPanelInfo.SetActive (false);
 			isButtonGuiaOn = false;
 		} else if (panelInput.activeSelf) {
 			GuiaPanelInteraccion.SetActive(false);
-			//PanelGuiaVidrioPanelInteraccion.SetActive (false);
 			isButtonGuiaOn = false;
 		}
 	}
