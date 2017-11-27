@@ -10,8 +10,8 @@ using System.Xml;
 
 public class VRMenuRoom : MonoBehaviour {
 
-    //[SerializeField] private SelectionSlider startControl;
-	[SerializeField] private VRUIAnimationClick UI_Btn;
+    [SerializeField] private GameObject errorPanel;
+    [SerializeField] private VRUIAnimationClick UI_Btn;
     [SerializeField] private VRCameraFade fader;
     [SerializeField] private AudioClip bgmMenu;
     [SerializeField] private GameObject[] dataControls;
@@ -100,23 +100,18 @@ public class VRMenuRoom : MonoBehaviour {
                 {
                     settings.Remove("lessonId");
                 }
-
-                log = "Seteando lessonId=" + lessonId;
                 settings.Add("lessonId", lessonId);
-
-                util.ShowErrorPanel(log);
-                
-            }else{
-                log += "ERROR. NO se puedo cargar la configuracion del sistema";
-                util.ShowErrorPanel(log);
+            }
+            else{
+               log = "ERROR. NO se puedo cargar la configuracion del sistema";
+               util.ShowErrorPanelByRef(errorPanel, log);
             }
            
         }
         catch (Exception e)
         {
-            log += "Exception: " + e.Message+ "\n" +e.StackTrace;
-
-            util.ShowErrorPanel(log);
+            log = "Exception: " + e.Message+ "\n" +e.StackTrace;
+            util.ShowErrorPanelByRef(errorPanel,log);
         }
         return settings;
     }

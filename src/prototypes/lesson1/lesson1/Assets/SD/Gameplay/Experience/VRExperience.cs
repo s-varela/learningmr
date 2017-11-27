@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System;
 
-public class VRExperience : MonoBehaviour {
+public class VRExperience : MonoBehaviour
+{
 
+
+    [SerializeField] private GameObject errorPanel;
     private static VRExperience _instance;
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
@@ -35,12 +38,14 @@ public class VRExperience : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         indiceVideo = -1;
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
     }
 
@@ -63,75 +68,51 @@ public class VRExperience : MonoBehaviour {
         Util util = Util.Instance;
         try
         {
-            /*foreach (KeyValuePair<string, object> pair in config)
-            {
-                if (!configuration.ContainsKey(pair.Key) || overwriteSettings)
-                {
-                    configuration[pair.Key] = pair.Value;
-                }
-            }*/
 
-       
             ConfigManager configManager = ConfigManager.Instance;
             Dictionary<string, object> config = configManager.Settings;
-
-            log = "VRExperience.StartExperience \n";
-            log += "lesson:" + (int)config["lessonId"] + " \n";
-
-            util.ShowErrorPanel(log);
 
             if (config.ContainsKey("appSettingtMap"))
             {
                 Dictionary<string, AppConfigType> appSettingtMap = (Dictionary<string, AppConfigType>)config["appSettingtMap"];
-                int lessonId = (int)config["lessonId"];
-                AppConfigType appConfig = appSettingtMap[lessonId.ToString()];
 
-                log += "ResourcesPath:" + appConfig.ResourcesPath + " \n";
-                log += "MatedataPath:" + appConfig.MetedataPath + " \n";
-                log += "AudioPath:" + appConfig.AudioPath + " \n";
-                log += "VideosPath:" + appConfig.VideosPath + " \n";
-                util.ShowErrorPanel(log);
+                if (config.ContainsKey("lessonId")){
+                    int lessonId = (int)config["lessonId"];
+                    AppConfigType appConfig = appSettingtMap[lessonId.ToString()];
 
-                videos = (String[])appConfig.Videos.ToArray(typeof(string));
-                ResourcesPath = appConfig.ResourcesPath;
-                MatedataPath = appConfig.MetedataPath;
-                AudioPath = appConfig.AudioPath;
-                VideosPath = appConfig.VideosPath;
+                    videos = (String[])appConfig.Videos.ToArray(typeof(string));
+                    ResourcesPath = appConfig.ResourcesPath;
+                    MatedataPath = appConfig.MetedataPath;
+                    AudioPath = appConfig.AudioPath;
+                    VideosPath = appConfig.VideosPath;
 
-                gameObjectsText = (Dictionary<string, string>)config["gameObjectsTexts"];
 
-                SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
-            }
-            else
+                    if (config.ContainsKey("gameObjectsTexts"))
+                    {
+                        gameObjectsText = (Dictionary<string, string>)config["gameObjectsTexts"];
+                    }
+                    else
+                    {
+                        log = "Error no se puedieron cargar las lecciones.\n Comprobar que el archivo app-text.xml exista en \n la carpeta de instalacion";
+                        util.ShowErrorPanelByRef(errorPanel, log);
+                    }
+                    SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+                }else
+                {
+                    log = "Error no se puedo cargar la leccion.";
+                    util.ShowErrorPanelByRef(errorPanel, log);
+                }
+            }else
             {
-                log += "Error. No se puede cargar la leccion. appSettingtMap es nulo \n";
-                util.ShowErrorPanel(log);
-            }
-
-            if (!config.ContainsKey("gameObjectsTexts"))
-            {
-                log += "Error. gameObjectsTexts es nulo \n";
-                util.ShowErrorPanel(log);
-            }
-
-            if (!config.ContainsKey("userConfig"))
-            {
-                log += "Error. userConfig es nulo \n";
-                util.ShowErrorPanel(log);
+                log = "Error no se puedieron cargar las lecciones.\n Comprobar que el archivo app-config.xml exista en \n la carpeta de instalacion";
+                util.ShowErrorPanelByRef(errorPanel, log);
             }
         }
         catch (Exception e)
         {
-            log += "Exception: " + e.Message + "\n" + e.StackTrace;
-            util.ShowErrorPanel(log);
+            log = "Exception: " + e.Message + "\n" + e.StackTrace;
+            util.ShowErrorPanelByRef(errorPanel, log);
         }
-    }
-
-    private void ShowErrorPanel(string msg)
-    {
-        GameObject panelErrorObj = GameObject.Find("ErrorMenu");
-        TextMesh textObject = GameObject.Find("UI_ErrorDialogText").GetComponent<TextMesh>();
-        textObject.text = msg;
     }
 
     public void StartExperience()
@@ -173,46 +154,55 @@ public class VRExperience : MonoBehaviour {
     internal string NextVideo()
     {
         indiceVideo++;
-        if (indiceVideo < videos.Length) {
+        if (indiceVideo < videos.Length)
+        {
             return videos[indiceVideo];
 
-        } else {
+        }
+        else
+        {
             indiceVideo = -1;
             return "End";
         }
     }
-	internal string CurrentVideo()
-	{
-		if (indiceVideo < videos.Length) {
-			return videos[indiceVideo];
+    internal string CurrentVideo()
+    {
+        if (indiceVideo < videos.Length)
+        {
+            return videos[indiceVideo];
 
-		} else {
-			return "End";
-		}
-	}
+        }
+        else
+        {
+            return "End";
+        }
+    }
 
-	internal string SelectVideo(int indice)
-	{
-		if (indice < videos.Length) {
-			indiceVideo = indice;
-			return videos[indiceVideo];
-		} else {
-			return "Error";
-		}
-	}
+    internal string SelectVideo(int indice)
+    {
+        if (indice < videos.Length)
+        {
+            indiceVideo = indice;
+            return videos[indiceVideo];
+        }
+        else
+        {
+            return "Error";
+        }
+    }
 
-	internal int CountVideo()
-	{
-		return videos.Length;
-	}
+    internal int CountVideo()
+    {
+        return videos.Length;
+    }
 
-	internal int GetIndice()
-	{
-		return indiceVideo;
-	}
+    internal int GetIndice()
+    {
+        return indiceVideo;
+    }
 
-	internal void ResetIndice()
-	{
-		indiceVideo = -1;
-	}
+    internal void ResetIndice()
+    {
+        indiceVideo = -1;
+    }
 }

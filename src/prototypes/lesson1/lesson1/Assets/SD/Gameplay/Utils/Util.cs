@@ -16,47 +16,36 @@ public class Util :MonoBehaviour
         }
     }
 
-
-    public void ShowErrorPanel(string msg)
+    public void ShowErrorPanelByRef(GameObject errorPanel,string msg)
     {
-        GameObject panelErrorObj = GameObject.Find("ErrorMenu");
+        errorPanel.SetActive(true);
+        string msgFinal="";
         TextMesh textObject = GameObject.Find("UI_ErrorDialogText").GetComponent<TextMesh>();
-        textObject.text = msg;
-    }
-
-
-    public void ShowConfig(System.Collections.Generic.Dictionary<string, object> config)
-    {
-        string log ="** Show config ** \n \n";
-        try
+        string[] splitMsg = msg.Split(' ');
+        int i = 0;
+        foreach (string msgPart in splitMsg)
         {
-            foreach (var key in config.Keys)
+            if (i != 5)
             {
-
-                log += key + "\n";
-
-                /* object obj = config[value];
-                 if (obj.GetType() == typeof(UserConfigType))
-                 {
-                     UserConfigType user = (UserConfigType)obj;
-                     log += "( user.UserFirstName," + user.UserFirstName + " ) \n";
-                     log += "( user.UserLastName," + user.UserLastName + " ) \n";
-                     log += "( user.UserLanguage," + user.UserLanguage + " ) \n";
-                     log += "( user.UserEmail," + user.UserEmail + " ) \n";
-                 }else if (obj.GetType() == typeof(AppConfigType))
-                 {
-                     log += "( MetedataPath," + ((AppConfigType)obj).MetedataPath + " ) \n";
-                     log += "( ResourcesPath," + ((AppConfigType)obj).ResourcesPath + " ) \n";
-                     log += "( VideosPath," + ((AppConfigType)obj).VideosPath + " ) \n";
-                 }else 
-                     log += "( " + value + ","+ (string)config[value]+ " ) \n";*/
+          
+                i++;
+                if (msgPart.Length > 35)
+                {
+                    msgFinal = msgFinal.Substring(0, 35) + "\n" + msgFinal.Substring(35, msgFinal.Length - 35);
+                }else
+                {
+                    msgFinal += msgPart + " ";
+                }
             }
-
-            ShowErrorPanel(log);
-
-        }catch (System.Exception e)
-        {
-            ShowErrorPanel("Exception: "+e.Message);
+            else
+            {
+                msgFinal += msgPart + " \n";
+                i = 0;
+            }
+         
         }
+        textObject.text = msgFinal;
     }
+
+   
 }

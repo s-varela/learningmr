@@ -18,6 +18,7 @@ public class NavigationPanel : MonoBehaviour {
 	[SerializeField] private VRUIAnimationClick btn3;
 	[SerializeField] private VRUIAnimationClick btn4;
 	[SerializeField] private VRUIAnimationClick btnDer;
+	[SerializeField] private VRUIAnimationClick btnGuia;
 
 	[SerializeField] private TextMesh UI_Btn1Text;
 	[SerializeField] private TextMesh UI_Btn2Text;
@@ -88,6 +89,10 @@ public class NavigationPanel : MonoBehaviour {
 		{
 			btn4.OnAnimationComplete += Button4Click;
 		}
+		if (btnGuia != null) 
+		{
+			btnGuia.OnAnimationComplete += ButtonGuiaClick;
+		}
 	}
 	
 	// Update is called once per frame
@@ -152,6 +157,11 @@ public class NavigationPanel : MonoBehaviour {
 	{
 		int btn4Int = Convert.ToInt16(UI_Btn4Text.text);
 		mediaManager.SelectVideo (btn4Int);
+	}
+
+	private void ButtonGuiaClick()
+	{
+		mediaManager.ButtonGuia ();
 	}
 
 	public void colorPart()

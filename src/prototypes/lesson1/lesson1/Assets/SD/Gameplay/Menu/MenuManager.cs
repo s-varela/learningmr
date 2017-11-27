@@ -5,7 +5,9 @@ using System;
 
 public class MenuManager : MonoBehaviour
 {
-	private string log;
+    [SerializeField] private GameObject errorPanel;
+
+    private string log;
 	// Use this for initialization
 	private Util util = Util.Instance;
 
@@ -18,17 +20,11 @@ public class MenuManager : MonoBehaviour
 	{
 		try
 		{
-			log += "Menu Manager. Start \n";
-			util.ShowErrorPanel(log);
-
 			ConfigManager configManager = ConfigManager.Instance;
 
 			Dictionary<string, object> settings = configManager.Settings;
 			if (settings != null)
 			{
-
-                util.ShowConfig(settings);
-
                 if (settings.ContainsKey("userConfig"))
 				{
 
@@ -66,22 +62,22 @@ public class MenuManager : MonoBehaviour
                 }
 				else
 				{
-					log += "ERROR: La configuracion de los textos no está cargada en el sistema.\n";
-					util.ShowErrorPanel(log);
-				}
+					log = "ERROR: La configuracion de los textos no está cargada en el sistema.\n";
+                    util.ShowErrorPanelByRef(errorPanel, log);
+                }
 			}
 			else
 			{
-				log += "ERROR: No se pudo cargar la configuracion del sistema \n";
-				util.ShowErrorPanel(log);
-			}
+				log = "ERROR: No se pudo cargar la configuracion del sistema \n";
+                util.ShowErrorPanelByRef(errorPanel, log);
+            }
 
 		}
 		catch (Exception e)
 		{
-			log += "Exception: " + e.Message + "\n" + e.StackTrace;
-			util.ShowErrorPanel(log);
-		}
+			log = "Exception: " + e.Message + "\n" + e.StackTrace;
+            util.ShowErrorPanelByRef(errorPanel, log);
+        }
 	}
 
 	private void Awake()
