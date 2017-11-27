@@ -1,4 +1,0 @@
-[4320]-Hello, my name is Michael.|
-[5765]-What's your name?|
-[8100]-My name is Johnny.|
-[9900]-What's your name?|

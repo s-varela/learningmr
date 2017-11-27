@@ -40,7 +40,6 @@ public class VRErrorMenu : MonoBehaviour {
             if(OnMenuShow != null && pauseOnDisplay)
                 OnMenuHide();
 
-			//sphere.SetActive (false);
             menuBase.SetActive(false);
             active = false;
         } else
@@ -54,7 +53,6 @@ public class VRErrorMenu : MonoBehaviour {
                 menuBase.transform.position = posMenu;
                 menuBase.transform.forward = -cameraTransform.forward;
             }
-			//sphere.SetActive (true);
             menuBase.SetActive(true);
             active = true;
         }
@@ -66,7 +64,6 @@ public class VRErrorMenu : MonoBehaviour {
         {
             OnMenuHide();
             menuBase.SetActive(false);
-			//sphere.SetActive (false);
             active = false;
         }
     }

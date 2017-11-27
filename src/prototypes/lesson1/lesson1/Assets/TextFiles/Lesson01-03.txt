@@ -1,5 +1,0 @@
-[3240]-Hello! My name is Michael.|
-[4919]-Nice to meet you Michael.|
-[6500]-What's your name?|
-[8240]-My name is Johnny.|
-[9700]-Nice to meet you too, Jhonny.|
