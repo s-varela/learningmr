@@ -1,4 +1,0 @@
-[4799]-Hi! Are you Johnny?|
-[6080]-Yes, I am.|
-[7770]-Are you Paul?|
-[10919]-No, Im not. Im Michael.|

@@ -5,28 +5,27 @@ using VRStandardAssets.Utils;
 using System.Collections.Generic;
 using Assets.SD.VRMenuRoom.Scripts;
 using UnityEngine.SceneManagement;
+using System.Xml;
+
 
 public class VRMenuRoom : MonoBehaviour {
 
-    [SerializeField] private SelectionSlider startControl;
+    [SerializeField] private GameObject errorPanel;
+    [SerializeField] private VRUIAnimationClick UI_Btn;
     [SerializeField] private VRCameraFade fader;
     [SerializeField] private AudioClip bgmMenu;
     [SerializeField] private GameObject[] dataControls;
+    [SerializeField] private int lessonId;
+
+    private string log = "";
+
+    Util util = Util.Instance;
 
     // Use this for initialization
     void Start () {
-        if (bgmMenu != null)
+		if(UI_Btn != null)
         {
-            AudioSource source = gameObject.AddComponent<AudioSource>();
-            source.clip = bgmMenu;
-            source.volume = 0.1f;
-            source.loop = true;
-            source.Play();
-        }
-
-	    if(startControl != null)
-        {
-            startControl.OnBarFilled += HandleStartControl;
+			UI_Btn.OnAnimationComplete += HandleStartControl;
         }
 
         InitializeControls();
@@ -74,18 +73,46 @@ public class VRMenuRoom : MonoBehaviour {
 
     private void HandleStartControl()
     {
+		if (bgmMenu != null)
+		{
+			AudioSource source = gameObject.AddComponent<AudioSource>();
+			source.clip = bgmMenu;
+			//source.volume = 0.1f;
+			//source.loop = true;
+			source.Play();
+		}
         StartCoroutine(StartExperience());
     }
 
     public Dictionary<string, object> GetMenuSettings()
     {
-        Dictionary<string, object> settings = new Dictionary<string, object>();
-        for(int i = 0; i < dataControls.Length; i ++)
-        {
-            IVRControl current = dataControls[i].GetComponent<IVRControl>();
-            settings.Add(current.GetControlName(), current.GetControlValue());
-        }
 
+        Dictionary<string, object> settings=null;
+        try
+            {
+            ConfigManager configManager = ConfigManager.Instance;
+  
+            if (configManager != null)
+            {
+                settings = configManager.Settings;
+            
+                if (settings.ContainsKey("lessonId"))
+                {
+                    settings.Remove("lessonId");
+                }
+                settings.Add("lessonId", lessonId);
+            }
+            else{
+               log = "ERROR. NO se puedo cargar la configuracion del sistema";
+               util.ShowErrorPanelByRef(errorPanel, log);
+            }
+           
+        }
+        catch (Exception e)
+        {
+            log = "Exception: " + e.Message+ "\n" +e.StackTrace;
+            util.ShowErrorPanelByRef(errorPanel,log);
+        }
         return settings;
     }
 }

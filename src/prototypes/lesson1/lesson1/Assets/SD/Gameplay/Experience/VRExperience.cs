@@ -4,15 +4,25 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System;
 
-public class VRExperience : MonoBehaviour {
+public class VRExperience : MonoBehaviour
+{
 
+
+    [SerializeField] private GameObject errorPanel;
     private static VRExperience _instance;
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
+    private Dictionary<string, string> gameObjectsText = new Dictionary<string, string>();
 
-    private string[] videos = { "Lesson01-01.mp4", "Lesson01-02.mp4", "Lesson01-03.mp4", "Lesson01-04.mp4", "Lesson01-05.mp4" };
+    private String[] videos;
     private static int indiceVideo = -1;
 
+    public string ResourcesPath { get; private set; }
+    public string MatedataPath { get; private set; }
+    public string AudioPath { get; private set; }
+    public string VideosPath { get; private set; }
+
+    private string log;
 
     public static VRExperience Instance
     {
@@ -28,12 +38,14 @@ public class VRExperience : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         indiceVideo = -1;
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
     }
 
@@ -51,17 +63,56 @@ public class VRExperience : MonoBehaviour {
         }
     }
 
-    public void StartExperience(Dictionary<string, object> config, bool overwriteSettings)
+    public void StartExperience(Dictionary<string, object> config1, bool overwriteSettings)
     {
-        foreach (KeyValuePair<string, object> pair in config)
+        Util util = Util.Instance;
+        try
         {
-            if (!configuration.ContainsKey(pair.Key) || overwriteSettings)
+
+            ConfigManager configManager = ConfigManager.Instance;
+            Dictionary<string, object> config = configManager.Settings;
+
+            if (config.ContainsKey("appSettingtMap"))
             {
-                configuration[pair.Key] = pair.Value;
+                Dictionary<string, AppConfigType> appSettingtMap = (Dictionary<string, AppConfigType>)config["appSettingtMap"];
+
+                if (config.ContainsKey("lessonId")){
+                    int lessonId = (int)config["lessonId"];
+                    AppConfigType appConfig = appSettingtMap[lessonId.ToString()];
+
+                    videos = (String[])appConfig.Videos.ToArray(typeof(string));
+                    ResourcesPath = appConfig.ResourcesPath;
+                    MatedataPath = appConfig.MetedataPath;
+                    AudioPath = appConfig.AudioPath;
+                    VideosPath = appConfig.VideosPath;
+
+
+                    if (config.ContainsKey("gameObjectsTexts"))
+                    {
+                        gameObjectsText = (Dictionary<string, string>)config["gameObjectsTexts"];
+                    }
+                    else
+                    {
+                        log = "Error no se puedieron cargar las lecciones.\n Comprobar que el archivo app-text.xml exista en \n la carpeta de instalacion";
+                        util.ShowErrorPanelByRef(errorPanel, log);
+                    }
+                    SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+                }else
+                {
+                    log = "Error no se puedo cargar la leccion.";
+                    util.ShowErrorPanelByRef(errorPanel, log);
+                }
+            }else
+            {
+                log = "Error no se puedieron cargar las lecciones.\n Comprobar que el archivo app-config.xml exista en \n la carpeta de instalacion";
+                util.ShowErrorPanelByRef(errorPanel, log);
             }
         }
-
-        SceneManager.LoadScene("Scenes/Experience", LoadSceneMode.Single);
+        catch (Exception e)
+        {
+            log = "Exception: " + e.Message + "\n" + e.StackTrace;
+            util.ShowErrorPanelByRef(errorPanel, log);
+        }
     }
 
     public void StartExperience()
@@ -91,44 +142,67 @@ public class VRExperience : MonoBehaviour {
         }
     }
 
+    public string GetGameObjectText(string textObjectId)
+    {
+        if (gameObjectsText.ContainsKey(textObjectId))
+        {
+            return gameObjectsText[textObjectId];
+        }
+        return "";
+    }
+
     internal string NextVideo()
     {
         indiceVideo++;
-        if (indiceVideo < videos.Length) {
+        if (indiceVideo < videos.Length)
+        {
             return videos[indiceVideo];
 
-        } else {
+        }
+        else
+        {
             indiceVideo = -1;
             return "End";
         }
     }
-	internal string CurrentVideo()
-	{
-		if (indiceVideo < videos.Length) {
-			return videos[indiceVideo];
+    internal string CurrentVideo()
+    {
+        if (indiceVideo < videos.Length)
+        {
+            return videos[indiceVideo];
 
-		} else {
-			return "End";
-		}
-	}
+        }
+        else
+        {
+            return "End";
+        }
+    }
 
-	internal string SelectVideo(int indice)
-	{
-		if (indice < videos.Length) {
-			indiceVideo = indice;
-			return videos[indiceVideo];
-		} else {
-			return "Error";
-		}
-	}
+    internal string SelectVideo(int indice)
+    {
+        if (indice < videos.Length)
+        {
+            indiceVideo = indice;
+            return videos[indiceVideo];
+        }
+        else
+        {
+            return "Error";
+        }
+    }
 
-	internal int CountVideo()
-	{
-		return videos.Length;
-	}
+    internal int CountVideo()
+    {
+        return videos.Length;
+    }
 
-	internal int GetIndice()
-	{
-		return indiceVideo;
-	}
+    internal int GetIndice()
+    {
+        return indiceVideo;
+    }
+
+    internal void ResetIndice()
+    {
+        indiceVideo = -1;
+    }
 }

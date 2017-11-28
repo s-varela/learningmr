@@ -28,7 +28,7 @@ public class SubtitleReader : MonoBehaviour
 
     }
 
-    public void RestFileReader(string videoName)
+    public void RestFileReader(string videoName, string videoPath)
     {
         try
         {
@@ -36,7 +36,7 @@ public class SubtitleReader : MonoBehaviour
             subtitlesLastSeconds = new Hashtable();
             dialogs = new Hashtable();
             string fileName = videoName.Replace("mp4", "txt");
-            StreamReader subtitles = new StreamReader(Application.persistentDataPath + pathSubs + fileName);
+            StreamReader subtitles = new StreamReader(videoPath + fileName);
             int lineCounter = 0;
             //guardo todos los ultimos segundos de los subtitulos y su texto
             while (!subtitles.EndOfStream)
@@ -59,12 +59,25 @@ public class SubtitleReader : MonoBehaviour
 
                 if (subtitleText.Contains("&I"))
                 {
+                    int iInput = subtitleText.IndexOf("&I")+2;
+   
+                    string[] answers = subtitleText.Substring(iInput, subtitleText.Length- iInput).Split('#');
+                    
+                    foreach (string answer in answers){
+                        Debug.Log("SubtitleReader. answer" + answer);
+                        dialogType.Answers.Add(answer);
+                    }
                     dialogType.RequiredInput = true;
                     dialogType.Text = subtitleText.Split('&')[0];
                 }
                 else if (subtitleText.Contains("&P"))
                 {
-                    dialogType.Pause = true;
+                    dialogType.Listen = true;
+                    dialogType.Text = subtitleText.Split('&')[0];
+                }
+                else if (subtitleText.Contains("&E"))
+                {
+                    dialogType.Finish = true;
                     dialogType.Text = subtitleText.Split('&')[0];
                 }
                 else
@@ -80,11 +93,84 @@ public class SubtitleReader : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.Log("ERROR_OBTENIENDO_SUBTITULOS: " + ex.Message);
+            Debug.Log("SubtitleReader. ERROR_OBTENIENDO_SUBTITULOS: " + ex.Message);
         }
 
     }
 
+
+    /*public void RestFileReader(string videoName)
+    {
+        try
+        {
+            subtitlesLastSeconds = new Hashtable();
+            dialogs = new Hashtable();
+            string fileName = videoName.Replace("mp4", "json");
+            StreamReader subtitles = new StreamReader(Application.persistentDataPath + pathSubs + fileName);
+  
+            //guardo todos los ultimos segundos de los subtitulos y su texto
+            while (!subtitles.EndOfStream)
+            {
+                DialogType dialogType = new DialogType();
+                string line = subtitles.ReadToEnd();
+                Debug.Log("SubtitleReader. json: " + line);
+                JSONObject j = new JSONObject(line);
+                accessData(j);
+            }
+            subtitles.Close();
+
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log("SubtitleReader. ERROR_OBTENIENDO_SUBTITULOS: " + ex.Message);
+        }
+
+    }*/
+
+    /*public static System.String toJSon(DialogType dialog)
+    { 
+            // Here we convert Java Object to JSO
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.AddField("text", dialog.Text); // Set the first name/pair
+            jsonObj.AddField("surname", dialog.Start);
+           
+            return jsonObj.Print();
+    }*/
+    
+    /*void accessData(JSONObject obj)
+    {
+        switch (obj.type)
+        {
+            case JSONObject.Type.OBJECT:
+                for (int i = 0; i < obj.list.Count; i++)
+                {
+                    string key = (string)obj.keys[i];
+                    JSONObject j = (JSONObject)obj.list[i];
+                    Debug.Log("SubtitleReader. " + key);
+                    accessData(j);
+                }
+                break;
+            case JSONObject.Type.ARRAY:
+                foreach (JSONObject j in obj.list)
+                {
+                    accessData(j);
+                }
+                break;
+            case JSONObject.Type.STRING:
+                Debug.Log("SubtitleReader. " +obj.str);
+                break;
+            case JSONObject.Type.NUMBER:
+                Debug.Log("SubtitleReader. " + obj.n);
+                break;
+            case JSONObject.Type.BOOL:
+                Debug.Log("SubtitleReader. " + obj.b);
+                break;
+            case JSONObject.Type.NULL:
+                Debug.Log("SubtitleReader. " + "NULL");
+                break;
+
+        }
+    }*/
 
     /* public Hashtable ReadSubtitleLine(long duration)
      {

@@ -8,12 +8,13 @@ public class VRGameMenu : MonoBehaviour {
     [SerializeField] private VRInput input;
     [SerializeField] private VRCameraFade fader;
     [SerializeField] private Transform cameraTransform;
-    [SerializeField] private float distance = 5;
+    [SerializeField] private float distance;
     [SerializeField] private GameObject menuBase;
-    [SerializeField] private VRUIAnimationClick btnOK;
-    [SerializeField] private VRUIAnimationClick btnCancel;
-    [SerializeField] private GameObject cameraReticle;
+    [SerializeField] private VRUIAnimationClick btnReturn;
+    [SerializeField] private VRUIAnimationClick btnResume;
     [SerializeField] private bool pauseOnDisplay;
+	[SerializeField] GameObject sphere;
+
 
     private bool active = false;
 
@@ -23,13 +24,13 @@ public class VRGameMenu : MonoBehaviour {
     // Use this for initialization
     void Start () {
         input.OnCancel += ToggleMenu;
-        if(btnOK != null)
+		if(btnReturn != null)
         {
-            btnOK.OnAnimationComplete += ExitExperience;
+			btnReturn.OnAnimationComplete += ExitExperience;
         }
-        if (btnCancel != null)
+		if (btnResume != null)
         {
-            btnCancel.OnAnimationComplete += CloseMenu;
+			btnResume.OnAnimationComplete += CloseMenu;
         }
 	}
 	
@@ -45,8 +46,8 @@ public class VRGameMenu : MonoBehaviour {
             if(OnMenuShow != null && pauseOnDisplay)
                 OnMenuHide();
 
+			sphere.SetActive (false);
             menuBase.SetActive(false);
-            cameraReticle.SetActive(false);
             active = false;
         } else
         {
@@ -59,8 +60,8 @@ public class VRGameMenu : MonoBehaviour {
                 menuBase.transform.position = posMenu;
                 menuBase.transform.forward = -cameraTransform.forward;
             }
+			sphere.SetActive (true);
             menuBase.SetActive(true);
-            cameraReticle.SetActive(true);
             active = true;
         }
     }
@@ -71,7 +72,7 @@ public class VRGameMenu : MonoBehaviour {
         {
             OnMenuHide();
             menuBase.SetActive(false);
-            cameraReticle.SetActive(false);
+			sphere.SetActive (false);
             active = false;
         }
     }
