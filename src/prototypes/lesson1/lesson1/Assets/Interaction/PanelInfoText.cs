@@ -67,30 +67,35 @@ public class PanelInfoText : MonoBehaviour
 	{
 		mediaManager.selectTextInfo (1);
 		textSelected = 1;
+		mediaManager.SetInactiveButtonGuia ();
 	}
 
 	private void panelInfo2OnClik()
 	{
 		mediaManager.selectTextInfo (2);
 		textSelected = 2;
+		mediaManager.SetInactiveButtonGuia ();
 	}
 
 	private void panelInfo3OnClik()
 	{
 		mediaManager.selectTextInfo (3);
 		textSelected = 3;
+		mediaManager.SetInactiveButtonGuia ();
 	}
 
 	private void panelInfo4OnClik()
 	{
 		mediaManager.selectTextInfo (4);
 		textSelected = 4;
+		mediaManager.SetInactiveButtonGuia ();
 	}
 
 	private void panelInfo5OnClik()
 	{
 		mediaManager.selectTextInfo (5);
 		textSelected = 5;
+		mediaManager.SetInactiveButtonGuia ();
 	}
 
 	public int WhichTextSelected() {
