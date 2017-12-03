@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace Assets.Interaction
 {
 
-    public class radioButtonInteraction : MonoBehaviour
+    public class RadioButtonInteraction : MonoBehaviour
     {
         [SerializeField] private VRUIAnimationClick r1;
         [SerializeField] private VRUIAnimationClick r2;
@@ -17,18 +17,18 @@ namespace Assets.Interaction
         [SerializeField] private VRUIAnimationClick r4;
         [SerializeField] private VRUIAnimationClick r5;
 
-        private static radioButtonInteraction _instance;
+        private static RadioButtonInteraction _instance;
 
         [SerializeField] private MediaManager mediaManager;
         private int radioSelected;
 
-        public static radioButtonInteraction Instance
+        public static RadioButtonInteraction Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<radioButtonInteraction>();
+                    _instance = FindObjectOfType<RadioButtonInteraction>();
                     // DontDestroyOnLoad(_instance.gameObject);
                 }
                 return _instance;

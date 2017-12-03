@@ -1067,7 +1067,7 @@ public class MediaManager : MonoBehaviour {
     private void LoadPanelInteractionTexts()
     {
         GameObject.Find("TextGuiaBtnTeclado").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnTeclado").Replace("\\n", "\n"); 
-        GameObject.Find("TextGuiaBtnStart").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnStart").Replace("\\n", "\n");
+        GameObject.Find("TextGuiaBtnPlay").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnPlay").Replace("\\n", "\n");
         GameObject.Find("TextGuiaQuestionPanel").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaQuestionPanel").Replace("\\n", "\n");
         GameObject.Find("TextGuiaAnswerPanel").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaAnswerPanel").Replace("\\n", "\n");
         GameObject.Find("TextGuiaHintText").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaHintText").Replace("\\n", "\n");
@@ -1077,9 +1077,9 @@ public class MediaManager : MonoBehaviour {
 
     private void LoadPanelInfoTexts()
     {
-        GameObject.Find("TextGuiaRadioButton").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaRadioButton").Replace("\\n", "\n");
+       // GameObject.Find("TextGuiaRadioButton").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaRadioButton").Replace("\\n", "\n");
         GameObject.Find("TextGuiaPanelInfo").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaPanelInfo").Replace("\\n", "\n");
-        GameObject.Find("TextGuiaBtnAudio").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnAudio").Replace("\\n", "\n");
+        GameObject.Find("TextGuiaBtnPlay").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnPlay").Replace("\\n", "\n");
         GameObject.Find("TextGuiaBtnTecladoInfo").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnTecladoInfo").Replace("\\n", "\n");
         GameObject.Find("TextGuiaBtnStartInfo").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaBtnStartInfo").Replace("\\n", "\n");
         GameObject.Find("TextGuiaPanelRespuesta").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextGuiaPanelRespuesta").Replace("\\n", "\n");

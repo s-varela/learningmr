@@ -64,7 +64,6 @@ public class ConfigManager : MonoBehaviour
             util.ShowErrorPanelByRef(errorPanel, log);
 
         }
-
     }
 
     public void Start()
@@ -74,7 +73,7 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
-   /* public void Awake()
+    public void Awake()
     {
         if (instance == null)
         {
@@ -85,8 +84,7 @@ public class ConfigManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }*/
-
+    }
 
     private void LoadUserInfo()
     {
@@ -135,6 +133,77 @@ public class ConfigManager : MonoBehaviour
         }catch (System.Exception ex)
         {
             log = "Excepcion: [LoadUserInfo] Error no se puedieron cargar los datos del usuario.\n Comprobar que el archivo user-config.xml exista en la carpeta de instalacion";
+            util.ShowErrorPanelByRef(errorPanel, log);
+        }
+    }
+
+
+    public void SaveUserConfig(UserConfigType userInfo)
+    {
+        try
+        {
+            //log = "Ini SaveUserConfig";
+            //util.ShowErrorPanelByRef(errorPanel, log);
+
+            XmlDocument newXml = new XmlDocument();
+            newXml.Load(resourcesPath + "/user-config.xml");
+
+            //log += "Cargando archivo: " + resourcesPath + "/user-config.xml \n";
+            //util.ShowErrorPanelByRef(errorPanel, log);
+
+            XmlNode root = newXml.DocumentElement;
+            XmlNode nodeUser = root.SelectSingleNode("//user");
+
+            foreach (XmlNode nodeChild in nodeUser.ChildNodes)
+            {
+                if (nodeChild.Name.Equals("firstName"))
+                {
+                    if (userInfo.UserFirstName != null)
+                    {
+                        nodeChild.InnerText= userInfo.UserFirstName;
+                        //log += "userFirstName: " + userInfo.UserFirstName + "\n";
+                        //util.ShowErrorPanelByRef(errorPanel, log);
+                    }
+                }
+
+                if (nodeChild.Name.Equals("lastName"))
+                {
+                    if (userInfo.UserLastName != null)
+                    {
+                        nodeChild.InnerText = userInfo.UserLastName;
+                        //log += "lastName: " + userInfo.UserLastName + "\n";
+                        //util.ShowErrorPanelByRef(errorPanel, log);
+                    }
+                }
+
+                if (nodeChild.Name.Equals("email"))
+                {
+                    if (userInfo.UserEmail != null)
+                    {
+                        nodeChild.InnerText= userInfo.UserEmail;
+                        //log += "email: " + userInfo.UserEmail + "\n";
+                    }
+                }
+
+                if (nodeChild.Name.Equals("language"))
+                {
+                    if (userInfo.UserLanguage != null)
+                    {
+                        nodeChild.InnerText= userInfo.UserLanguage;
+                        //log += "language: " + userInfo.UserLanguage +"\n";
+                        //util.ShowErrorPanelByRef(errorPanel, log);
+                    }
+                }
+            }
+ 
+            newXml.Save(resourcesPath + "/user-config.xml");
+
+            IniConfigManager();
+
+        }
+        catch (System.Exception ex)
+        {
+            log = "Excepcion: [SaveUserConfig] Error no se puedieron actualizar los datos del usuario.";
             util.ShowErrorPanelByRef(errorPanel, log);
         }
     }
@@ -203,14 +272,14 @@ public class ConfigManager : MonoBehaviour
     {
         try
         {
-            log += "INI: LoadAppSettings \n";
+            //log += "INI: LoadAppSettings \n";
       
             Dictionary<string, AppConfigType> appSettingtMap = new Dictionary<string, AppConfigType>();
             XmlDocument newXml = new XmlDocument();
 
             newXml.Load(resourcesPath + "/app-config.xml");
 
-            log += "Cargando archivo: " + resourcesPath + "/app-config.xml \n";
+            //log += "Cargando archivo: " + resourcesPath + "/app-config.xml \n";
 
             XmlNode root = newXml.DocumentElement;
             XmlNodeList nodesLessonData = root.SelectNodes("//lesson-data");
@@ -224,31 +293,31 @@ public class ConfigManager : MonoBehaviour
 
                 foreach (XmlNode nodeChild in nodeLessonData.ChildNodes)
                 {
-                    log += nodeChild.Name + ": " + nodeChild.InnerText + "\n";
+                    //log += nodeChild.Name + ": " + nodeChild.InnerText + "\n";
                     // util.ShowErrorPanel(log);
 
                     if (nodeChild.Name.Equals("id"))
                     {
                         appConfigType.Id = nodeChild.InnerText;
-                        log += "id: " + appConfigType.Id + "\n";
+                        //log += "id: " + appConfigType.Id + "\n";
                     }
 
                     if (nodeChild.Name.Equals("metadataPath"))
                     {
                         appConfigType.MetedataPath = nodeChild.InnerText;
-                        log += "metadataPath: " + appConfigType.MetedataPath + "\n";
+                        //log += "metadataPath: " + appConfigType.MetedataPath + "\n";
                     }
 
                     if (nodeChild.Name.Equals("audioPath"))
                     {
                         appConfigType.AudioPath = nodeChild.InnerText;
-                        log += "audioPath: " + appConfigType.AudioPath + "\n";
+                        //log += "audioPath: " + appConfigType.AudioPath + "\n";
                     }
 
                     if (nodeChild.Name.Equals("videosPath"))
                     {
                         appConfigType.VideosPath = nodeChild.InnerText;
-                        log += "videosPath: " + appConfigType.VideosPath + "\n";
+                        //log += "videosPath: " + appConfigType.VideosPath + "\n";
                     }
 
                     if (nodeChild.Name.Equals("videos"))
@@ -257,7 +326,7 @@ public class ConfigManager : MonoBehaviour
                         foreach (XmlNode nodeVideoName in nodeListVideos)
                         {
                             appConfigType.Videos.Add(nodeVideoName.InnerText);
-                            log += nodeVideoName.InnerText + "\n";
+                            //log += nodeVideoName.InnerText + "\n";
                         }
                     }
                 }
@@ -266,7 +335,7 @@ public class ConfigManager : MonoBehaviour
 
             Settings.Add("appSettingtMap", appSettingtMap);
 
-            log += "Carga de configuracion de la aplicacion finalizada! \n";
+            //log += "Carga de configuracion de la aplicacion finalizada! \n";
             //util.ShowErrorPanelByRef(errorPanel, log);
         }
         catch (System.Exception ex)
@@ -275,4 +344,6 @@ public class ConfigManager : MonoBehaviour
             util.ShowErrorPanelByRef(errorPanel, log);
         }
     }
+
+ 
 }
