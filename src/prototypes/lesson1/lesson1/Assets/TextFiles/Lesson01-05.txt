@@ -1,6 +1,0 @@
-[3670]-Hello! My name is Michael.|
-[5520]-What's your name?|
-[8360]-Nice to meet you.|
-[10430]-Where are you from?|
-[12800]-I'm from Sydney Australia.|
-[17390]-Nice! Nice to meet you, bye!|

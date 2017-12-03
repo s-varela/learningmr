@@ -16,7 +16,6 @@ namespace Assets.Interaction
         [SerializeField] private float distance = 5;
         [SerializeField] private VRUIAnimationClick btnTeclado;
         [SerializeField] private VRUIAnimationClick btnRec;
-        [SerializeField] private VRUIAnimationClick btnRepeat;
        	[SerializeField] private TextMesh speechRecognitionResult;
         [SerializeField] private GCSpeechRecognition speechRecognition;
         [SerializeField] GameObject teclado;
@@ -25,8 +24,8 @@ namespace Assets.Interaction
         [SerializeField] Text keyboardInp;
         [SerializeField] Material UI_SpeechStart;
         [SerializeField] Material UI_SpeechStop;
-        [SerializeField] Material radioButtonSelected;
-        [SerializeField] Material radioButtonNotSelected;
+        //[SerializeField] Material radioButtonSelected;
+        //[SerializeField] Material radioButtonNotSelected;
         [SerializeField] private MediaManager mediaManager;
 
 		[SerializeField] GameObject gifRipple;
@@ -34,7 +33,6 @@ namespace Assets.Interaction
 		[SerializeField] TextMesh answer;
 		[SerializeField] private Blinker blinker;
 
-        public int selectedNumberRadio;
         // Use this for initialization
         void Start()
         {
@@ -46,11 +44,6 @@ namespace Assets.Interaction
             if (btnTeclado != null)
             {
                 btnTeclado.OnAnimationComplete += ButtonTecladoOnClick;
-            }
-
-            if (btnRepeat != null)
-            {
-                btnRepeat.OnAnimationComplete += repeatAudio;
             }
 
 			noWifi.SetActive (false);
@@ -71,17 +64,7 @@ namespace Assets.Interaction
             panelInfo.SetActive(false);
             keyboardInp.text = "";
         }
-
-        private void repeatAudio() {
-
-            string selectedString = "";
-            radioButtonInteraction selectedRadio = radioButtonInteraction.Instance;
-            int selecRadio = selectedRadio.WhichRadioSelected();
-            selectedString = GameObject.Find("TextInfo" + selecRadio).GetComponent<TextMesh>().text;
-
-            mediaManager.repeatAudio(selectedString);
-        }
-
+			
         private void OnDestroy()
         {
             speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
@@ -90,6 +73,7 @@ namespace Assets.Interaction
 
         private void StartRecordButtonOnClickHandler()
         {
+			mediaManager.SetInactiveButtonGuia ();
 			speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler;
 			speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;
 
@@ -116,6 +100,7 @@ namespace Assets.Interaction
 
         private void StopRecordButtonOnClickHandler()
         {
+			mediaManager.SetInactiveButtonGuia ();
             if (btnRec != null)
             {
                 btnRec.GetComponent<Renderer>().material = UI_SpeechStart;
