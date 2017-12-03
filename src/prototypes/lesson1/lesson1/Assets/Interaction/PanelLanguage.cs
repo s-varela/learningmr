@@ -6,15 +6,15 @@ public class PanelLanguage : MonoBehaviour
 {
 
     [SerializeField] private VRUIAnimationClick flag1;
-	[SerializeField] private VRUIAnimationClick flag2;
-	[SerializeField] private VRUIAnimationClick flag3;
+    [SerializeField] private VRUIAnimationClick flag2;
+    [SerializeField] private VRUIAnimationClick flag3;
 
-	[SerializeField] private Material MatFlag1;
-	[SerializeField] private Material MatFlag1BW;
-	[SerializeField] private Material MatFlag2;
-	[SerializeField] private Material MatFlag2BW;
-	[SerializeField] private Material MatFlag3;
-	[SerializeField] private Material MatFlag3BW;
+    [SerializeField] private Material MatFlag1;
+    [SerializeField] private Material MatFlag1BW;
+    [SerializeField] private Material MatFlag2;
+    [SerializeField] private Material MatFlag2BW;
+    [SerializeField] private Material MatFlag3;
+    [SerializeField] private Material MatFlag3BW;
 
     [SerializeField] private GameObject errorPanel;
     private string log;
@@ -34,10 +34,10 @@ public class PanelLanguage : MonoBehaviour
         }
 
         if (flag3 != null)
-		{
-			flag3.OnAnimationComplete += flag3OnClik;
-		}
-		
+        {
+            flag3.OnAnimationComplete += Flag3OnClik;
+        }
+
         ConfigManager configManager = ConfigManager.Instance;
         Dictionary<string, object> settings = configManager.Settings;
         if (settings != null)
@@ -49,12 +49,20 @@ public class PanelLanguage : MonoBehaviour
                 {
                     GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1;
                     GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2BW;
+                    GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3BW;
 
                 }
                 else if (userConfig.UserLanguage == "fre")
                 {
                     GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
                     GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2;
+                    GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3BW;
+                }
+                else if (userConfig.UserLanguage == "fre")
+                {
+                    GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
+                    GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2BW;
+                    GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3;
                 }
             }
         }
@@ -99,7 +107,7 @@ public class PanelLanguage : MonoBehaviour
         {
             GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
             GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2;
-			GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3BW;
+            GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3BW;
 
             ConfigManager configManager = ConfigManager.Instance;
             Dictionary<string, object> settings = configManager.Settings;
@@ -121,12 +129,32 @@ public class PanelLanguage : MonoBehaviour
         }
     }
 
-   private void flag3OnClik()
-	{
-		GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
-		GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2BW;
-		GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3;
-	}
-	
+    private void Flag3OnClik()
+    {
+        try
+        {
+            GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
+            GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2BW;
+            GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3;
+            ConfigManager configManager = ConfigManager.Instance;
+            Dictionary<string, object> settings = configManager.Settings;
+            if (settings != null)
+            {
+                if (settings.ContainsKey("userConfig"))
+                {
+                    UserConfigType userConfig = (UserConfigType)settings["userConfig"];
+                    userConfig.UserLanguage = "ita";
+                    configManager.SaveUserConfig(userConfig);
+                    util.ReLoadMenuTexts(errorPanel);
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            log = "Exception: " + e.Message + "\n" + e.StackTrace;
+            util.ShowErrorPanelByRef(errorPanel, log);
+        }
+    }
+
 
 }
