@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 18ebe3b882746ac4b8eb903215b525c9
+timeCreated: 1513636811
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: DK Woolwich
+  fontNames:
+  - DK Woolwich
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

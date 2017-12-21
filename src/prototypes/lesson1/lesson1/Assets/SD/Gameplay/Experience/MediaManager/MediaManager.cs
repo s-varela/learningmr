@@ -47,6 +47,9 @@ public class MediaManager : MonoBehaviour {
 	[SerializeField] GameObject GuiaPanelInfo;
 	[SerializeField] GameObject GuiaPanelInteraccion;
 	[SerializeField] GameObject BtnGuia;
+	[SerializeField] GameObject PanelResume;
+	[SerializeField] GameObject PanelNavigation;
+	[SerializeField] GameObject PanelFinalLesson;
 
 	[SerializeField] Material play;
 
@@ -146,6 +149,9 @@ public class MediaManager : MonoBehaviour {
 		panelHintText.SetActive(false);
 		PanelTextLAR.SetActive (false);
 		BtnGuia.SetActive (false);
+		PanelResume.SetActive (false);
+		PanelNavigation.SetActive (true);
+		PanelFinalLesson.SetActive (false);
 		Sub.text="";
 		normalText.text = "";
 		userAnswer.text = "";
@@ -155,6 +161,37 @@ public class MediaManager : MonoBehaviour {
 		wait = false;
         currentPage = 0;
     }
+
+	public void InitializeVariables2()
+	{
+		changeSub = false;
+		answerOK = false;
+		showUserInput = false;
+		listen = false;
+		panelInfo.SetActive(false);
+		panelSub.SetActive(true);
+		panelInput.SetActive(false);
+		sphere.SetActive(false);
+		keyboard.SetActive(false);
+		panelAnswer.SetActive(false);
+		panelQuestion.SetActive(false);
+		panelHintButton.SetActive(false);
+		panelHintText.SetActive(false);
+		PanelTextLAR.SetActive (false);
+		BtnGuia.SetActive (false);
+		PanelResume.SetActive (false);
+		PanelNavigation.SetActive (true);
+		PanelFinalLesson.SetActive (false);
+		Sub.text="";
+		normalText.text = "";
+		userAnswer.text = "";
+
+		givenHint.text = "";
+		indiceAudio = 0;
+//		textForRepeat = new ArrayList();
+		wait = false;
+		currentPage = 0;
+	}
 
     void Awake()
     {
@@ -246,21 +283,35 @@ public class MediaManager : MonoBehaviour {
                             normalText.text = "Error reproducir audio" + ex.Message;
                         }
                     }
-//					if(!sfx.isPlaying)
-//					{
-//						SetMaterialPlay();
-//					}
                 }
                 else if (IsInputMode())
                 {
-                    isInPanelInfoMode = false;
+					//Esto no va comentado. Se hizo para hacer la prueba al final de la leccion
+                    //isInPanelInfoMode = false;
                     PauseMedia();
-                    EnableInterationMenu();
+					//Esto no va comentado. Se hizo para hacer la prueba al final de la leccion
+                    //EnableInterationMenu();
+
+					//Todo esto no va aca.. Cuando se corrija el bug de la interaccion borrar todo esto:
+					//----------------------------------
+					PanelResume.SetActive(true);
+					PanelFinalLesson.SetActive(true);
+					PanelNavigation.SetActive(false);
+					panelSub.SetActive(false);
+					LoadPanelResumeTexts();
+					LoadPanelResumeScore();
+					//----------------------------------
                 }
                 else if (IsFinishMode())
                 {
                     isInPanelInfoMode = false;
-                    FinishExperience();
+                    //FinishExperience();
+					PanelResume.SetActive(true);
+					PanelFinalLesson.SetActive(true);
+					PanelNavigation.SetActive(false);
+					panelSub.SetActive(false);
+					LoadPanelResumeTexts();
+					LoadPanelResumeScore();
                 }
                 else if (IsSkipMode())
                 {
@@ -704,7 +755,7 @@ public class MediaManager : MonoBehaviour {
         [SerializeField] public string videoVolumeConfigValue;
     }
 
-    private void FinishExperience()
+	public void FinishExperience()
     {
         experience.BackToMainMenu();
     }
@@ -851,6 +902,7 @@ public class MediaManager : MonoBehaviour {
 			{
 				if(!videoName.Equals("Error"))
 				{
+					InitializeVariables2();
 
 					navigationPanel.materialOriginal();
 					Sub.text="";
@@ -859,7 +911,6 @@ public class MediaManager : MonoBehaviour {
 					panelInput.SetActive(false);
            
                     sphere.SetActive(false);
-					InitializeVariables();
 					navigationPanel.colorPart();
 					navigationPanel.OcultarPart();
 
@@ -1106,4 +1157,25 @@ public class MediaManager : MonoBehaviour {
 			isButtonGuiaOn = false;
 		}
 	}
+
+	private void LoadPanelResumeTexts()
+	{
+		GameObject.Find("TextTituloResumen").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextTituloResumen").Replace("\\n", "\n");
+		GameObject.Find("TextMensaje").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextMensaje").Replace("\\n", "\n");
+		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextCorrectas").Replace("\\n", "\n");
+		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextReintentos").Replace("\\n", "\n");
+		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextAyuda").Replace("\\n", "\n");
+		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextSalteadas").Replace("\\n", "\n");
+		GameObject.Find("UI_BtnMenuText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnMenuText").Replace("\\n", "\n");
+		GameObject.Find("UI_BtnRepetirText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnRepetirText").Replace("\\n", "\n");
+	}
+
+	private void LoadPanelResumeScore()
+	{
+		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += "2";
+		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += "1";
+		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += "0";
+		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += "0";
+	}
+
 }
