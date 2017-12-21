@@ -5,6 +5,7 @@ using UnityEngine;
 using VRStandardAssets.Utils;
 using System.Collections;
 using UnityEngine.UI;
+using System.Diagnostics;
 
 namespace Assets.Interaction
 {
@@ -32,6 +33,8 @@ namespace Assets.Interaction
 		[SerializeField] GameObject gifProcessing;
 		[SerializeField] TextMesh answer;
 		[SerializeField] private Blinker blinker;
+		Stopwatch counter;
+		bool recording;
 
         // Use this for initialization
         void Start()
@@ -50,12 +53,29 @@ namespace Assets.Interaction
             speechRecognition = GCSpeechRecognition.Instance;
             speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler; // Posiblemente
             speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;   // redundantes
+			recording = false;
+			this.counter = new Stopwatch ();
         }
+
+
+		void Restart () 
+		{
+			this.counter.Reset ();
+			this.counter.Start ();
+		}
+
+
+		bool ElapsedTime(int seconds)
+		{
+			return this.counter.ElapsedMilliseconds > seconds;
+		}
 
         // Update is called once per frame
         void Update()
         {
-
+			if (recording && ElapsedTime (10000)) {
+				Timeout ();
+			}
         }
 
         private void ButtonTecladoOnClick()
@@ -89,6 +109,8 @@ namespace Assets.Interaction
                     btnRec.OnAnimationComplete -= StartRecordButtonOnClickHandler;
                     btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
             	}
+				Restart ();
+				recording = true;
 			    speechRecognition.StartRecord (false);
 		    } 
             else 
@@ -112,6 +134,22 @@ namespace Assets.Interaction
             gifProcessing.SetActive(true);
         }
 
+		private void Timeout()
+		{
+			if(btnRec != null)
+			{
+				btnRec.GetComponent<Renderer>().material = UI_SpeechStart;
+				btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
+				btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
+			}
+			this.counter.Stop ();
+			gifRipple.SetActive (false);
+			gifProcessing.SetActive (false);
+			speechRecognition.StopRecord();
+			recording = false;
+			answer.text = "No se detectaron palabras.";
+		}
+
         private void LanguageDropdownOnValueChanged(int value)
         {
             value = 1;
@@ -127,14 +165,12 @@ namespace Assets.Interaction
 
         private void SpeechRecognizedSuccessEventHandler(RecognitionResponse obj, long requestIndex)
         {
+			this.counter.Stop ();
+			recording = false;
             string result = "";
             if (obj != null && obj.results.Length > 0)
             {
                result = obj.results[0].alternatives[0].transcript;
-            }
-            else
-            {
-                result = "No words were detected.";
             }
             gifProcessing.SetActive(false);
 			answer.text = result.Trim ();

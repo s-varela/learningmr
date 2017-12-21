@@ -42,6 +42,7 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] private MediaManager mediaManager;
 	[SerializeField] private Blinker blinker;
 	Stopwatch counter;
+	bool recording;
 
     // Use this for initialization
     void Start () {
@@ -56,16 +57,18 @@ public class InteractionPanel : MonoBehaviour {
 		}
 
 		noWifi.SetActive (false);
-		this.counter = new Stopwatch ();
 		speechRecognition = GCSpeechRecognition.Instance;
 		speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler; // Posiblemente
 		speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;   // redundantes
+		recording = false;
+		this.counter = new Stopwatch ();
+
 	}
 	
 	// Update is called once per frame
 	// Update is called once per frame
 	void Update () {
-		if (ElapsedTime (10000)) {
+		if (recording && ElapsedTime (10000)) {
 			Timeout ();
 		}
 	}
@@ -123,6 +126,7 @@ public class InteractionPanel : MonoBehaviour {
 				btnRec.OnAnimationComplete += StopRecordButtonOnClickHandler;
 			}
 			Restart ();
+			recording = true;
 			speechRecognition.StartRecord (false);
 		} else 
 		{
@@ -140,23 +144,26 @@ public class InteractionPanel : MonoBehaviour {
 			btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
 			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
 		}
-		this.counter.Stop ();
-		speechRecognitionResult.text = "Stopped Recording";
+		// this.counter.Stop ();
 		gifRipple.SetActive (false);
 		speechRecognition.StopRecord();
+		// recording = false;
 		gifProcessing.SetActive (true);
 	}
 
 	private void Timeout()
 	{
-		speechRecognition.StopRecord();
 		if(btnRec != null)
 		{
 			btnRec.GetComponent<Renderer>().material = UI_SpeechStart;
 			btnRec.OnAnimationComplete -= StopRecordButtonOnClickHandler;
 			btnRec.OnAnimationComplete += StartRecordButtonOnClickHandler;
 		}
+		this.counter.Stop ();
 		gifRipple.SetActive (false);
+		gifProcessing.SetActive (false);
+		speechRecognition.StopRecord();
+		recording = false;
 		mediaManager.DisplayWarningMessage("No se detectaron palabras.");
 	}
 
@@ -175,14 +182,11 @@ public class InteractionPanel : MonoBehaviour {
 	private void SpeechRecognizedSuccessEventHandler(RecognitionResponse obj, long requestIndex)
 	{
 		this.counter.Stop ();
+		recording = false;
 		gifProcessing.SetActive (false);
 		if (obj != null && obj.results.Length > 0)
 		{
 			speechRecognitionResult.text = obj.results[0].alternatives[0].transcript;
-		}
-		else
-		{
-			mediaManager.DisplayWarningMessage("No se detectaron palabras.");
 		}
 		mediaManager.ValidateAnswer (speechRecognitionResult.text);
 		speechRecognition.RecognitionSuccessEvent -= SpeechRecognizedSuccessEventHandler;
