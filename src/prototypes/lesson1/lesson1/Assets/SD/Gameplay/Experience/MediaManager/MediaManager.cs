@@ -791,6 +791,7 @@ public class MediaManager : MonoBehaviour {
 				{
 					navigationPanel.materialOriginal();
 					navigationPanel.colorPart();
+					navigationPanel.OcultarPart();
                     InitializeVariables();
 
 					media.UnLoad();

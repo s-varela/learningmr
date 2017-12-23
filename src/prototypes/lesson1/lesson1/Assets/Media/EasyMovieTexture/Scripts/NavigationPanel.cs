@@ -35,6 +35,8 @@ public class NavigationPanel : MonoBehaviour {
 	[SerializeField] GameObject GO_btn2;
 	[SerializeField] GameObject GO_btn3;
 	[SerializeField] GameObject GO_btn4;
+	[SerializeField] GameObject GO_btnIzq;
+	[SerializeField] GameObject GO_btnDer;
 
 	private int cantVideo = 0; 
 	private int cantVideoAux = 0;
@@ -47,23 +49,34 @@ public class NavigationPanel : MonoBehaviour {
 		cantVideo = experience.CountVideo();
 		cantVideoAux = experience.CountVideo();
 
-		switch (cantVideo) 
-		{
-		case 1:
-			changeMaterialOcultar (GO_btn2);
-			changeMaterialOcultar (GO_btn3);
-			changeMaterialOcultar (GO_btn4);
-			break;
-		case 2:
-			changeMaterialOcultar (GO_btn3);
-			changeMaterialOcultar (GO_btn4);
-			break;
-		case 3:
-			changeMaterialOcultar (GO_btn4);
-			break;
-		default:
-			break;
+		int btn1Int = Convert.ToInt16(UI_Btn1Text.text);
+		btn1Int = btn1Int + 4;
+		if (btn1Int <= cantVideo) {
+			GO_btnDer.SetActive (true);
+		} else {
+			GO_btnDer.SetActive (false);
 		}
+		GO_btnIzq.SetActive (false);
+
+		OcultarPart ();
+
+//		switch (cantVideo) 
+//		{
+//		case 1:
+//			changeMaterialOcultar (GO_btn2);
+//			changeMaterialOcultar (GO_btn3);
+//			changeMaterialOcultar (GO_btn4);
+//			break;
+//		case 2:
+//			changeMaterialOcultar (GO_btn3);
+//			changeMaterialOcultar (GO_btn4);
+//			break;
+//		case 3:
+//			changeMaterialOcultar (GO_btn4);
+//			break;
+//		default:
+//			break;
+//		}
 
 		if(btnDer != null)
 		{
@@ -115,7 +128,13 @@ public class NavigationPanel : MonoBehaviour {
 			materialOriginal ();
 			cantVideoAux = cantVideoAux - 4;
 			OcultarPart();
+			GO_btnIzq.SetActive (true);
 		}
+		btn1Int = btn1Int + 4;
+		if (btn1Int > cantVideo) {
+			GO_btnDer.SetActive (false);
+		}
+		selecẗPart ();
 	}
 
 	private void ButtonIzqClick()
@@ -133,6 +152,12 @@ public class NavigationPanel : MonoBehaviour {
 			materialOriginal ();
 			cantVideoAux = cantVideoAux + 4;
 		}
+		btn1Int = btn1Int - 4;
+		if (btn1Int <= 0) {
+			GO_btnIzq.SetActive (false);
+		}
+		GO_btnDer.SetActive (true);
+		selecẗPart ();
 	}
 
 	private void Button1Click()
@@ -263,6 +288,32 @@ public class NavigationPanel : MonoBehaviour {
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void selecẗPart()
+	{
+		int indice = experience.GetIndice();
+		indice++;
+		int btn1Int = Convert.ToInt16(UI_Btn1Text.text);
+ 		int btn4Int = btn1Int + 3;
+		if (btn1Int <= indice && btn4Int >= indice) {
+			while (indice > 4)
+				indice = indice - 4;
+			switch (indice) {
+			case 1:
+				changeColor (GO_btn1);
+				break;
+			case 2:
+				changeColor (GO_btn2);
+				break;
+			case 3:
+				changeColor (GO_btn3);
+				break;
+			case 4:
+				changeColor (GO_btn4);
+				break;
+			}
 		}
 	}
 }
