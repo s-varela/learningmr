@@ -80,8 +80,6 @@ public class Util :MonoBehaviour
                 GameObject.Find("UI_Btn1Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn1Text"];
                 GameObject.Find("UI_Btn2Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn2Text"];
                 GameObject.Find("UI_Btn3Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn3Text"];
-                GameObject.Find("UI_Btn4Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn4Text"];
-                //GameObject.Find("UI_UserMenuTitle").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_UserMenuTitle"];
             }
             else
             {
