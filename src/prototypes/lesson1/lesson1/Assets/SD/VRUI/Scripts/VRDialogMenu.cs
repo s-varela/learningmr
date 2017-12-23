@@ -77,8 +77,8 @@ public class VRDialogMenu : MonoBehaviour {
     {
         active = false;
         OnAcceptClick();
-        menuBase.SetActive(false);
-        sphere.SetActive(false);
+        //menuBase.SetActive(false);
+        //sphere.SetActive(false);
     }
 
 }
