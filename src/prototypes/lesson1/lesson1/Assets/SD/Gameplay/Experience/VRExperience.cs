@@ -6,21 +6,23 @@ using System;
 
 public class VRExperience : MonoBehaviour
 {
-
-
     [SerializeField] private GameObject errorPanel;
     private static VRExperience _instance;
 
     private Dictionary<string, object> configuration = new Dictionary<string, object>();
     private Dictionary<string, string> gameObjectsText = new Dictionary<string, string>();
-
     private String[] videos;
     private static int indiceVideo = -1;
+    private UserQualificationType userQualification = new UserQualificationType();
+    private UserConfigType userConfig;
 
     public string ResourcesPath { get; private set; }
     public string MatedataPath { get; private set; }
     public string AudioPath { get; private set; }
     public string VideosPath { get; private set; }
+    public UserQualificationType UserQualification { get;  set; }
+    public UserConfigType UserConfig { get; private set; }
+
 
     private string log;
 
@@ -86,6 +88,12 @@ public class VRExperience : MonoBehaviour
                     AudioPath = appConfig.AudioPath;
                     VideosPath = appConfig.VideosPath;
 
+                    //El puntaje por cada usuario se resetea cuando se inicia una leccion
+                    userConfig = (UserConfigType)config["userConfig"];
+
+                    userQualification.LessonId = lessonId.ToString();
+                    userQualification.UserId = userConfig.Id;
+         
 
                     if (config.ContainsKey("gameObjectsTexts"))
                     {

@@ -66,8 +66,8 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo1").GetComponent<TextMesh>().text;
-		mediaManager.repeatAudio(selectedString);
-		mediaManager.selectTextInfo (1);
+		mediaManager.RepeatAudio(selectedString);
+		mediaManager.SelectTextInfo (1);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (1);
 		mediaManager.SetInactiveButtonGuia ();
@@ -79,8 +79,8 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo2").GetComponent<TextMesh>().text;
-		mediaManager.repeatAudio(selectedString);
-		mediaManager.selectTextInfo (2);
+		mediaManager.RepeatAudio(selectedString);
+		mediaManager.SelectTextInfo (2);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (2);
 		mediaManager.SetInactiveButtonGuia ();
@@ -92,8 +92,8 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo3").GetComponent<TextMesh>().text;
-		mediaManager.repeatAudio(selectedString);
-		mediaManager.selectTextInfo (3);
+		mediaManager.RepeatAudio(selectedString);
+		mediaManager.SelectTextInfo (3);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (3);
 		mediaManager.SetInactiveButtonGuia ();
@@ -105,8 +105,8 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo4").GetComponent<TextMesh>().text;
-		mediaManager.repeatAudio(selectedString);
-		mediaManager.selectTextInfo (4);
+		mediaManager.RepeatAudio(selectedString);
+		mediaManager.SelectTextInfo (4);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (4);
 		mediaManager.SetInactiveButtonGuia ();
@@ -118,8 +118,8 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo5").GetComponent<TextMesh>().text;
-		mediaManager.repeatAudio(selectedString);
-		mediaManager.selectTextInfo (5);
+		mediaManager.RepeatAudio(selectedString);
+		mediaManager.SelectTextInfo (5);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (5);
 		mediaManager.SetInactiveButtonGuia ();
