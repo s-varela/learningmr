@@ -128,7 +128,7 @@ public class MediaManager : MonoBehaviour
     private void DialogAcceptHandle()
     {
 
-        //userQualification.SkipCount=+1;
+        userQualification.SkipCount += 1;
 
         skip = true;
         menuPause = false;
@@ -858,7 +858,7 @@ public class MediaManager : MonoBehaviour
         SetInactiveButtonGuia();
         string questionText = theQuestion.text;
 
-        //userQualification.HelpCount = +1;
+        userQualification.HelpCount +=1;
 
         givenHint.text += " " + dialogType.Answers[0].ToString().Split(' ')[++i];
     }
@@ -946,7 +946,7 @@ public class MediaManager : MonoBehaviour
             
                 ConfigDialogMode();
                 ResumeMedia();
-                //userQualification.SuccessCount = +1;
+                userQualification.SuccessCount +=1;
             }
             else
             {
@@ -954,7 +954,7 @@ public class MediaManager : MonoBehaviour
                 userAnswer.color = Color.red;
                 panelInput.SetActive(true);
                 gifCross.SetActive(true);
-                //userQualification.RepeatCount = +1;
+                userQualification.RepeatCount +=1;
 
             }
         }
