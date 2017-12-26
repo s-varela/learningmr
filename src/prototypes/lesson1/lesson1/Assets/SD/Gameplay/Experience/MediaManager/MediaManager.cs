@@ -129,6 +129,7 @@ public class MediaManager : MonoBehaviour
     {
 
         userQualification.SkipCount += 1;
+        UnityEngine.Debug.Log("[MediaManager][DialogAcceptHandle] SkipCount:" + userQualification.SkipCount);
 
         skip = true;
         menuPause = false;
@@ -859,6 +860,7 @@ public class MediaManager : MonoBehaviour
         string questionText = theQuestion.text;
 
         userQualification.HelpCount +=1;
+        UnityEngine.Debug.Log("[MediaManager][GiveHint] HelpCount:" + userQualification.HelpCount);
 
         givenHint.text += " " + dialogType.Answers[0].ToString().Split(' ')[++i];
     }
@@ -947,6 +949,7 @@ public class MediaManager : MonoBehaviour
                 ConfigDialogMode();
                 ResumeMedia();
                 userQualification.SuccessCount +=1;
+                UnityEngine.Debug.Log("[MediaManager][ValidateAnswer] SuccessCount:" + userQualification.SuccessCount);
             }
             else
             {
@@ -955,6 +958,7 @@ public class MediaManager : MonoBehaviour
                 panelInput.SetActive(true);
                 gifCross.SetActive(true);
                 userQualification.RepeatCount +=1;
+                UnityEngine.Debug.Log("[MediaManager][ValidateAnswer] RepeatCount:" + userQualification.RepeatCount);
 
             }
         }
