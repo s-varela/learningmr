@@ -300,21 +300,9 @@ public class MediaManager : MonoBehaviour
                 }
                 else if (IsInputMode())
                 {
-					//Esto no va comentado. Se hizo para hacer la prueba al final de la leccion
-                    //isInPanelInfoMode = false;
+                    isInPanelInfoMode = false;
                     PauseMedia();
-					//Esto no va comentado. Se hizo para hacer la prueba al final de la leccion
-                    //EnableInterationMenu();
-
-					//Todo esto no va aca.. Cuando se corrija el bug de la interaccion borrar todo esto:
-					//----------------------------------
-					PanelResume.SetActive(true);
-					PanelFinalLesson.SetActive(true);
-					PanelNavigation.SetActive(false);
-					panelSub.SetActive(false);
-					LoadPanelResumeTexts();
-					LoadPanelResumeScore();
-					//----------------------------------
+                    EnableInterationMenu();
                 }
                 else if (IsFinishMode())
                 {
@@ -1246,9 +1234,9 @@ public class MediaManager : MonoBehaviour
 
 	private void LoadPanelResumeScore()
 	{
-		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += "2";
-		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += "1";
-		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += "0";
-		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += "0";
+		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += userQualification.SuccessCount;
+		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += userQualification.RepeatCount;
+		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += userQualification.HelpCount;
+		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += userQualification.SkipCount;
 	}
 }

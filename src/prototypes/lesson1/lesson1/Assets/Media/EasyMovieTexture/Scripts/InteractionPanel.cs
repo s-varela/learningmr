@@ -58,8 +58,8 @@ public class InteractionPanel : MonoBehaviour {
 
 		noWifi.SetActive (false);
 		speechRecognition = GCSpeechRecognition.Instance;
-		speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler; // Posiblemente
-		speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;   // redundantes
+		//speechRecognition.RecognitionSuccessEvent += SpeechRecognizedSuccessEventHandler; // Posiblemente
+		//speechRecognition.RecognitionFailedEvent += SpeechRecognizedFailedEventHandler;   // redundantes
 		recording = false;
 		this.counter = new Stopwatch ();
 
