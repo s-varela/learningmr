@@ -21,8 +21,22 @@ public class PanelLanguage : MonoBehaviour
     // Use this for initialization
     private Util util = Util.Instance;
 
+	private static PanelLanguage instance;
+
+	public static PanelLanguage Instance
+	{
+		get
+		{
+			if (instance == null)
+			{
+				instance = new PanelLanguage();
+			}
+			return instance;
+		}
+	}
+
     // Use this for initialization
-    void Start()
+    public void Start()
     {
         if (flag1 != null)
         {
@@ -45,20 +59,20 @@ public class PanelLanguage : MonoBehaviour
             if (settings.ContainsKey("userConfig"))
             {
                 UserConfigType userConfig = (UserConfigType)settings["userConfig"];
-                if (userConfig.UserLanguage == "esp")
+				if (userConfig.UserLanguage.Equals("esp"))
                 {
                     GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1;
                     GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2BW;
                     GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3BW;
 
                 }
-                else if (userConfig.UserLanguage == "fre")
+				else if (userConfig.UserLanguage.Equals("fre"))
                 {
                     GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
                     GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2;
                     GameObject.Find("UI_Lan3").GetComponent<Renderer>().material = MatFlag3BW;
                 }
-                else if (userConfig.UserLanguage == "fre")
+				else if (userConfig.UserLanguage.Equals("ita"))
                 {
                     GameObject.Find("UI_Lan1").GetComponent<Renderer>().material = MatFlag1BW;
                     GameObject.Find("UI_Lan2").GetComponent<Renderer>().material = MatFlag2BW;
@@ -90,7 +104,7 @@ public class PanelLanguage : MonoBehaviour
                     UserConfigType userConfig = (UserConfigType)settings["userConfig"];
                     userConfig.UserLanguage = "esp";
                     configManager.SaveUserConfig(userConfig);
-                    util.ReLoadMenuTexts(errorPanel);
+                    util.ReLoadMenuTexts(errorPanel, false);
                 }
             }
         }
@@ -118,7 +132,7 @@ public class PanelLanguage : MonoBehaviour
                     UserConfigType userConfig = (UserConfigType)settings["userConfig"];
                     userConfig.UserLanguage = "fre";
                     configManager.SaveUserConfig(userConfig);
-                    util.ReLoadMenuTexts(errorPanel);
+					util.ReLoadMenuTexts(errorPanel, false);
                 }
             }
         }
@@ -145,7 +159,7 @@ public class PanelLanguage : MonoBehaviour
                     UserConfigType userConfig = (UserConfigType)settings["userConfig"];
                     userConfig.UserLanguage = "ita";
                     configManager.SaveUserConfig(userConfig);
-                    util.ReLoadMenuTexts(errorPanel);
+					util.ReLoadMenuTexts(errorPanel, false);
                 }
             }
         }
