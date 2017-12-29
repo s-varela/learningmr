@@ -34,7 +34,7 @@ public class ResumePanel : MonoBehaviour {
 
 	private void ButtonMenuOnClick()
 	{
-		mediaManager.FinishExperience ();
+		mediaManager.FinishLesson ();
 	}
 
 	private void ButtonRepeatOnClick()

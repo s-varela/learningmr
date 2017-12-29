@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Xml;
 using System.Collections.Generic;
+using System;
 
 public class ConfigManager : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class ConfigManager : MonoBehaviour
 
     private static ConfigManager instance;
     private Dictionary<string, object> settings;
-    public string resourcesPath;
+    private string resourcesPath;
     private string log = "";
   
 
@@ -208,6 +209,60 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
+    internal void SaveLessonScore(UserQualificationType userQualification)
+    {
+        try
+        {
+            UnityEngine.Debug.Log("[ConfigManager][SaveLessonScore]. Inicio");
+            XmlDocument scoreXml = new XmlDocument();
+            scoreXml.Load(resourcesPath + "/lessons-score.xml");
+
+            UnityEngine.Debug.Log("[ConfigManager][SaveLessonScore] Archivo lessons-score.xml cargado correctamente");
+
+            XmlNode root = scoreXml.DocumentElement;
+            // XmlNode nodeScore = root.SelectSingleNode("//lesson-score/lessonId[text()='" + userQualification.LessonId + "']");
+            //XmlNode nodeScore = root.SelectSingleNode("//lesson-score");
+            //XmlNodeList nodeScoreList = root.SelectNodes("//lesson-score");
+
+            XmlNodeList nodeList = root.SelectNodes("descendant::lesson-score[lessonId='"+ userQualification.LessonId + "']");
+
+            UnityEngine.Debug.Log("userQualification.LessonId="+ userQualification.LessonId);
+
+            foreach (XmlNode nodeChild in nodeList)
+            {
+                if (nodeChild.Name.Equals("successCount"))
+                {
+                    nodeChild.InnerText = userQualification.SuccessCount.ToString();
+                    UnityEngine.Debug.Log("userQualification.SuccessCount="+ userQualification.SuccessCount.ToString());
+                }
+                if (nodeChild.Name.Equals("skipCount"))
+                {
+                    nodeChild.InnerText = userQualification.SkipCount.ToString();
+                    UnityEngine.Debug.Log("userQualification.SkipCount=" + userQualification.SkipCount.ToString());
+                }
+                if (nodeChild.Name.Equals("helpCount"))
+                {
+                    nodeChild.InnerText = userQualification.HelpCount.ToString();
+                    UnityEngine.Debug.Log("userQualification.HelpCount=" + userQualification.HelpCount.ToString());
+                }
+                if (nodeChild.Name.Equals("repeatCount"))
+                {
+                    nodeChild.InnerText = userQualification.RepeatCount.ToString();
+                    UnityEngine.Debug.Log("userQualification.RepeatCount=" + userQualification.RepeatCount.ToString());
+                }
+            }
+
+            scoreXml.Save(resourcesPath + "/lessons-score.xml");
+            UnityEngine.Debug.Log("[ConfigManager][SaveLessonScore] Archivo lessons-score.xml guardado correctamente");
+            UnityEngine.Debug.Log("[ConfigManager][SaveLessonScore]. Fin");
+        }
+        catch (System.Exception ex)
+        {
+            log = "Excepcion: [SaveLessonScore] No se pudo guardar el puntaje del jugador. "+ex.Message;
+            util.ShowErrorPanelByRef(errorPanel, log);
+        }
+    }
+
     private void LoadAppText()
     {
          Dictionary<string, string> gameObjectTextMap = new Dictionary<string, string>();
@@ -330,6 +385,7 @@ public class ConfigManager : MonoBehaviour
                         }
                     }
                 }
+
                 appSettingtMap.Add(appConfigType.Id, appConfigType);
             }
 

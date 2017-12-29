@@ -20,6 +20,7 @@ public class VRExperience : MonoBehaviour
     public string MatedataPath { get; private set; }
     public string AudioPath { get; private set; }
     public string VideosPath { get; private set; }
+
     public UserQualificationType UserQualification { get;  set; }
     public UserConfigType UserConfig { get; private set; }
 
@@ -130,6 +131,7 @@ public class VRExperience : MonoBehaviour
 
     public void BackToMainMenu()
     {
+        SaveLessonScore();
         SceneManager.LoadScene("Scenes/MainMenu", LoadSceneMode.Single);
     }
 
@@ -212,5 +214,14 @@ public class VRExperience : MonoBehaviour
     internal void ResetIndice()
     {
         indiceVideo = -1;
+    }
+
+
+    private void SaveLessonScore()
+    {
+        UnityEngine.Debug.Log("[VRExperience][SaveLessonScore]. Inicio");
+        ConfigManager configManager = ConfigManager.Instance;
+        configManager.SaveLessonScore(userQualification);
+        UnityEngine.Debug.Log("[VRExperience][SaveLessonScore]. Fin");
     }
 }
