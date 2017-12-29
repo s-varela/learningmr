@@ -20,7 +20,7 @@ public class MenuManager : MonoBehaviour
 	{
 		try
         {
-            util.ReLoadMenuTexts(errorPanel);
+            util.ReLoadMenuTexts(errorPanel, true);
 
         }
         catch (Exception e)

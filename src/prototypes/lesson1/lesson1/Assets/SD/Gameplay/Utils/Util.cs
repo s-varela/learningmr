@@ -48,7 +48,7 @@ public class Util :MonoBehaviour
         textObject.text = msgFinal;
     }
 
-    public void ReLoadMenuTexts(GameObject errorPanel)
+	public void ReLoadMenuTexts(GameObject errorPanel, bool menuActive)
     {
         string log = "";
         ConfigManager configManager = ConfigManager.Instance;
@@ -77,9 +77,17 @@ public class Util :MonoBehaviour
             {
                 Dictionary<string, string> gameObjectsTextsMap = (Dictionary<string, string>)settings["gameObjectsTexts"];
 
-                GameObject.Find("UI_Btn1Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn1Text"];
-                GameObject.Find("UI_Btn2Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn2Text"];
-                GameObject.Find("UI_Btn3Text").GetComponent<TextMesh>().text = (string)gameObjectsTextsMap["UI_Btn3Text"];
+				if (menuActive) {
+					GameObject.Find ("UI_Btn1Text").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_Btn1Text"];
+					GameObject.Find ("UI_Btn2Text").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_Btn2Text"];
+					GameObject.Find ("UI_Btn3Text").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_Btn3Text"];
+				} else {
+					GameObject.Find ("UI_UserMenuTitle").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitle"];
+					GameObject.Find ("UI_UserMenuTitleName").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitleName"];
+					GameObject.Find ("UI_UserMenuTitleSurname").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitleSurname"];
+					GameObject.Find ("UI_UserMenuTitleLanguage").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitleLanguage"];
+					GameObject.Find ("UI_BtnConfirmarText").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_BtnConfirmarText"];
+				}
             }
             else
             {
