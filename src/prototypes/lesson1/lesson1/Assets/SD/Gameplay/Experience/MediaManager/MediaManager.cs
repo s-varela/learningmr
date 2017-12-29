@@ -79,6 +79,7 @@ public class MediaManager : MonoBehaviour
     private int i = -1;
     private bool skip = false;
     private ArrayList textForRepeat;
+    private ArrayList audioCodesForRepeat;
     private string selectedString;
     private int currentPage;
     private const int windows = 5;
@@ -101,7 +102,7 @@ public class MediaManager : MonoBehaviour
         originalColor = Sub.color;
         textForRepeat = new ArrayList();
         userQualification = new UserQualificationType();
-
+        audioCodesForRepeat = new ArrayList();
         //Inicializar variables
         InitializeVariables();
 
@@ -176,6 +177,7 @@ public class MediaManager : MonoBehaviour
 		givenHint.text = "";
 		indiceAudio = 0;
         textForRepeat = new ArrayList();
+        audioCodesForRepeat = new ArrayList();
         wait = false;
         currentPage = 0;
         isLessonFinish = false;
@@ -216,6 +218,8 @@ public class MediaManager : MonoBehaviour
     {
         if (media == null)
         {
+            textForRepeat = new ArrayList();
+            audioCodesForRepeat = new ArrayList();
             experience = VRExperience.Instance;
             counterVideo = new Stopwatch();
             counterVideo.Start();
@@ -228,7 +232,6 @@ public class MediaManager : MonoBehaviour
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
-
             listen = false;
             showUserInput = false;
             finish = false;
@@ -265,8 +268,9 @@ public class MediaManager : MonoBehaviour
                             }
 
                             //arraylist con texto para repetir
-                            textForRepeat.Add(dialogType.Text);
                             normalText.text = dialogType.Text;
+                            //arraylist con texto para repetir
+                            textForRepeat.Add(dialogType);
                             answerOK = false;
                             Sub.color = originalColor;
                             gifTick.SetActive(false);
@@ -456,15 +460,32 @@ public class MediaManager : MonoBehaviour
     {
         Vector3 panelInfoScale = new Vector3(3f, 2f, 0.008f);
         panelInfo.transform.localScale = panelInfoScale;
-
         PanelTextLAR.SetActive(false);
-
         int textRepeat = textForRepeat.Count - currentPage * windows;
+
         if (indiceAudio < windows && indiceAudio < textRepeat)
         {
             TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
             textObject.color = Color.yellow;
-            PlayAudio(textObject.text);
+
+            //obtengo el audio segun codigo
+            if (currentPage+1 == 1)
+            {
+                DialogType audioDiag = (DialogType)textForRepeat[indiceAudio];
+                string audioCodeToRepeat = audioDiag.audioId;
+                PlayAudio(audioCodeToRepeat);
+            }
+            else if(currentPage + 1 == 2) {
+                DialogType audioDiag = (DialogType)textForRepeat[indiceAudio + 5];
+                string audioCodeToRepeat = audioDiag.audioId;
+                PlayAudio(audioCodeToRepeat);
+            }
+            else if (currentPage + 1 == 3)
+            {
+                DialogType audioDiag = (DialogType)textForRepeat[indiceAudio + 10];
+                string audioCodeToRepeat = audioDiag.audioId;
+                PlayAudio(audioCodeToRepeat);
+            }
 
             if (indiceAudio > 0)
             {
@@ -812,6 +833,7 @@ public class MediaManager : MonoBehaviour
             sphere.SetActive(false);
             panelSub.SetActive(true);
             textForRepeat.Clear();
+            audioCodesForRepeat.Clear();
             ManagerVideo();
         }
         catch (System.Exception ex)
@@ -819,7 +841,6 @@ public class MediaManager : MonoBehaviour
             //TODO logger
             UnityEngine.Debug.Log("[MediaManager][FinishLessonPart] Excepcion: " + ex.Message);
         }
-
     }
 
     private void ManagerVideo()
@@ -1048,9 +1069,27 @@ public class MediaManager : MonoBehaviour
     }
 
     //metodo repetir audio panel de resumen
-    public void RepeatAudio(string selectedString)
-    {
-        PlayAudio(selectedString);
+
+    public void repeatAudio(int selectedString) {
+
+        if (currentPage + 1 == 1)
+        {
+            DialogType audioDiag = (DialogType)textForRepeat[selectedString];
+            string audioCodeToRepeat = audioDiag.audioId;
+            PlayAudio(audioCodeToRepeat);
+        }
+        else if (currentPage + 1 == 2)
+        {
+            DialogType audioDiag = (DialogType)textForRepeat[selectedString + 5];
+            string audioCodeToRepeat = audioDiag.audioId;
+            PlayAudio(audioCodeToRepeat);
+        }
+        else if (currentPage + 1 == 3)
+        {
+            DialogType audioDiag = (DialogType)textForRepeat[selectedString + 10];
+            string audioCodeToRepeat = audioDiag.audioId;
+            PlayAudio(audioCodeToRepeat);
+        }
     }
 
     //metodo proxima pagina panel de resumen
@@ -1103,7 +1142,8 @@ public class MediaManager : MonoBehaviour
 
             if (indice < textForRepeat.Count)
             {
-                string text = textForRepeat[indice].ToString();
+                DialogType diag = (DialogType)textForRepeat[indice];
+                string text = diag.Text;
                 textObject.text = text;
                 textObject.color = Color.white;
             }
