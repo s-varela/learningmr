@@ -32,6 +32,7 @@ public class SubtitleReader : MonoBehaviour
     {
         try
         {
+            //Lesson01-01
             string subtitleText = null;
             subtitlesLastSeconds = new Hashtable();
             dialogs = new Hashtable();
@@ -43,9 +44,13 @@ public class SubtitleReader : MonoBehaviour
             {
                 DialogType dialogType = new DialogType();
                 string line = subtitles.ReadLine();
+                
                 int firstBracket = line.IndexOf("[") + 1;
+               
                 int lastSquareBracket = line.IndexOf("]") - 1;
+               
                 int lastInterval = int.Parse(line.Substring(firstBracket, lastSquareBracket));
+                
                 // Add to hasmap last second interval. 
 
                 dialogType.Start = lastInterval;
@@ -57,6 +62,14 @@ public class SubtitleReader : MonoBehaviour
                 int between = dash - parent;
                 subtitleText = line.Substring(parent, between);
 
+                if (subtitleText.Contains("&A")) {
+                    int audId = subtitleText.IndexOf("&A") + 2;
+                    string audioId = subtitleText.Substring(audId);
+                    audioId.Replace('|',' ');
+                    audioId.Trim(); audioId.TrimEnd(); audioId.TrimStart();
+                    dialogType.audioId = audioId;
+              }
+
                 if (subtitleText.Contains("&I"))
                 {
                     int iInput = subtitleText.IndexOf("&I")+2;
@@ -64,7 +77,6 @@ public class SubtitleReader : MonoBehaviour
                     string[] answers = subtitleText.Substring(iInput, subtitleText.Length- iInput).Split('#');
                     
                     foreach (string answer in answers){
-                        Debug.Log("SubtitleReader. answer" + answer);
                         dialogType.Answers.Add(answer);
                     }
                     dialogType.RequiredInput = true;
@@ -84,6 +96,11 @@ public class SubtitleReader : MonoBehaviour
                 {
                     dialogType.Text = subtitleText;
                 }
+
+                int ampersandIndex = line.IndexOf("&");
+                int firstLetter = line.IndexOf("]") + 1;
+                int sentence = ampersandIndex - firstLetter;
+                dialogType.Text = line.Substring(firstLetter, sentence);
 
                 dialogs.Add(lineCounter, dialogType);
                 lineCounter++;

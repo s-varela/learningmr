@@ -75,6 +75,7 @@ public class MediaManager : MonoBehaviour {
 	private int i=-1;
     private bool skip = false;
     private ArrayList textForRepeat;
+    private ArrayList audioCodesForRepeat;
     private string selectedString;
     private int currentPage;
     private const int windows = 5;
@@ -93,7 +94,7 @@ public class MediaManager : MonoBehaviour {
 		experience.ResetIndice ();
 		originalColor = Sub.color;
         textForRepeat = new ArrayList();
-
+        audioCodesForRepeat = new ArrayList();
         //Inicializar variables
         InitializeVariables();
 
@@ -152,7 +153,8 @@ public class MediaManager : MonoBehaviour {
 		givenHint.text = "";
 		indiceAudio = 0;
         textForRepeat = new ArrayList();
-		wait = false;
+        audioCodesForRepeat = new ArrayList();
+        wait = false;
         currentPage = 0;
     }
 
@@ -160,6 +162,8 @@ public class MediaManager : MonoBehaviour {
     {
         if (media == null)
         {
+            textForRepeat = new ArrayList();
+            audioCodesForRepeat = new ArrayList();
             experience = VRExperience.Instance;
             counterVideo = new Stopwatch();
             counterVideo.Start();
@@ -172,13 +176,11 @@ public class MediaManager : MonoBehaviour {
             media = FindObjectOfType<MediaPlayerCtrl>();
             if (media == null)
                 throw new UnityException("No Media Player Ctrl object in scene");
-
             listen = false;
             showUserInput = false;
             finish=false;
             indiceAudio = 0;
             dialogType = new DialogType();
-            textForRepeat = new ArrayList();
         }
     }
 
@@ -203,8 +205,9 @@ public class MediaManager : MonoBehaviour {
 
                         if (!theSub.Equals("") && theSub != normalText.text)
                         {
+                            //audioCodesForRepeat.Add(dialogType.audioId);
                             //arraylist con texto para repetir
-                            textForRepeat.Add(theSub);
+                            textForRepeat.Add(dialogType);
                             normalText.text = theSub;
                             answerOK = false;
                             Sub.color = originalColor;
@@ -389,15 +392,36 @@ public class MediaManager : MonoBehaviour {
 		Vector3 panelInfoScale = new Vector3(3f,2f,0.008f);
 		panelInfo.transform.localScale = panelInfoScale;
 
-		PanelTextLAR.SetActive (false);
+		PanelTextLAR.SetActive(false);
 
 		int textRepeat = textForRepeat.Count - currentPage*windows;
-		if (indiceAudio < windows && indiceAudio < textRepeat)
+
+        if (indiceAudio < windows && indiceAudio < textRepeat)
         {
+            TextMesh textObjectBef = GameObject.Find("audioId").GetComponent<TextMesh>();
+            textObjectBef.text = currentPage.ToString();
             TextMesh textObject = GameObject.Find("TextInfo" + (indiceAudio + 1)).GetComponent<TextMesh>();
             textObject.color = Color.yellow;
-            PlayAudio(textObject.text);
-     
+            //obtengo el audio segun codigo
+            if (currentPage+1 == 1)
+            {
+                DialogType audioDiag = (DialogType)textForRepeat[indiceAudio];
+                string audioCodeToRepeat = audioDiag.audioId;
+                PlayAudio(audioCodeToRepeat);
+            }
+            else if(currentPage + 1 == 2) {
+                DialogType audioDiag = (DialogType)textForRepeat[indiceAudio + 5];
+                string audioCodeToRepeat = audioDiag.audioId;
+                PlayAudio(audioCodeToRepeat);
+            }
+            else if (currentPage + 1 == 3)
+            {
+                DialogType audioDiag = (DialogType)textForRepeat[indiceAudio + 10];
+                string audioCodeToRepeat = audioDiag.audioId;
+                PlayAudio(audioCodeToRepeat);
+            }
+
+
             if (indiceAudio > 0)
             {
                 TextMesh textObjectBefore = GameObject.Find("TextInfo" + indiceAudio).GetComponent<TextMesh>();
@@ -720,6 +744,7 @@ public class MediaManager : MonoBehaviour {
 		sphere.SetActive(false);
 		panelSub.SetActive(true);
         textForRepeat.Clear();
+        audioCodesForRepeat.Clear();
         ManagerVideo();
     }
 
@@ -933,7 +958,9 @@ public class MediaManager : MonoBehaviour {
 
     //metodo repetir audio panel de resumen
     public void repeatAudio(string selectedString) {
-        PlayAudio(selectedString);
+        DialogType audioDiag = (DialogType)textForRepeat[indiceAudio];
+        string audioCodeToRepeat = audioDiag.audioId;//codigo de audio a repetir
+        PlayAudio(audioCodeToRepeat);
     }
 
     //metodo proxima pagina panel de resumen
@@ -980,7 +1007,8 @@ public class MediaManager : MonoBehaviour {
 
             if (indice < textForRepeat.Count)
             {
-                string text = textForRepeat[indice].ToString();
+                DialogType diag = (DialogType)textForRepeat[indice];
+                string text = diag.Text;
                 textObject.text = text;
                 textObject.color = Color.white;
             }
