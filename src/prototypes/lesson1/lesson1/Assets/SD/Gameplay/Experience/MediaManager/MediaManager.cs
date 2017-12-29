@@ -87,6 +87,8 @@ public class MediaManager : MonoBehaviour
     private bool firstTimePanelInteraccion = true;
     private UserQualificationType userQualification;
 
+    private bool isLessonFinish;
+
     void Start()
     {
         selectedString = "";
@@ -128,6 +130,12 @@ public class MediaManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        mediaDialogMenu.OnAcceptClick -= DialogAcceptHandle;
+    }
+
+
     private void DialogAcceptHandle()
     {
 
@@ -167,9 +175,10 @@ public class MediaManager : MonoBehaviour
 		userAnswer.text = "";
 		givenHint.text = "";
 		indiceAudio = 0;
-    textForRepeat = new ArrayList();
-    wait = false;
-    currentPage = 0;
+        textForRepeat = new ArrayList();
+        wait = false;
+        currentPage = 0;
+        isLessonFinish = false;
    }
 
 	public void InitializeVariables2()
@@ -306,14 +315,20 @@ public class MediaManager : MonoBehaviour
                 }
                 else if (IsFinishMode())
                 {
+                    UnityEngine.Debug.Log("[MediaManager][FinishLesson]. Inicio");
                     isInPanelInfoMode = false;
-                    //FinishExperience();
-					PanelResume.SetActive(true);
-					PanelFinalLesson.SetActive(true);
-					PanelNavigation.SetActive(false);
-					panelSub.SetActive(false);
-					LoadPanelResumeTexts();
-					LoadPanelResumeScore();
+                    PanelResume.SetActive(true);
+                    PanelFinalLesson.SetActive(true);
+                    PanelNavigation.SetActive(false);
+                    panelSub.SetActive(false);
+                    LoadPanelResumeTexts();
+                    LoadPanelResumeScore();
+                    
+                    //Guardo los resultados en la VrExperience y lo guardo
+                    experience.UserQualification = userQualification;
+                    isLessonFinish = true;
+                    UnityEngine.Debug.Log("[MediaManager][FinishLesson]. Fin");
+
                 }
                 else if (IsSkipMode())
                 {
@@ -329,7 +344,7 @@ public class MediaManager : MonoBehaviour
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log(ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][update] Excepcion" + ex.Message);
         }
 
     }
@@ -349,7 +364,7 @@ public class MediaManager : MonoBehaviour
 
     private bool IsFinishMode()
     {
-        return dialogType.Finish && ElapsedTime(2000);
+        return dialogType.Finish && ElapsedTime(2000) && !isLessonFinish;
     }
 
     private bool IsInputMode()
@@ -697,7 +712,7 @@ public class MediaManager : MonoBehaviour
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][ValidateAnswerRepeatPanel] " + ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][ValidateAnswerRepeatPanel] Excepcion: " + ex.Message);
         }
     }
 
@@ -746,7 +761,7 @@ public class MediaManager : MonoBehaviour
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][ValidateAnswerRepeatPanelVoice] " + ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][ValidateAnswerRepeatPanelVoice] Excepcion: " + ex.Message);
         }
     }
 
@@ -772,10 +787,16 @@ public class MediaManager : MonoBehaviour
         [SerializeField] public string videoVolumeConfigValue;
     }
 
-	public void FinishExperience()
+	public void FinishLesson()
     {
-        VRExperience.Instance.UserQualification = userQualification;
-        VRExperience.Instance.BackToMainMenu();
+        try
+        {
+            experience.BackToMainMenu();
+
+        }catch (Exception ex)
+        {
+            UnityEngine.Debug.Log("[MediaManager][FinishLesson] Excepcion: " + ex.Message);
+        }
     }
 
 
@@ -796,7 +817,7 @@ public class MediaManager : MonoBehaviour
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][FinishLessonPart] " + ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][FinishLessonPart] Excepcion: " + ex.Message);
         }
 
     }
@@ -831,13 +852,13 @@ public class MediaManager : MonoBehaviour
             }
             else
             {
-                FinishExperience();
+                FinishLesson();
             }
         }
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][ManagerVideo]" + ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][ManagerVideo] Excepcion: " + ex.Message);
         }
 
     }
@@ -871,7 +892,7 @@ public class MediaManager : MonoBehaviour
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][PlayAudio]"+ ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][PlayAudio] Excepcion: " + ex.Message);
         }
     }
 
@@ -953,13 +974,13 @@ public class MediaManager : MonoBehaviour
             }
             else
             {
-                FinishExperience();
+                FinishLesson();
             }
         }
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][SelectVideo]" + ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][SelectVideo] Excepcion: " + ex.Message);
         }
     }
 
@@ -1010,7 +1031,7 @@ public class MediaManager : MonoBehaviour
         catch (System.Exception ex)
         {
             //TODO logger
-            UnityEngine.Debug.Log("[MediaManager][ValidateAnswer]" + ex.Message);
+            UnityEngine.Debug.Log("[MediaManager][ValidateAnswer] Excepcion: " + ex.Message);
         }
     }
 
@@ -1234,9 +1255,9 @@ public class MediaManager : MonoBehaviour
 
 	private void LoadPanelResumeScore()
 	{
-		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += userQualification.SuccessCount;
-		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += userQualification.RepeatCount;
-		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += userQualification.HelpCount;
-		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += userQualification.SkipCount;
+		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += userQualification.SuccessCount.ToString();
+		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += userQualification.RepeatCount.ToString();
+		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += userQualification.HelpCount.ToString();
+		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += userQualification.SkipCount.ToString();
 	}
 }
