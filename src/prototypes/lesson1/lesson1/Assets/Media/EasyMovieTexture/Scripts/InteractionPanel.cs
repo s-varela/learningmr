@@ -21,16 +21,17 @@ public class InteractionPanel : MonoBehaviour {
 	[SerializeField] GameObject panelSub;
 	[SerializeField] GameObject panelInput;
 	[SerializeField] GameObject teclado;
-    [SerializeField] GameObject hintButton;
-    [SerializeField] GameObject skipButton;
+    //[SerializeField] GameObject hintButton;
+    //[SerializeField] GameObject skipButton;
     [SerializeField] Text keyboardInp;
 
 	[SerializeField] GameObject panelAnswer;
 	[SerializeField] GameObject panelQuestion;
-	[SerializeField] GameObject panelHint;
+	//[SerializeField] GameObject panelHint;
 	[SerializeField] GameObject panelHintText;
+    [SerializeField] GameObject panelSkipHint;
 
-	[SerializeField] GameObject gifRipple;
+    [SerializeField] GameObject gifRipple;
 	[SerializeField] GameObject gifProcessing;
 	[SerializeField] GameObject noWifi;
 	[SerializeField] TextMesh answer;
@@ -90,11 +91,12 @@ public class InteractionPanel : MonoBehaviour {
 		panelSub.SetActive (false);
 		panelInput.SetActive (false);
 		teclado.SetActive (true);
-        hintButton.SetActive(false);
-        skipButton.SetActive(false);
+        panelSkipHint.SetActive(false);
+        //hintButton.SetActive(false);
+        //skipButton.SetActive(false);
 		panelQuestion.SetActive (false);
 		panelHintText.SetActive (false);
-		panelHint.SetActive (false);
+		//panelHint.SetActive (false);
 		panelAnswer.SetActive (false);
         keyboardInp.text = "";
     }

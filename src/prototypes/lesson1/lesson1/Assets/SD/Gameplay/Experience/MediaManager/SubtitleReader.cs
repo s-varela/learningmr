@@ -32,6 +32,7 @@ public class SubtitleReader : MonoBehaviour
     {
         try
         {
+            //VRExperience experience = VRExperience.Instance;
             string subtitleText = null;
             subtitlesLastSeconds = new Hashtable();
             dialogs = new Hashtable();
@@ -69,6 +70,7 @@ public class SubtitleReader : MonoBehaviour
                     }
                     dialogType.RequiredInput = true;
                     dialogType.Text = subtitleText.Split('&')[0];
+                   // experience.CountQuestionsToAnswer += 1;
                 }
                 else if (subtitleText.Contains("&P"))
                 {

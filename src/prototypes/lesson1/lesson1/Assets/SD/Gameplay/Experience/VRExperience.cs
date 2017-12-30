@@ -15,6 +15,7 @@ public class VRExperience : MonoBehaviour
     private static int indiceVideo = -1;
     private UserQualificationType userQualification = new UserQualificationType();
     private UserConfigType userConfig;
+    private int countQuestionsToAnswer = 0;
 
     public string ResourcesPath { get; private set; }
     public string MatedataPath { get; private set; }
@@ -24,6 +25,17 @@ public class VRExperience : MonoBehaviour
     public UserQualificationType UserQualification { get;  set; }
     public UserConfigType UserConfig { get; private set; }
 
+    public int CountQuestionsToAnswer
+    {
+        get
+        {
+            return countQuestionsToAnswer;
+        }
+        set
+        {
+            countQuestionsToAnswer = value;
+        }
+    }
 
     private string log;
 
@@ -161,7 +173,7 @@ public class VRExperience : MonoBehaviour
         return "";
     }
 
-    internal string NextVideo()
+    public string NextVideo()
     {
         indiceVideo++;
         if (indiceVideo < videos.Length)
@@ -175,7 +187,7 @@ public class VRExperience : MonoBehaviour
             return "End";
         }
     }
-    internal string CurrentVideo()
+    public string CurrentVideo()
     {
         if (indiceVideo < videos.Length)
         {
@@ -188,7 +200,7 @@ public class VRExperience : MonoBehaviour
         }
     }
 
-    internal string SelectVideo(int indice)
+    public string SelectVideo(int indice)
     {
         if (indice < videos.Length)
         {
@@ -201,17 +213,17 @@ public class VRExperience : MonoBehaviour
         }
     }
 
-    internal int CountVideo()
+    public int CountVideo()
     {
         return videos.Length;
     }
 
-    internal int GetIndice()
+    public int GetIndice()
     {
         return indiceVideo;
     }
 
-    internal void ResetIndice()
+    public void ResetIndice()
     {
         indiceVideo = -1;
     }

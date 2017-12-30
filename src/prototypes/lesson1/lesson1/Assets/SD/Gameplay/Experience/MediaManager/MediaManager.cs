@@ -26,10 +26,10 @@ public class MediaManager : MonoBehaviour
     [SerializeField] GameObject panelInput;
     [SerializeField] GameObject panelQuestion;
     [SerializeField] GameObject panelAnswer;
-    [SerializeField] GameObject panelHintButton;
+    //[SerializeField] GameObject panelHintButton;
     [SerializeField] GameObject panelHintText;
-    [SerializeField] GameObject hintButton;
-    [SerializeField] GameObject skipButton;
+    //[SerializeField] GameObject hintButton;
+   // [SerializeField] GameObject skipButton;
     [SerializeField] GameObject sphere;
     [SerializeField] GameObject keyboard;
     [SerializeField] Text keyboardInp;
@@ -51,6 +51,8 @@ public class MediaManager : MonoBehaviour
 	[SerializeField] GameObject PanelResume;
 	[SerializeField] GameObject PanelNavigation;
 	[SerializeField] GameObject PanelFinalLesson;
+
+    [SerializeField] GameObject panelSkipHint;
 
   [SerializeField] Material play;
 
@@ -130,11 +132,6 @@ public class MediaManager : MonoBehaviour
 
     }
 
-    private void OnDestroy()
-    {
-        mediaDialogMenu.OnAcceptClick -= DialogAcceptHandle;
-    }
-
 
     private void DialogAcceptHandle()
     {
@@ -163,9 +160,11 @@ public class MediaManager : MonoBehaviour
 		keyboard.SetActive(false);
 		panelAnswer.SetActive(false);
 		panelQuestion.SetActive(false);
-		panelHintButton.SetActive(false);
-		panelHintText.SetActive(false);
-		PanelTextLAR.SetActive (false);
+        //panelHintButton.SetActive(false);
+        panelHintText.SetActive(false);
+        panelSkipHint.SetActive(false);
+
+        PanelTextLAR.SetActive (false);
 		BtnGuia.SetActive (false);
 		PanelResume.SetActive (false);
 		PanelNavigation.SetActive (true);
@@ -194,9 +193,12 @@ public class MediaManager : MonoBehaviour
 		keyboard.SetActive(false);
 		panelAnswer.SetActive(false);
 		panelQuestion.SetActive(false);
-		panelHintButton.SetActive(false);
-		panelHintText.SetActive(false);
-		PanelTextLAR.SetActive (false);
+        //panelHintButton.SetActive(false);
+        panelHintText.SetActive(false);
+
+        panelSkipHint.SetActive(false);
+
+        PanelTextLAR.SetActive (false);
 		BtnGuia.SetActive (false);
 		PanelResume.SetActive (false);
 		PanelNavigation.SetActive (true);
@@ -526,8 +528,9 @@ public class MediaManager : MonoBehaviour
         TextMesh textObject = GameObject.Find("QuestionText").GetComponent<TextMesh>();
         textObject.text = dialogType.Text; ;
 
-        panelHintButton.SetActive(true);
+        //panelHintButton.SetActive(true);
         panelHintText.SetActive(true);
+        panelSkipHint.SetActive(true);
 
         BtnGuia.SetActive(true);
 
@@ -547,8 +550,9 @@ public class MediaManager : MonoBehaviour
         panelSub.SetActive(true);
         panelAnswer.SetActive(false);
         panelQuestion.SetActive(false);
-        panelHintButton.SetActive(false);
+        //panelHintButton.SetActive(false);
         panelHintText.SetActive(false);
+        panelSkipHint.SetActive(false);
         userAnswer.text = "";
         givenHint.text = "";
         Sub.text = "";
@@ -581,10 +585,11 @@ public class MediaManager : MonoBehaviour
                 panelInput.SetActive(true);
                 panelAnswer.SetActive(true);
                 panelQuestion.SetActive(true);
-                panelHintButton.SetActive(true);
-                hintButton.SetActive(true);
-                skipButton.SetActive(true);
+                //panelHintButton.SetActive(true);
+                //hintButton.SetActive(true);
+                //skipButton.SetActive(true);
                 panelHintText.SetActive(true);
+                panelSkipHint.SetActive(true);
                 gifCross.SetActive(false);
                 gifTick.SetActive(false);
             }
@@ -625,10 +630,11 @@ public class MediaManager : MonoBehaviour
                 panelInput.SetActive(true);
                 panelAnswer.SetActive(true);
                 panelQuestion.SetActive(true);
-                panelHintButton.SetActive(true);
+                //panelHintButton.SetActive(true);
                 panelHintText.SetActive(true);
-                hintButton.SetActive(true);
-                skipButton.SetActive(true);
+                //hintButton.SetActive(true);
+                //skipButton.SetActive(true);
+                panelSkipHint.SetActive(true);
             }
         }
     }
@@ -919,11 +925,9 @@ public class MediaManager : MonoBehaviour
         mesh.enabled = v;
     }
 
-    public void GiveHint(TextMesh theQuestion)
+    public void GiveHint()
     {
         SetInactiveButtonGuia();
-        string questionText = theQuestion.text;
-
         userQualification.HelpCount +=1;
         UnityEngine.Debug.Log("[MediaManager][GiveHint] HelpCount:" + userQualification.HelpCount);
 
@@ -1250,7 +1254,7 @@ public class MediaManager : MonoBehaviour
 		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextAyuda").Replace("\\n", "\n");
 		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextSalteadas").Replace("\\n", "\n");
 		GameObject.Find("UI_BtnMenuText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnMenuText").Replace("\\n", "\n");
-		GameObject.Find("UI_BtnRepetirText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnRepetirText").Replace("\\n", "\n");
+		//GameObject.Find("UI_BtnRepetirText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnRepetirText").Replace("\\n", "\n");
 	}
 
 	private void LoadPanelResumeScore()
