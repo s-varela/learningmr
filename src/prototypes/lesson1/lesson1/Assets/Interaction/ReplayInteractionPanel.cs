@@ -66,7 +66,7 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo1").GetComponent<TextMesh>().text;
-		mediaManager.RepeatAudio(selectedString);
+		mediaManager.repeatAudio(int.Parse("0"));
 		mediaManager.SelectTextInfo (1);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (1);
@@ -79,7 +79,7 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo2").GetComponent<TextMesh>().text;
-		mediaManager.RepeatAudio(selectedString);
+		mediaManager.repeatAudio((int.Parse("1")));
 		mediaManager.SelectTextInfo (2);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (2);
@@ -92,7 +92,7 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo3").GetComponent<TextMesh>().text;
-		mediaManager.RepeatAudio(selectedString);
+		mediaManager.repeatAudio((int.Parse("2")));
 		mediaManager.SelectTextInfo (3);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (3);
@@ -105,7 +105,7 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo4").GetComponent<TextMesh>().text;
-		mediaManager.RepeatAudio(selectedString);
+		mediaManager.repeatAudio((int.Parse("3")));
 		mediaManager.SelectTextInfo (4);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (4);
@@ -118,7 +118,7 @@ public class ReplayInteractionPanel : MonoBehaviour
 	{
 		string selectedString = "";
 		selectedString = GameObject.Find("TextInfo5").GetComponent<TextMesh>().text;
-		mediaManager.RepeatAudio(selectedString);
+		mediaManager.repeatAudio((int.Parse("4")));
 		mediaManager.SelectTextInfo (5);
 		PanelInfoText selectedText = PanelInfoText.Instance;
 		selectedText.SetTextSelected (5);

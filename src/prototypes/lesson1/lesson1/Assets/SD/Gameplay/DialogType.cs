@@ -16,6 +16,7 @@ public class DialogType
     public bool RequiredInput { get; set; }
     public bool Listen { get; set; }
     public bool Finish { get; set; }
+    public String audioId{ get; set; }
 
     public ArrayList Answers
     {
