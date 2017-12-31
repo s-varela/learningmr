@@ -1245,7 +1245,7 @@ public class MediaManager : MonoBehaviour
     private void LoadPanelInteractionTexts()
     {
         GameObject.Find("TextGuiaBtnTeclado").GetComponent<TextMesh>().text = VRExperience.Instance.GetGameObjectText("TextGuiaBtnTeclado").Replace("\\n", "\n");
-        GameObject.Find("TextGuiaBtnPlay").GetComponent<TextMesh>().text = VRExperience.Instance.GetGameObjectText("TextGuiaBtnPlay").Replace("\\n", "\n");
+        GameObject.Find("TextGuiaBtnStart").GetComponent<TextMesh>().text = VRExperience.Instance.GetGameObjectText("TextGuiaBtnStart").Replace("\\n", "\n");
         GameObject.Find("TextGuiaQuestionPanel").GetComponent<TextMesh>().text = VRExperience.Instance.GetGameObjectText("TextGuiaQuestionPanel").Replace("\\n", "\n");
         GameObject.Find("TextGuiaAnswerPanel").GetComponent<TextMesh>().text = VRExperience.Instance.GetGameObjectText("TextGuiaAnswerPanel").Replace("\\n", "\n");
         GameObject.Find("TextGuiaHintText").GetComponent<TextMesh>().text = VRExperience.Instance.GetGameObjectText("TextGuiaHintText").Replace("\\n", "\n");
