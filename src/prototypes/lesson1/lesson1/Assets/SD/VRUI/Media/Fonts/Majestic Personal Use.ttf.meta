@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: ba6a3236817edbd489161d1a3846f0c6
+timeCreated: 1513636811
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Majestic
+  fontNames:
+  - Majestic
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

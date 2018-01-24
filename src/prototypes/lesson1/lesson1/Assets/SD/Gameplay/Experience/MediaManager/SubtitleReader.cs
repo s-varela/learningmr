@@ -32,6 +32,7 @@ public class SubtitleReader : MonoBehaviour
     {
         try
         {
+            //Lesson01-01
             string subtitleText = null;
             subtitlesLastSeconds = new Hashtable();
             dialogs = new Hashtable();
@@ -43,9 +44,13 @@ public class SubtitleReader : MonoBehaviour
             {
                 DialogType dialogType = new DialogType();
                 string line = subtitles.ReadLine();
+                
                 int firstBracket = line.IndexOf("[") + 1;
+                UnityEngine.Debug.Log("firstBracket: " + firstBracket);
                 int lastSquareBracket = line.IndexOf("]") - 1;
+                UnityEngine.Debug.Log("lastSquareBracket: " + lastSquareBracket);
                 int lastInterval = int.Parse(line.Substring(firstBracket, lastSquareBracket));
+                UnityEngine.Debug.Log("lastInterval: " + lastInterval);
                 // Add to hasmap last second interval. 
 
                 dialogType.Start = lastInterval;
@@ -53,9 +58,21 @@ public class SubtitleReader : MonoBehaviour
 
                 //agregar texto a otro hashMap
                 int parent = line.IndexOf("]") + 1;
+                UnityEngine.Debug.Log("parent: " + parent);
                 int dash = line.IndexOf("|");
+                UnityEngine.Debug.Log("dash: " + dash);
                 int between = dash - parent;
+                UnityEngine.Debug.Log("between: " + between);
                 subtitleText = line.Substring(parent, between);
+                UnityEngine.Debug.Log("subtitleText: " + subtitleText);
+
+                if (subtitleText.Contains("&A")) {
+                    int audId = subtitleText.IndexOf("&A") + 2;
+                    string audioId = subtitleText.Substring(audId);
+                    audioId.Replace('|',' ');
+                    audioId.Trim(); audioId.TrimEnd(); audioId.TrimStart();
+                    dialogType.audioId = audioId;
+              }
 
                 if (subtitleText.Contains("&I"))
                 {
@@ -64,27 +81,37 @@ public class SubtitleReader : MonoBehaviour
                     string[] answers = subtitleText.Substring(iInput, subtitleText.Length- iInput).Split('#');
                     
                     foreach (string answer in answers){
-                        Debug.Log("SubtitleReader. answer" + answer);
                         dialogType.Answers.Add(answer);
                     }
                     dialogType.RequiredInput = true;
                     dialogType.Text = subtitleText.Split('&')[0];
+                    UnityEngine.Debug.Log(" INTERACCION dialogType.Text: " + dialogType.Text);
                 }
                 else if (subtitleText.Contains("&P"))
                 {
                     dialogType.Listen = true;
                     dialogType.Text = subtitleText.Split('&')[0];
+                    UnityEngine.Debug.Log(" REPETCICION dialogType.Text: " + dialogType.Text);
                 }
                 else if (subtitleText.Contains("&E"))
                 {
                     dialogType.Finish = true;
                     dialogType.Text = subtitleText.Split('&')[0];
+                    UnityEngine.Debug.Log(" FINAL dialogType.Text: " + dialogType.Text);
                 }
                 else
                 {
                     dialogType.Text = subtitleText;
                 }
-
+ 
+                int ampersandIndex = line.IndexOf("&");
+                UnityEngine.Debug.Log(" ampersandIndex " + ampersandIndex);
+                int firstLetter = line.IndexOf("]") + 1;
+                UnityEngine.Debug.Log("firstLetter" + firstLetter);
+                int sentence = ampersandIndex - firstLetter;
+                UnityEngine.Debug.Log(" sentence " + sentence);
+                dialogType.Text = line.Substring(firstLetter, sentence);
+                UnityEngine.Debug.Log(" ULTIMO dialogType.Text: " + dialogType.Text);
                 dialogs.Add(lineCounter, dialogType);
                 lineCounter++;
             }

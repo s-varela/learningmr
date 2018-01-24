@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Util :MonoBehaviour
 {
@@ -47,5 +48,58 @@ public class Util :MonoBehaviour
         textObject.text = msgFinal;
     }
 
-   
+	public void ReLoadMenuTexts(GameObject errorPanel, bool menuActive)
+    {
+        string log = "";
+        ConfigManager configManager = ConfigManager.Instance;
+
+        System.Collections.Generic.Dictionary<string, object> settings = configManager.Settings;
+        if (settings != null)
+        {
+            if (settings.ContainsKey("userConfig"))
+            {
+                UserConfigType userConfig = (UserConfigType)settings["userConfig"];
+                /* CARGO PANEL DE USUARIO
+
+                if (GameObject.Find("UI_UserMenuFirstName").activeSelf)
+                {
+                    GameObject.Find("UI_UserMenuFirstName").GetComponent<TextMesh>().text = userConfig.UserFirstName;
+                }
+                if (GameObject.Find("UI_UserMenuLanguage").activeSelf)
+                {
+                    GameObject.Find("UI_UserMenuLanguage").GetComponent<TextMesh>().text = userConfig.UserLanguage;
+                }
+                */
+                /* CARGO BOTONES DEL MENU*/
+            }
+
+            if (settings.ContainsKey("gameObjectsTexts"))
+            {
+                Dictionary<string, string> gameObjectsTextsMap = (Dictionary<string, string>)settings["gameObjectsTexts"];
+
+				if (menuActive) {
+					GameObject.Find ("UI_Btn1Text").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_Btn1Text"];
+					GameObject.Find ("UI_Btn2Text").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_Btn2Text"];
+					GameObject.Find ("UI_Btn3Text").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_Btn3Text"];
+				} else {
+					GameObject.Find ("UI_UserMenuTitle").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitle"];
+					GameObject.Find ("UI_UserMenuTitleName").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitleName"];
+					GameObject.Find ("UI_UserMenuTitleSurname").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitleSurname"];
+					GameObject.Find ("UI_UserMenuTitleLanguage").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_UserMenuTitleLanguage"];
+					GameObject.Find ("UI_BtnConfirmarText").GetComponent<TextMesh> ().text = (string)gameObjectsTextsMap ["UI_BtnConfirmarText"];
+				}
+            }
+            else
+            {
+                log = "ERROR: La configuracion de los textos no está cargada en el sistema.\n";
+                this.ShowErrorPanelByRef(errorPanel, log);
+            }
+        }
+        else
+        {
+            log = "ERROR: No se pudo cargar la configuracion del sistema \n";
+            this.ShowErrorPanelByRef(errorPanel, log);
+        }
+    }
+
 }

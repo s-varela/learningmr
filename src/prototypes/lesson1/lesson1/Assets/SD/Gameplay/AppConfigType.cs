@@ -33,7 +33,6 @@ public class AppConfigType
         }
     }
 
-
-
+    public string ScorePath { get; internal set; }
 }
     
