@@ -13,6 +13,7 @@ public class VRExperience : MonoBehaviour
     private Dictionary<string, string> gameObjectsText = new Dictionary<string, string>();
     private String[] videos;
     private static int indiceVideo = -1;
+    private  int lessonID = -1;
     private UserQualificationType userQualification = new UserQualificationType();
     private UserConfigType userConfig;
     private int countQuestionsToAnswer = 0;
@@ -93,6 +94,7 @@ public class VRExperience : MonoBehaviour
 
                 if (config.ContainsKey("lessonId")){
                     int lessonId = (int)config["lessonId"];
+                    lessonID = lessonId;
                     AppConfigType appConfig = appSettingtMap[lessonId.ToString()];
 
                     videos = (String[])appConfig.Videos.ToArray(typeof(string));
@@ -221,6 +223,11 @@ public class VRExperience : MonoBehaviour
     public int GetIndice()
     {
         return indiceVideo;
+    }
+
+    public int GetLessonID()
+    {
+        return lessonID;
     }
 
     public void ResetIndice()

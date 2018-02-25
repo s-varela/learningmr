@@ -72,6 +72,7 @@ public class MediaManager : MonoBehaviour
     private bool finish;
     private bool isInPanelInfoMode = false;
     private bool isButtonGuiaOn = false;
+    private bool pasarGuia = true;
 
     private bool answerOK = false;
     private bool menuPause = false;
@@ -249,29 +250,26 @@ public class MediaManager : MonoBehaviour
     void Update()
     {
         try
-        {
+        {   //not paused nor waiting
             if (!menuPause && !wait)
-            {
+            {   //enters here if user must answer direct questions
                 if (IsDialogMode())
                 {
-                 
                     long seconds = counterVideo.ElapsedMilliseconds;
                     // search if duration is in last subtitle second (in miliseconds)
                     dialogType = subReader.ReadSubtitleLine(seconds);
-
+                    // it's not the last subtitle
                     if (dialogType != null)
                     {
-                      
+                        //if enters here the video is still running
                         if (!dialogType.Text.Equals("") && dialogType.Text != normalText.text)
                         {
                             if (panelInput.activeSelf)
                             {
                                 DisableInterationMenu();
                             }
-
-                            //arraylist con texto para repetir
                             normalText.text = dialogType.Text;
-                            //arraylist con texto para repetir
+                            //saves text to repeat in excercise in arraylist
                             textForRepeat.Add(dialogType);
                             answerOK = false;
                             Sub.color = originalColor;
@@ -292,7 +290,6 @@ public class MediaManager : MonoBehaviour
                         {
                             ConfigDialogFinishMode();
                         }
-
                     }
                 }
                 else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
@@ -303,8 +300,18 @@ public class MediaManager : MonoBehaviour
                     {
                         try
                         {
-                            //ConfigListenMode();
-                            RepeatDialog(); //Se reproducen los dialogos
+                            // if (experience.getIndice() == 1 && experience.getLessonID() == 1)
+                            // {
+                            if (pasarGuia)
+                            {
+                                //no hago nada, espero al click del usuario
+                                // para mostrar el ejercicio de repeticion
+                            }
+                            else {
+                                RepeatDialog(); //Se reproducen los dialogos
+                            }                                                
+                          //  }
+                            
                         }
                         catch (System.Exception ex)
                         {
@@ -868,7 +875,7 @@ public class MediaManager : MonoBehaviour
 					navigationPanel.colorPart();
 					navigationPanel.OcultarPart();
                     InitializeVariables();
-
+                    pasarGuia = true;
                     media.UnLoad();
 
                     subReader.RestFileReader(videoName, experience.ResourcesPath + experience.MatedataPath);
@@ -972,7 +979,7 @@ public class MediaManager : MonoBehaviour
             }
             indice--;
             string videoName = experience.SelectVideo(indice);
-
+            pasarGuia = true;
             counterVideo.Reset();
 
             if (!videoName.Equals("End"))
@@ -1285,7 +1292,12 @@ public class MediaManager : MonoBehaviour
 		}
 	}
 
-	private void LoadPanelResumeTexts()
+    public void pasarPanelGuia() {
+        pasarGuia = false;
+    }
+
+
+    private void LoadPanelResumeTexts()
 	{
 		GameObject.Find("TextTituloResumen").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextTituloResumen").Replace("\\n", "\n");
 		GameObject.Find("TextMensaje").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextMensaje").Replace("\\n", "\n");
