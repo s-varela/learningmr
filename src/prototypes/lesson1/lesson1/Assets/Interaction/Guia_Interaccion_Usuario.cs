@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +9,7 @@ using UnityEngine;
 
 namespace Assets.Interaction
 {
-    public class Guia_usuario : MonoBehaviour
+    public class Guia_Interaccion_Usuario : MonoBehaviour
     {
 
         [SerializeField]
@@ -25,7 +28,9 @@ namespace Assets.Interaction
 
         private void Siguiente()
         {
-            mediaManager.PasarPanelGuia();
+            mediaManager.PasarPanelGuiaPanelInteraccion();
         }
+
     }
 }
+

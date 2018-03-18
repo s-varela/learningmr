@@ -14,47 +14,88 @@ public class MediaManager : MonoBehaviour
 
     private VRExperience experience = null;
 
-    [SerializeField] private MediaPlayerCtrl media;
-    [SerializeField] private AudioSource audioLeft;
-    [SerializeField] private AudioSource audioRight;
-    [SerializeField] private MediaManagerData data;
-    [SerializeField] private VRGameMenu menu;
+    [SerializeField]
+    private MediaPlayerCtrl media;
+    [SerializeField]
+    private AudioSource audioLeft;
+    [SerializeField]
+    private AudioSource audioRight;
+    [SerializeField]
+    private MediaManagerData data;
+    [SerializeField]
+    private VRGameMenu menu;
 
-    [SerializeField] private LoadPanel loadPanel;
-    [SerializeField] GameObject panelInfo;
-    [SerializeField] GameObject panelSub;
-    [SerializeField] GameObject panelInput;
-    [SerializeField] GameObject panelQuestion;
-    [SerializeField] GameObject panelAnswer;
+    [SerializeField]
+    private LoadPanel loadPanel;
+    [SerializeField]
+    GameObject panelInfo;
+    [SerializeField]
+    GameObject panelSub;
+    [SerializeField]
+    GameObject panelInput;
+    [SerializeField]
+    GameObject panelQuestion;
+    [SerializeField]
+    GameObject panelAnswer;
     //[SerializeField] GameObject panelHintButton;
-    [SerializeField] GameObject panelHintText;
+    [SerializeField]
+    GameObject panelHintText;
     //[SerializeField] GameObject hintButton;
-   // [SerializeField] GameObject skipButton;
-    [SerializeField] GameObject sphere;
-    [SerializeField] GameObject keyboard;
-    [SerializeField] Text keyboardInp;
-    [SerializeField] TextMesh Sub;
-    [SerializeField] TextMesh userAnswer;
-    [SerializeField] TextMesh givenHint;
-    [SerializeField] GameObject gifTick;
-    [SerializeField] GameObject gifCross;
-    [SerializeField] private TextMesh normalText;
-    [SerializeField] NavigationPanel navigationPanel;
-    [SerializeField] GameObject mediaDialogMenuPanel;
+    // [SerializeField] GameObject skipButton;
+    [SerializeField]
+    GameObject sphere;
+    [SerializeField]
+    GameObject keyboard;
+    [SerializeField]
+    Text keyboardInp;
+    [SerializeField]
+    TextMesh Sub;
+    [SerializeField]
+    TextMesh userAnswer;
+    [SerializeField]
+    TextMesh givenHint;
+    [SerializeField]
+    GameObject gifTick;
+    [SerializeField]
+    GameObject gifCross;
+    [SerializeField]
+    private TextMesh normalText;
+    [SerializeField]
+    NavigationPanel navigationPanel;
+    [SerializeField]
+    GameObject mediaDialogMenuPanel;
     VRDialogMenu mediaDialogMenu;
 
-	[SerializeField] TextMesh textRespuesta;
-	[SerializeField] GameObject PanelTextLAR;
-	[SerializeField] GameObject GuiaPanelInfo;
-	[SerializeField] GameObject GuiaPanelInteraccion;
-	[SerializeField] GameObject BtnGuia;
-	[SerializeField] GameObject PanelResume;
-	[SerializeField] GameObject PanelNavigation;
-	[SerializeField] GameObject PanelFinalLesson;
+    [SerializeField]
+    TextMesh textRespuesta;
+    [SerializeField]
+    GameObject PanelTextLAR;
+    [SerializeField]
+    GameObject PanelText;
+    [SerializeField]
+    GameObject guiaRepeticion;
+    [SerializeField]
+    GameObject TextGuiaInteraccion;
+    [SerializeField]
+    GameObject guiaInteraccion;
+    [SerializeField]
+    GameObject GuiaPanelInfo;
+    [SerializeField]
+    GameObject GuiaPanelInteraccion;
+    [SerializeField]
+    GameObject BtnGuia;
+    [SerializeField]
+    GameObject PanelResume;
+    [SerializeField]
+    GameObject PanelNavigation;
+    [SerializeField]
+    GameObject PanelFinalLesson;
 
-    [SerializeField] GameObject panelSkipHint;
+    [SerializeField]
+    GameObject panelSkipHint;
 
-  [SerializeField] Material play;
+    [SerializeField]
+    Material play;
 
     private const string TECLADO_RESPUESTA_VACIA = "Por favor, ingrese una respuesta.";
     private SubtitleReader subReader;
@@ -73,6 +114,7 @@ public class MediaManager : MonoBehaviour
     private bool isInPanelInfoMode = false;
     private bool isButtonGuiaOn = false;
     private bool pasarGuia = true;
+    private bool pasarGuiaInteraccion = true;
 
     private bool answerOK = false;
     private bool menuPause = false;
@@ -150,72 +192,72 @@ public class MediaManager : MonoBehaviour
     }
 
     void InitializeVariables()
-	{
-		changeSub = false;
-		answerOK = false;
-		showUserInput = false;
-		listen = false;
-		panelInfo.SetActive(false);
-		panelSub.SetActive(true);
-		panelInput.SetActive(false);
-		sphere.SetActive(false);
-		keyboard.SetActive(false);
-		panelAnswer.SetActive(false);
-		panelQuestion.SetActive(false);
+    {
+        changeSub = false;
+        answerOK = false;
+        showUserInput = false;
+        listen = false;
+        panelInfo.SetActive(false);
+        panelSub.SetActive(true);
+        panelInput.SetActive(false);
+        sphere.SetActive(false);
+        keyboard.SetActive(false);
+        panelAnswer.SetActive(false);
+        panelQuestion.SetActive(false);
         //panelHintButton.SetActive(false);
         panelHintText.SetActive(false);
         panelSkipHint.SetActive(false);
 
-        PanelTextLAR.SetActive (false);
-		BtnGuia.SetActive (false);
-		PanelResume.SetActive (false);
-		PanelNavigation.SetActive (true);
-		PanelFinalLesson.SetActive (false);
-		Sub.text="";
-		normalText.text = "";
-		userAnswer.text = "";
-		givenHint.text = "";
-		indiceAudio = 0;
+        PanelTextLAR.SetActive(false);
+        BtnGuia.SetActive(false);
+        PanelResume.SetActive(false);
+        PanelNavigation.SetActive(true);
+        PanelFinalLesson.SetActive(false);
+        Sub.text = "";
+        normalText.text = "";
+        userAnswer.text = "";
+        givenHint.text = "";
+        indiceAudio = 0;
         textForRepeat = new ArrayList();
         audioCodesForRepeat = new ArrayList();
         wait = false;
         currentPage = 0;
         isLessonFinish = false;
-   }
+    }
 
-	public void InitializeVariables2()
-	{
-		changeSub = false;
-		answerOK = false;
-		showUserInput = false;
-		listen = false;
-		panelInfo.SetActive(false);
-		panelSub.SetActive(true);
-		panelInput.SetActive(false);
-		sphere.SetActive(false);
-		keyboard.SetActive(false);
-		panelAnswer.SetActive(false);
-		panelQuestion.SetActive(false);
+    public void InitializeVariables2()
+    {
+        changeSub = false;
+        answerOK = false;
+        showUserInput = false;
+        listen = false;
+        panelInfo.SetActive(false);
+        panelSub.SetActive(true);
+        panelInput.SetActive(false);
+        sphere.SetActive(false);
+        keyboard.SetActive(false);
+        panelAnswer.SetActive(false);
+        panelQuestion.SetActive(false);
         //panelHintButton.SetActive(false);
         panelHintText.SetActive(false);
 
         panelSkipHint.SetActive(false);
 
-        PanelTextLAR.SetActive (false);
-		BtnGuia.SetActive (false);
-		PanelResume.SetActive (false);
-		PanelNavigation.SetActive (true);
-		PanelFinalLesson.SetActive (false);
-		Sub.text="";
-		normalText.text = "";
-		userAnswer.text = "";
+        PanelTextLAR.SetActive(false);
+        BtnGuia.SetActive(false);
+        PanelResume.SetActive(false);
+        PanelNavigation.SetActive(true);
+        PanelFinalLesson.SetActive(false);
+        Sub.text = "";
+        normalText.text = "";
+        userAnswer.text = "";
 
-		givenHint.text = "";
-		indiceAudio = 0;
-//		textForRepeat = new ArrayList();
-		wait = false;
-		currentPage = 0;
-	}
+        givenHint.text = "";
+        indiceAudio = 0;
+        //		textForRepeat = new ArrayList();
+        wait = false;
+        currentPage = 0;
+    }
 
     void Awake()
     {
@@ -292,7 +334,7 @@ public class MediaManager : MonoBehaviour
                         }
                     }
                 }
-                else if (IsListenMode())// Modo Listen, muestro panel frontal y reproduzco audios
+                else if (IsListenMode()) // Modo Listen, muestro panel frontal y reproduzco audios
                 {
                     isInPanelInfoMode = true;
 
@@ -300,18 +342,27 @@ public class MediaManager : MonoBehaviour
                     {
                         try
                         {
-                            // if (experience.getIndice() == 1 && experience.getLessonID() == 1)
-                            // {
-                            if (pasarGuia)
+                            TextMesh textObject = GameObject.Find("lessonId").GetComponent<TextMesh>();
+                            textObject.text = experience.GetLessonID().ToString();
+
+                            TextMesh textObject2 = GameObject.Find("videoId").GetComponent<TextMesh>();
+                            textObject2.text = experience.GetIndice().ToString();
+
+                            if (experience.GetIndice() == 1 && experience.GetLessonID() == 1)
                             {
-                                //no hago nada, espero al click del usuario
-                                // para mostrar el ejercicio de repeticion
+                                if (pasarGuia)
+                                {
+                                    //wait until user clicks continue button
+                                }
+                                else {
+                                    RepeatDialog(); //Se reproducen los dialogos
+                                }
                             }
                             else {
+
                                 RepeatDialog(); //Se reproducen los dialogos
-                            }                                                
-                          //  }
-                            
+                            }
+
                         }
                         catch (System.Exception ex)
                         {
@@ -322,9 +373,32 @@ public class MediaManager : MonoBehaviour
                 }
                 else if (IsInputMode())
                 {
-                    isInPanelInfoMode = false;
-                    PauseMedia();
-                    EnableInterationMenu();
+                    TextMesh textObject = GameObject.Find("lessonId").GetComponent<TextMesh>();
+                    textObject.text = experience.GetLessonID().ToString();
+
+                    TextMesh textObject2 = GameObject.Find("videoId").GetComponent<TextMesh>();
+                    textObject2.text = experience.GetIndice().ToString();
+
+                    //last video of first lesson
+                    if (experience.GetIndice() == 4 && experience.GetLessonID() == 1)
+                    {
+                        if (pasarGuiaInteraccion)
+                        {
+                            isInPanelInfoMode = false;
+                            PauseMedia();
+                        }
+                        else {
+                            isInPanelInfoMode = false;
+                            PauseMedia();
+                            EnableInterationMenu();
+                        }
+                    }
+                    else {
+                            isInPanelInfoMode = false;
+                            PauseMedia();
+                            EnableInterationMenu();
+                        
+                    }
                 }
                 else if (IsFinishMode())
                 {
@@ -336,7 +410,7 @@ public class MediaManager : MonoBehaviour
                     panelSub.SetActive(false);
                     LoadPanelResumeTexts();
                     LoadPanelResumeScore();
-                    
+
                     //Guardo los resultados en la VrExperience y lo guardo
                     experience.UserQualification = userQualification;
                     isLessonFinish = true;
@@ -417,6 +491,15 @@ public class MediaManager : MonoBehaviour
 
     private void ConfigInputMode()
     {
+        if (experience.GetIndice() == 4 && experience.GetLessonID() == 1 && pasarGuiaInteraccion)
+        {
+            sphere.SetActive(true);
+            PanelTextLAR.SetActive(true);
+            PanelText.SetActive(false);
+            guiaRepeticion.SetActive(false);
+            guiaInteraccion.SetActive(true);
+            TextGuiaInteraccion.SetActive(true);
+        }
         i = -1;
         showUserInput = true;
         listen = false;
@@ -426,16 +509,6 @@ public class MediaManager : MonoBehaviour
         counterDelay.Reset();
         counterDelay.Start();
     }
-
-    private void ActivePanelTextLAR()
-    {
-        listen = true;
-        PauseMedia();
-        sphere.SetActive(true);
-        panelSub.SetActive(false);
-        PanelTextLAR.SetActive(true);
-    }
-
 
     private void ConfigListenMode()
     {
@@ -447,7 +520,13 @@ public class MediaManager : MonoBehaviour
         sphere.SetActive(true);
         panelSub.SetActive(false);
         textRespuesta.text = "";
-        PanelTextLAR.SetActive(true);
+        if (experience.GetIndice() == 0 && experience.GetLessonID() == 1) { 
+            PanelTextLAR.SetActive(true);
+            PanelText.SetActive(true);
+            guiaRepeticion.SetActive(true);
+            guiaInteraccion.SetActive(false);
+            TextGuiaInteraccion.SetActive(false);
+        }
 
         Vector3 apagar = new Vector3(0.00001f, 0.00001f, 0.00001f);
         panelInfo.transform.localScale = apagar;
@@ -478,13 +557,14 @@ public class MediaManager : MonoBehaviour
             textObject.color = Color.yellow;
 
             //obtengo el audio segun codigo
-            if (currentPage+1 == 1)
+            if (currentPage + 1 == 1)
             {
                 DialogType audioDiag = (DialogType)textForRepeat[indiceAudio];
                 string audioCodeToRepeat = audioDiag.audioId;
                 PlayAudio(audioCodeToRepeat);
             }
-            else if(currentPage + 1 == 2) {
+            else if (currentPage + 1 == 2)
+            {
                 DialogType audioDiag = (DialogType)textForRepeat[indiceAudio + 5];
                 string audioCodeToRepeat = audioDiag.audioId;
                 PlayAudio(audioCodeToRepeat);
@@ -546,6 +626,7 @@ public class MediaManager : MonoBehaviour
 
     public void EnableInterationMenu()
     {
+        PanelTextLAR.SetActive(false);
         sphere.SetActive(true);
         panelSub.SetActive(false);
         panelInput.SetActive(true);
@@ -562,11 +643,11 @@ public class MediaManager : MonoBehaviour
 
         BtnGuia.SetActive(true);
 
-        if (firstTimePanelInteraccion)
-        {
-            ButtonGuiaOn();
-            firstTimePanelInteraccion = false;
-        }
+      //  if (firstTimePanelInteraccion)
+     //   {
+      //      ButtonGuiaOn();
+       //     firstTimePanelInteraccion = false;
+      //  }
     }
 
     public void DisableInterationMenu()
@@ -815,19 +896,24 @@ public class MediaManager : MonoBehaviour
     [System.Serializable]
     public struct MediaManagerData
     {
-        [SerializeField] public string audioAssetKey;
-        [SerializeField] public string audioVolumeConfigValue;
-        [SerializeField] public string videoAssetKey;
-        [SerializeField] public string videoVolumeConfigValue;
+        [SerializeField]
+        public string audioAssetKey;
+        [SerializeField]
+        public string audioVolumeConfigValue;
+        [SerializeField]
+        public string videoAssetKey;
+        [SerializeField]
+        public string videoVolumeConfigValue;
     }
 
-	public void FinishLesson()
+    public void FinishLesson()
     {
         try
         {
             experience.BackToMainMenu();
 
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             UnityEngine.Debug.Log("[MediaManager][FinishLesson] Excepcion: " + ex.Message);
         }
@@ -869,11 +955,11 @@ public class MediaManager : MonoBehaviour
             counterVideo.Reset();
             if (!videoName.Equals("End"))
             {
-				if(!videoName.Equals("Error"))
-				{
-					navigationPanel.materialOriginal();
-					navigationPanel.colorPart();
-					navigationPanel.OcultarPart();
+                if (!videoName.Equals("Error"))
+                {
+                    navigationPanel.materialOriginal();
+                    navigationPanel.colorPart();
+                    navigationPanel.OcultarPart();
                     InitializeVariables();
                     pasarGuia = true;
                     media.UnLoad();
@@ -956,7 +1042,7 @@ public class MediaManager : MonoBehaviour
     public void GiveHint()
     {
         SetInactiveButtonGuia();
-        userQualification.HelpCount +=1;
+        userQualification.HelpCount += 1;
         UnityEngine.Debug.Log("[MediaManager][GiveHint] HelpCount:" + userQualification.HelpCount);
 
         givenHint.text += " " + dialogType.Answers[0].ToString().Split(' ')[++i];
@@ -1043,10 +1129,10 @@ public class MediaManager : MonoBehaviour
                 userAnswer.color = Color.green;
                 gifTick.SetActive(true);
                 gifCross.SetActive(false);
-            
+
                 ConfigDialogMode();
                 ResumeMedia();
-                userQualification.SuccessCount +=1;
+                userQualification.SuccessCount += 1;
                 UnityEngine.Debug.Log("[MediaManager][ValidateAnswer] SuccessCount:" + userQualification.SuccessCount);
             }
             else
@@ -1055,7 +1141,7 @@ public class MediaManager : MonoBehaviour
                 userAnswer.color = Color.red;
                 panelInput.SetActive(true);
                 gifCross.SetActive(true);
-                userQualification.RepeatCount +=1;
+                userQualification.RepeatCount += 1;
                 UnityEngine.Debug.Log("[MediaManager][ValidateAnswer] RepeatCount:" + userQualification.RepeatCount);
 
             }
@@ -1081,7 +1167,8 @@ public class MediaManager : MonoBehaviour
 
     //metodo repetir audio panel de resumen
 
-    public void repeatAudio(int selectedString) {
+    public void repeatAudio(int selectedString)
+    {
 
         if (currentPage + 1 == 1)
         {
@@ -1199,11 +1286,11 @@ public class MediaManager : MonoBehaviour
 
         BtnGuia.SetActive(true);
 
-        if (firstTimePanelInfo)
-        {
-            ButtonGuiaOn();
-            firstTimePanelInfo = false;
-        }
+      //  if (firstTimePanelInfo)
+      //  {
+       //     ButtonGuiaOn();
+      //      firstTimePanelInfo = false;
+      //  }
 
         //Primero los prendo a todos
         Vector3 prender = new Vector3(0.7f, 0.12f, 1f);
@@ -1273,47 +1360,57 @@ public class MediaManager : MonoBehaviour
     }
 
     private void ButtonGuiaOff()
-	{
-		if (panelInfo.activeSelf) {
-			GuiaPanelInfo.SetActive(false);
-			isButtonGuiaOn = false;
-		} else if (panelInput.activeSelf) {
-			GuiaPanelInteraccion.SetActive(false);
-			isButtonGuiaOn = false;
-		}
-	}
+    {
+        if (panelInfo.activeSelf)
+        {
+            GuiaPanelInfo.SetActive(false);
+            isButtonGuiaOn = false;
+        }
+        else if (panelInput.activeSelf)
+        {
+            GuiaPanelInteraccion.SetActive(false);
+            isButtonGuiaOn = false;
+        }
+    }
 
-	public void SetInactiveButtonGuia()
-	{
-		if (isButtonGuiaOn) {
-			GuiaPanelInfo.SetActive(false);
-			GuiaPanelInteraccion.SetActive(false);
-			isButtonGuiaOn = false;
-		}
-	}
+    public void SetInactiveButtonGuia()
+    {
+        if (isButtonGuiaOn)
+        {
+            GuiaPanelInfo.SetActive(false);
+            GuiaPanelInteraccion.SetActive(false);
+            isButtonGuiaOn = false;
+        }
+    }
 
-    public void pasarPanelGuia() {
+    public void PasarPanelGuia()
+    {
         pasarGuia = false;
+    }
+
+    public void PasarPanelGuiaPanelInteraccion()
+    {
+        pasarGuiaInteraccion = false;
     }
 
 
     private void LoadPanelResumeTexts()
-	{
-		GameObject.Find("TextTituloResumen").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextTituloResumen").Replace("\\n", "\n");
-		GameObject.Find("TextMensaje").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextMensaje").Replace("\\n", "\n");
-		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextCorrectas").Replace("\\n", "\n");
-		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextReintentos").Replace("\\n", "\n");
-		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextAyuda").Replace("\\n", "\n");
-		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextSalteadas").Replace("\\n", "\n");
-		GameObject.Find("UI_BtnMenuText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnMenuText").Replace("\\n", "\n");
-		//GameObject.Find("UI_BtnRepetirText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnRepetirText").Replace("\\n", "\n");
-	}
+    {
+        GameObject.Find("TextTituloResumen").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextTituloResumen").Replace("\\n", "\n");
+        GameObject.Find("TextMensaje").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextMensaje").Replace("\\n", "\n");
+        GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextCorrectas").Replace("\\n", "\n");
+        GameObject.Find("TextReintentos").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextReintentos").Replace("\\n", "\n");
+        GameObject.Find("TextAyuda").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextAyuda").Replace("\\n", "\n");
+        GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text = experience.GetGameObjectText("TextSalteadas").Replace("\\n", "\n");
+        GameObject.Find("UI_BtnMenuText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnMenuText").Replace("\\n", "\n");
+        //GameObject.Find("UI_BtnRepetirText").GetComponent<TextMesh>().text = experience.GetGameObjectText("UI_BtnRepetirText").Replace("\\n", "\n");
+    }
 
-	private void LoadPanelResumeScore()
-	{
-		GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += userQualification.SuccessCount.ToString();
-		GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += userQualification.RepeatCount.ToString();
-		GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += userQualification.HelpCount.ToString();
-		GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += userQualification.SkipCount.ToString();
-	}
+    private void LoadPanelResumeScore()
+    {
+        GameObject.Find("TextCorrectas").GetComponent<TextMesh>().text += userQualification.SuccessCount.ToString();
+        GameObject.Find("TextReintentos").GetComponent<TextMesh>().text += userQualification.RepeatCount.ToString();
+        GameObject.Find("TextAyuda").GetComponent<TextMesh>().text += userQualification.HelpCount.ToString();
+        GameObject.Find("TextSalteadas").GetComponent<TextMesh>().text += userQualification.SkipCount.ToString();
+    }
 }
