@@ -316,6 +316,7 @@ public class MediaManager : MonoBehaviour
                             answerOK = false;
                             Sub.color = originalColor;
                             gifTick.SetActive(false);
+							gifCross.SetActive(false);
                         }
 
                         if (dialogType.Listen)
