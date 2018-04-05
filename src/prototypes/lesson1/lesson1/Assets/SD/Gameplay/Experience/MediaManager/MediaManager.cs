@@ -131,8 +131,8 @@ public class MediaManager : MonoBehaviour
         mediaDialogMenu.OnAcceptClick += DialogAcceptHandle;
 
         ManagerVideo();
-
     }
+
 
 
     private void DialogAcceptHandle()
@@ -242,6 +242,7 @@ public class MediaManager : MonoBehaviour
             dialogType = new DialogType();
             textForRepeat = new ArrayList();
             userQualification = new UserQualificationType();
+       
         }
     }
 
@@ -251,6 +252,7 @@ public class MediaManager : MonoBehaviour
     {
         try
         {   //not paused nor waiting
+
             if (!menuPause && !wait)
             {   //enters here if user must answer direct questions
                 if (IsDialogMode())
@@ -897,17 +899,16 @@ public class MediaManager : MonoBehaviour
 
     }
 
-    private void PlayAudio(string subtilte)
+    private void PlayAudio(string soundName)
     {
         try
         {
             sfx = gameObject.AddComponent<AudioSource>();
-            if (subtilte != null && subtilte != "")
+            if (soundName != null && soundName != "")
             {
-                string pathSounds = audioManager.getAudioPathName(subtilte);
-                if (pathSounds != null)
-                {
+                    string pathSounds = audioManager.getAudioPathName(soundName);
                     sfx.clip = Resources.Load<AudioClip>(pathSounds) as AudioClip;
+                    //sfx.clip = (AudioClip)audioManager.HashAudios[soundName];
                     sfx.loop = false;
                     sfx.volume = 1.0f;
                     sfx.ignoreListenerPause = true;
@@ -916,11 +917,6 @@ public class MediaManager : MonoBehaviour
                     sfx.Play();
 
                     //SetMaterialPlay();
-                }
-                else
-                {
-                    UnityEngine.Debug.Log("Error en la reproduccion del audio. Audio no encontrado. texto: " + subtilte);
-                }
             }
         }
         catch (System.Exception ex)
